@@ -323,7 +323,7 @@ export function About() {
               className="relative aspect-4/3 w-full overflow-hidden bg-black/4"
             >
               <Image
-                src="/sage_white.png"
+                src="/me.png"
                 alt="Abakwe Carrington"
                 fill
                 className="object-cover object-top grayscale"

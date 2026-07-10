@@ -633,7 +633,7 @@ export function Contact() {
                 transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
               >
                 <Image
-                  src="/logo/logo_white.png"
+                  src="/sage/sage_prim_white.png"
                   alt="Cybersage"
                   width={130}
                   height={32}

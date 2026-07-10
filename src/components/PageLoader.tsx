@@ -127,7 +127,7 @@ export function PageLoader({ onDone }: { onDone: () => void }) {
         style={{ opacity: 0 }}
       >
         <Image
-          src="/logo/logo_white.png"
+          src="/sage/sage_prim_white.png"
           alt="Cybersage"
           width={520}
           height={140}

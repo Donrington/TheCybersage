@@ -111,7 +111,7 @@ export function Navbar() {
           {/* Logo — always left */}
           <a href="#" className="flex items-center shrink-0 mr-3" aria-label="Cybersage">
             <Image
-              src="/logo/logo_white_horizontal.png"
+              src="/sage/sage_horiz2_dark.png"
               alt="Cybersage"
               width={160}
               height={40}
@@ -158,7 +158,7 @@ export function Navbar() {
             }}
           >
             <Image
-              src="/logo/logo_white_horizontal.png"
+              src="/sage/sage_horiz2_dark.png"
               alt="Cybersage"
               width={140}
               height={36}

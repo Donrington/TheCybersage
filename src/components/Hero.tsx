@@ -118,7 +118,7 @@ export function Hero() {
           loop
           playsInline
           preload="auto"
-          poster="/hero_revamp_poster.jpg"
+          poster="/hero_image.png"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/hero_vid_revamp_opt.mp4" type="video/mp4" />
