@@ -117,7 +117,7 @@ export function Navbar() {
               height={50}
               priority
               className="block object-contain"
-              style={{ height: 34, width: 'auto' }}
+              style={{ height: 46, width: 'auto' }}
             />
           </a>
 
@@ -164,7 +164,7 @@ export function Navbar() {
               height={50}
               priority
               className="block object-contain"
-              style={{ height: 28, width: 'auto' }}
+              style={{ height: 38, width: 'auto' }}
             />
           </a>
 
