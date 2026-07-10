@@ -111,10 +111,10 @@ export function Navbar() {
           {/* Logo — always left */}
           <a href="#" className="flex items-center shrink-0 mr-3" aria-label="Cybersage">
             <Image
-              src="/sage/sage_horiz2_dark.png"
+              src="/sage/sage_horiz1_white.png"
               alt="Cybersage"
-              width={160}
-              height={40}
+              width={200}
+              height={50}
               priority
               className="block object-contain"
               style={{ height: 34, width: 'auto' }}
@@ -158,10 +158,10 @@ export function Navbar() {
             }}
           >
             <Image
-              src="/sage/sage_horiz2_dark.png"
+              src="/sage/sage_horiz1_white.png"
               alt="Cybersage"
-              width={140}
-              height={36}
+              width={200}
+              height={50}
               priority
               className="block object-contain"
               style={{ height: 28, width: 'auto' }}

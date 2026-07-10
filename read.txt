@@ -1,0 +1,17 @@
+Hi, my name is Abakwe Carrington. I'm an Infrastructure & Systems Architect, and I want to walk you through a project I'm building right now, called Wytnest.
+
+Wytnest is a testimonial platform. It gives businesses a way to collect proof — real videos and written reviews from happy customers — and display that proof on their website in a way that actually looks good and actually converts visitors into buyers. I built it with African businesses in mind first, which is why it supports both Naira and Dollar pricing from day one.
+
+My role on this project is everything, end to end. I designed the product, built the front end, designed the database, and I'm now wiring up the backend logic that ties it all together. So I've touched every layer of the stack — the interface people see, the server logic running behind it, and the infrastructure storing and serving the data.
+
+The biggest challenge going in was this: most testimonial tools feel like an afterthought — a plain popup, or a boring wall of text. I wanted something different. I wanted the marketing site itself to double as a live demo, so the moment you land on the homepage, you're already looking at the real widget in action, not a screenshot of it.
+
+The second challenge was technical. When a business embeds this widget on their own site, it has to look right no matter what styling that site already has. My solution was to isolate the widget using something called a Shadow DOM — think of it as a sealed box. The widget's styling lives inside that box, completely separate from the host site's styling, so there's zero visual conflict, ever.
+
+So far, I've completed the entire front end: the marketing site, the dashboard business owners use to manage testimonials, the submission flow customers go through to record or write one, and all three widget display styles. I've also built the database schema and the backend functions that will handle video uploads, process payments through Paystack and Stripe, and transcribe video testimonials automatically.
+
+That transcription piece is actually the AI feature I'm most excited about. Every video testimonial gets automatically converted to text using speech-to-text, so business owners get a searchable, readable version of each video. From there, I plan to use that same transcript to auto-generate short highlight clips and pull out the most quotable lines for social media — automatically, without anyone writing it by hand.
+
+Right now I'm in the final stretch: connecting real authentication, wiring the dashboard to live data, and turning on payments. I'm proud of how far it's come — it started as one idea, and it's turned into a real product with real architecture behind it.
+
+I'm looking forward to bringing this same kind of ownership and hands-on technology experience to this role.
