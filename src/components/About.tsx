@@ -274,9 +274,10 @@ export function About() {
                   fontSize:   'clamp(1.05rem, 1.5vw, 1.3rem)',
                 }}
               >
-                5+ years designing and running production systems for global clients — multi-tenant
-                compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the
-                system end-to-end: architecture, infrastructure, backend, delivery.
+                A software engineer based in Lagos, Nigeria — 5+ years designing and running
+                production systems for global clients: multi-tenant compliance platforms, HIPAA
+                medical portals, high-traffic marketplaces. I own the system end-to-end:
+                architecture, infrastructure, backend, delivery.
               </p>
               <p
                 className="text-black/40 leading-relaxed"
@@ -324,7 +325,7 @@ export function About() {
             >
               <Image
                 src="/me.png"
-                alt="Abakwe Carrington"
+                alt="Abakwe Carrington — software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
                 fill
                 className="object-cover object-top grayscale"
                 sizes="(max-width: 1024px) 100vw, 50vw"

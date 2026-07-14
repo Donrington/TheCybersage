@@ -17,12 +17,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
 
   title: {
-    default: 'Abakwe Carrington | Infrastructure & Systems Architect',
+    default:
+      'Abakwe Carrington — Software Engineer & Systems Architect in Lagos, Nigeria',
     template: '%s | Abakwe Carrington',
   },
 
   description:
-    'Abakwe Carrington (Cybersage) — Infrastructure & Systems Architect with 5+ years designing distributed, production-grade platforms. Cloud architecture, DevOps, Go & Django backends, PostgreSQL, AWS. Available for hire — remote, worldwide.',
+    'Abakwe Carrington (Cybersage) is a software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria — 5+ years designing distributed, production-grade platforms for clients worldwide. Cloud architecture, DevOps, Go & Django backends, PostgreSQL, AWS. Available for hire — remote, worldwide.',
 
   keywords: [
     // Brand / name
@@ -32,6 +33,27 @@ export const metadata: Metadata = {
     'cybersage.dev',
     'Cybersage developer',
     'Donrington',
+    // Nigeria / Lagos geo cluster
+    'software engineer in Nigeria',
+    'software engineer in Lagos',
+    'software engineer Lagos Nigeria',
+    'best software engineer in Nigeria',
+    'top software engineers in Nigeria',
+    'top software engineer in Lagos',
+    'Nigerian software engineer',
+    'software developer in Nigeria',
+    'software developer in Lagos',
+    'web developer in Lagos Nigeria',
+    'backend engineer in Nigeria',
+    'DevOps engineer in Nigeria',
+    'cloud architect in Nigeria',
+    'systems architect in Lagos',
+    'hire software engineer in Nigeria',
+    'hire developer in Lagos',
+    'freelance software engineer Nigeria',
+    'remote software engineer Nigeria',
+    'top developers in Africa',
+    'African software engineer',
     // Role
     'Infrastructure Architect',
     'Systems Architect',
@@ -82,8 +104,6 @@ export const metadata: Metadata = {
     'Systems Architect portfolio',
     'Cloud Architect portfolio',
     'Software Engineer portfolio',
-    'Nigerian software engineer',
-    'African developer',
     'remote developer worldwide',
     'enterprise web development',
     'scalable web applications',
@@ -105,25 +125,40 @@ export const metadata: Metadata = {
   publisher: 'Abakwe Carrington',
 
   icons: {
-    icon: [{ url: '/logo/logo_white.png', type: 'image/png' }],
-    apple: '/logo/logo_white.png',
-    shortcut: '/logo/logo_white.png',
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/sage/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/sage/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/sage/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/favicon.ico',
   },
 
   openGraph: {
-    type: 'website',
+    type: 'profile',
+    firstName: 'Abakwe',
+    lastName: 'Carrington',
+    username: 'cybersage',
     url: BASE_URL,
     siteName: 'Cybersage — Abakwe Carrington',
-    title: 'Abakwe Carrington | Infrastructure & Systems Architect',
+    title:
+      'Abakwe Carrington — Software Engineer & Systems Architect in Lagos, Nigeria',
     description:
-      '5+ years architecting distributed, production-grade systems. AWS · Docker · Go · Django · PostgreSQL · Redis. Available for hire — remote, worldwide.',
+      'Software engineer & Infrastructure Architect in Lagos, Nigeria. 5+ years architecting distributed, production-grade systems. AWS · Docker · Go · Django · PostgreSQL · Redis. Available for hire — remote, worldwide.',
     locale: 'en_US',
     images: [
       {
         url: `${BASE_URL}/cybersage_og.png`,
         width: 1200,
         height: 630,
-        alt: 'Abakwe Carrington — Infrastructure & Systems Architect',
+        alt: 'Abakwe Carrington — Software Engineer & Systems Architect, Lagos, Nigeria',
+        type: 'image/png',
+      },
+      {
+        url: `${BASE_URL}/me.png`,
+        width: 1393,
+        height: 1149,
+        alt: 'Portrait of Abakwe Carrington, software engineer and systems architect based in Lagos, Nigeria',
         type: 'image/png',
       },
     ],
@@ -133,9 +168,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@CarlSwitch_CHUG',
     creator: '@CarlSwitch_CHUG',
-    title: 'Abakwe Carrington | Infrastructure & Systems Architect',
+    title:
+      'Abakwe Carrington — Software Engineer & Systems Architect in Lagos, Nigeria',
     description:
-      '5+ years architecting production-grade distributed systems. AWS · Docker · Go · Django · PostgreSQL. Available for hire worldwide.',
+      'Software engineer & Infrastructure Architect in Lagos, Nigeria. 5+ years architecting production-grade distributed systems. AWS · Docker · Go · Django · PostgreSQL. Available worldwide.',
     images: [`${BASE_URL}/cybersage_og.png`],
   },
 
@@ -158,6 +194,8 @@ export const metadata: Metadata = {
     languages: {
       'en-US': BASE_URL,
       'en-GB': BASE_URL,
+      'en-NG': BASE_URL,
+      'x-default': BASE_URL,
     },
   },
 
@@ -173,6 +211,11 @@ export const metadata: Metadata = {
     'theme-color': '#0A0A0A',
     'msapplication-TileColor': '#0A0A0A',
     'application-name': 'Cybersage',
+    // Geo targeting — Lagos, Nigeria
+    'geo.region': 'NG-LA',
+    'geo.placename': 'Lagos, Nigeria',
+    'geo.position': '6.5244;3.3792',
+    ICBM: '6.5244, 3.3792',
   },
 };
 
@@ -182,35 +225,85 @@ export const viewport: Viewport = {
   themeColor: '#0A0A0A',
 };
 
+/* ── Structured data — single @graph so every entity cross-references ── */
+
+const LAGOS = {
+  '@type': 'Place',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Lagos',
+    addressRegion: 'Lagos State',
+    addressCountry: 'NG',
+  },
+};
+
+const headshot = {
+  '@type': 'ImageObject',
+  '@id': `${BASE_URL}/#headshot`,
+  url: `${BASE_URL}/me.png`,
+  contentUrl: `${BASE_URL}/me.png`,
+  width: 1393,
+  height: 1149,
+  caption:
+    'Abakwe Carrington — software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria',
+  creditText: 'Abakwe Carrington (Cybersage)',
+  representativeOfPage: true,
+};
+
 const personSchema = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
   '@id': `${BASE_URL}/#person`,
   name: 'Abakwe Carrington',
+  givenName: 'Abakwe',
+  familyName: 'Carrington',
   alternateName: ['Cybersage', 'Carrington Abakwe', 'Donrington'],
   url: BASE_URL,
-  image: {
-    '@type': 'ImageObject',
-    url: `${BASE_URL}/cybersage_og.png`,
-    width: 1200,
-    height: 630,
-  },
-  jobTitle: 'Infrastructure & Systems Architect',
+  image: { '@id': `${BASE_URL}/#headshot` },
+  jobTitle: ['Infrastructure & Systems Architect', 'Software Engineer'],
   description:
-    'Infrastructure & Systems Architect with 5+ years of experience designing distributed, production-grade platforms — cloud infrastructure, DevOps pipelines, and resilient backends on AWS, Docker, Go, Django, and PostgreSQL.',
+    'Abakwe Carrington is a software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria, with 5+ years of experience designing distributed, production-grade platforms — cloud infrastructure, DevOps pipelines, and resilient backends on AWS, Docker, Go, Django, and PostgreSQL — for clients worldwide.',
   email: 'abakwecarrington@gmail.com',
   nationality: { '@type': 'Country', name: 'Nigeria' },
-  hasOccupation: {
-    '@type': 'Occupation',
-    name: 'Infrastructure & Systems Architect',
-    description:
-      'Designs cloud infrastructure, distributed backends, and system architecture for clients worldwide — from data models and service boundaries to zero-downtime deployment.',
-    occupationLocation: { '@type': 'Country', name: 'Worldwide' },
-    skills:
-      'System Design, Cloud Architecture, AWS, Docker, Kubernetes, CI/CD, Go, Django, PostgreSQL, Redis, Microservices, REST APIs, Next.js, React, TypeScript',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Lagos',
+    addressRegion: 'Lagos State',
+    addressCountry: 'NG',
   },
+  homeLocation: LAGOS,
+  workLocation: [
+    LAGOS,
+    { '@type': 'Place', name: 'Remote — Worldwide' },
+  ],
+  worksFor: { '@id': `${BASE_URL}/#org` },
+  hasOccupation: [
+    {
+      '@type': 'Occupation',
+      name: 'Software Engineer',
+      description:
+        'Designs and builds production software — distributed backends, APIs, and full-stack products — from Lagos, Nigeria for clients worldwide.',
+      occupationLocation: [
+        { '@type': 'City', name: 'Lagos' },
+        { '@type': 'Country', name: 'Nigeria' },
+      ],
+      skills:
+        'Software Engineering, Go, Django, Python, TypeScript, Next.js, React, PostgreSQL, Redis, REST APIs, Microservices',
+    },
+    {
+      '@type': 'Occupation',
+      name: 'Infrastructure & Systems Architect',
+      description:
+        'Designs cloud infrastructure, distributed backends, and system architecture — from data models and service boundaries to zero-downtime deployment.',
+      occupationLocation: [
+        { '@type': 'City', name: 'Lagos' },
+        { '@type': 'Country', name: 'Nigeria' },
+      ],
+      skills:
+        'System Design, Cloud Architecture, AWS, Docker, Kubernetes, Terraform, CI/CD, DevOps, Infrastructure as Code, High Availability',
+    },
+  ],
   knowsAbout: [
-    'System Design', 'Cloud Architecture', 'Distributed Systems',
+    'Software Engineering', 'System Design', 'Cloud Architecture', 'Distributed Systems',
     'AWS', 'Docker', 'Kubernetes', 'Terraform',
     'CI/CD', 'DevOps', 'Infrastructure as Code',
     'Go', 'Django', 'Python', 'Node.js',
@@ -221,9 +314,39 @@ const personSchema = {
     'Computer Vision', 'Embedded Systems', 'WebRTC',
     'Real-time Systems', 'AI Engineering', 'HIPAA Compliance',
   ],
+  knowsLanguage: ['English'],
+  alumniOf: [
+    {
+      '@type': 'EducationalOrganization',
+      name: 'Moat Academy',
+      address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
+    },
+    { '@type': 'EducationalOrganization', name: 'IBT Learning' },
+  ],
+  hasCredential: [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Web Application Development',
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'EducationalOrganization', name: 'Moat Academy' },
+    },
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Full Stack Engineering',
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'EducationalOrganization', name: 'IBT Learning' },
+    },
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Web Development Internship',
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'Organization', name: 'Zidio Development' },
+    },
+  ],
   makesOffer: [
     {
       '@type': 'Offer',
+      areaServed: ['Nigeria', 'Worldwide'],
       itemOffered: {
         '@type': 'Service',
         name: 'Systems Architecture & Design',
@@ -233,6 +356,7 @@ const personSchema = {
     },
     {
       '@type': 'Offer',
+      areaServed: ['Nigeria', 'Worldwide'],
       itemOffered: {
         '@type': 'Service',
         name: 'Cloud Infrastructure & DevOps',
@@ -242,6 +366,7 @@ const personSchema = {
     },
     {
       '@type': 'Offer',
+      areaServed: ['Nigeria', 'Worldwide'],
       itemOffered: {
         '@type': 'Service',
         name: 'Distributed Backend & API Engineering',
@@ -251,6 +376,7 @@ const personSchema = {
     },
     {
       '@type': 'Offer',
+      areaServed: ['Nigeria', 'Worldwide'],
       itemOffered: {
         '@type': 'Service',
         name: 'Full Stack Product Delivery',
@@ -269,53 +395,91 @@ const personSchema = {
     email: 'abakwecarrington@gmail.com',
     contactType: 'professional inquiry',
     availableLanguage: 'English',
+    areaServed: 'Worldwide',
   },
 };
 
+const orgSchema = {
+  '@type': 'ProfessionalService',
+  '@id': `${BASE_URL}/#org`,
+  name: 'Cybersage',
+  legalName: 'Cybersage — Abakwe Carrington',
+  url: BASE_URL,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${BASE_URL}/sage/icon-512.png`,
+    width: 512,
+    height: 512,
+  },
+  image: { '@id': `${BASE_URL}/#headshot` },
+  description:
+    'Independent software engineering and systems architecture practice of Abakwe Carrington — distributed platforms, cloud infrastructure, and production-grade backends. Based in Lagos, Nigeria; serving clients worldwide.',
+  founder: { '@id': `${BASE_URL}/#person` },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Lagos',
+    addressRegion: 'Lagos State',
+    addressCountry: 'NG',
+  },
+  areaServed: [
+    { '@type': 'Country', name: 'Nigeria' },
+    { '@type': 'Country', name: 'United States' },
+    { '@type': 'Country', name: 'United Kingdom' },
+    { '@type': 'Country', name: 'Canada' },
+    { '@type': 'Country', name: 'Australia' },
+    'Worldwide',
+  ],
+  knowsAbout: [
+    'Software Engineering', 'Systems Architecture', 'Cloud Infrastructure',
+    'DevOps', 'Distributed Systems', 'Backend Engineering',
+  ],
+  email: 'abakwecarrington@gmail.com',
+  sameAs: [
+    'https://github.com/Donrington',
+    'https://www.linkedin.com/in/carrington-abakwe-b0b0a0217',
+    'https://x.com/CarlSwitch_CHUG',
+  ],
+};
+
 const websiteSchema = {
-  '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${BASE_URL}/#website`,
   url: BASE_URL,
   name: 'Cybersage — Abakwe Carrington',
+  alternateName: ['cybersage.dev', 'Abakwe Carrington Portfolio'],
   description:
-    'Portfolio and professional profile of Abakwe Carrington — Infrastructure & Systems Architect.',
+    'Portfolio and professional profile of Abakwe Carrington — software engineer and Infrastructure & Systems Architect in Lagos, Nigeria.',
   author: { '@id': `${BASE_URL}/#person` },
-  publisher: { '@id': `${BASE_URL}/#person` },
-  inLanguage: 'en-US',
+  publisher: { '@id': `${BASE_URL}/#org` },
+  inLanguage: 'en',
   copyrightYear: new Date().getFullYear(),
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${BASE_URL}/?q={search_term_string}`,
-    },
-    'query-input': 'required name=search_term_string',
-  },
 };
 
 const profilePageSchema = {
-  '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   '@id': `${BASE_URL}/#profilepage`,
   url: BASE_URL,
-  name: 'Abakwe Carrington — Infrastructure & Systems Architect Portfolio',
+  name: 'Abakwe Carrington — Software Engineer & Systems Architect in Lagos, Nigeria',
   description:
-    'Professional portfolio of Abakwe Carrington (Cybersage), an Infrastructure & Systems Architect with 5+ years of experience designing production-grade distributed systems.',
+    'Professional portfolio of Abakwe Carrington (Cybersage), a software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria, with 5+ years of experience designing production-grade distributed systems.',
+  isPartOf: { '@id': `${BASE_URL}/#website` },
+  about: { '@id': `${BASE_URL}/#person` },
+  mainEntity: { '@id': `${BASE_URL}/#person` },
+  primaryImageOfPage: { '@id': `${BASE_URL}/#headshot` },
   dateCreated: '2024-01-01',
   dateModified: new Date().toISOString().split('T')[0],
-  mainEntity: { '@id': `${BASE_URL}/#person` },
+  inLanguage: 'en',
   breadcrumb: {
     '@type': 'BreadcrumbList',
     itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: BASE_URL,
-      },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
     ],
   },
+};
+
+const schemaGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [headshot, personSchema, orgSchema, websiteSchema, profilePageSchema],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -324,15 +488,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(profilePageSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaGraph) }}
         />
       </head>
       <body className="antialiased">

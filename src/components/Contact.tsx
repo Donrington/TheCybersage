@@ -566,7 +566,7 @@ export function Contact() {
             transition={{ duration: 0.6, delay: 0.55, ease: EASE }}
           >
             {[
-              { label: 'Location', value: 'Remote · Worldwide' },
+              { label: 'Location', value: 'Lagos, Nigeria · Remote Worldwide' },
               { label: 'Response', value: 'Within 24 hours' },
               { label: 'Status', value: 'Available for projects', pulse: true },
             ].map((item, i) => (
@@ -750,7 +750,7 @@ export function Contact() {
                 className="text-[0.55rem] tracking-[0.16em] uppercase text-white/18 font-medium text-center sm:text-left"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
-                © 2026 Abakwe Carrington · Cybersage
+                © 2026 Abakwe Carrington · Cybersage · Software Engineer, Lagos, Nigeria
               </p>
               <p
                 className="text-[0.55rem] tracking-[0.14em] uppercase text-white/12 text-center sm:text-right"

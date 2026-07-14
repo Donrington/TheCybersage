@@ -155,7 +155,7 @@ export function Hero() {
               className="text-[0.6rem] font-medium tracking-[0.15em] uppercase text-black/30"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
-              Remote · Worldwide
+              Lagos, Nigeria · Remote Worldwide
             </span>
           </motion.div>
 

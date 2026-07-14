@@ -3,6 +3,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 export const runtime = 'nodejs';
+export const alt =
+  'Abakwe Carrington — Software Engineer & Systems Architect in Lagos, Nigeria';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -60,7 +62,7 @@ export default function Image() {
               textTransform: 'uppercase',
             }}
           >
-            Infrastructure &amp; Systems Architect
+            Software Engineer &amp; Systems Architect — Lagos, Nigeria
           </span>
 
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -97,8 +99,8 @@ export default function Image() {
               margin: '6px 0 0',
             }}
           >
-            5+ years architecting distributed, production-grade systems.
-            Available for hire — remote, worldwide.
+            Software engineer &amp; systems architect in Lagos, Nigeria — 5+ years
+            architecting distributed, production-grade systems. Available for hire worldwide.
           </p>
         </div>
 
