@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Instrument_Serif } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import { headers } from 'next/headers';
 import './globals.css';
 
 const instrumentSerif = Instrument_Serif({
@@ -482,12 +483,19 @@ const schemaGraph = {
   '@graph': [headshot, personSchema, orgSchema, websiteSchema, profilePageSchema],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const nonce = (await headers()).get('x-nonce') ?? undefined;
+
   return (
     <html lang="en" className={instrumentSerif.variable} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaGraph) }}
         />
       </head>
