@@ -207,8 +207,8 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.55, ease: EASE }}
       >
-        <span style={{ ...S.label, color: 'rgba(10,10,10,0.28)' }}>{num}</span>
-        <span style={{ ...S.micro, color: 'rgba(10,10,10,0.22)' }}>{exp.type}</span>
+        <span style={{ ...S.label, color: '#D9D9D9', mixBlendMode: 'difference' }}>{num}</span>
+        <span style={{ ...S.micro, color: '#D9D9D9', mixBlendMode: 'difference' }}>{exp.type}</span>
       </motion.div>
 
       {/* Year */}
@@ -219,7 +219,8 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
           fontStyle: 'italic',
           fontWeight: 400,
           fontSize: 'clamp(5.5rem,27vw,11rem)',
-          color: 'rgba(10,10,10,0.35)',
+          color: '#D9D9D9',
+          mixBlendMode: 'difference',
           letterSpacing: '-0.045em',
           lineHeight: 0.85,
           marginBottom: '1.25rem',
@@ -233,7 +234,7 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
 
       {/* Hairline */}
       <motion.div
-        style={{ height: '1px', background: 'rgba(10,10,10,0.1)', marginBottom: '1.5rem', transformOrigin: 'left' }}
+        style={{ height: '1px', background: 'rgba(255,255,255,0.3)', marginBottom: '1.5rem', transformOrigin: 'left' }}
         initial={{ scaleX: 0 }}
         animate={inView ? { scaleX: 1 } : {}}
         transition={{ duration: 0.85, ease: EASE, delay: 0.12 }}
@@ -241,7 +242,7 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
 
       {/* Company */}
       <motion.p
-        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.6rem', letterSpacing: '0.36em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.42)', fontWeight: 700, marginBottom: '0.65rem' }}
+        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.6rem', letterSpacing: '0.36em', textTransform: 'uppercase', color: '#EDEDED', mixBlendMode: 'difference', fontWeight: 700, marginBottom: '0.65rem' }}
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -256,7 +257,8 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
             fontFamily: 'Satoshi, system-ui, sans-serif',
             fontWeight: 900,
             fontSize: 'clamp(1.9rem,9vw,3.2rem)',
-            color: 'rgba(10,10,10,0.92)',
+            color: '#FFFFFF',
+            mixBlendMode: 'difference',
             letterSpacing: '-0.04em',
             lineHeight: 0.95,
           }}
@@ -273,12 +275,12 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
         {exp.bullets.map((b, i) => (
           <motion.li
             key={i}
-            style={{ display: 'flex', gap: '0.65rem', fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.84rem,3.2vw,0.94rem)', color: 'rgba(10,10,10,0.62)', fontWeight: 500, lineHeight: 1.65 }}
+            style={{ display: 'flex', gap: '0.65rem', fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.84rem,3.2vw,0.94rem)', color: '#E0E0E0', mixBlendMode: 'difference', fontWeight: 500, lineHeight: 1.65 }}
             initial={{ opacity: 0, x: -12 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, ease: EASE, delay: 0.3 + i * 0.07 }}
           >
-            <span style={{ marginTop: '0.6em', width: '3px', height: '3px', borderRadius: '50%', background: 'rgba(10,10,10,0.22)', flexShrink: 0 }} />
+            <span style={{ marginTop: '0.6em', width: '3px', height: '3px', borderRadius: '50%', background: '#E0E0E0', flexShrink: 0 }} />
             {b}
           </motion.li>
         ))}
@@ -295,9 +297,9 @@ function MobileCard({ exp, index }: { exp: (typeof EXPERIENCE)[0]; index: number
           <span
             key={t}
             style={{
-              border: '1px solid rgba(10,10,10,0.14)',
-              background: 'rgba(10,10,10,0.025)',
-              color: 'rgba(10,10,10,0.48)',
+              border: '1px solid #D9D9D9',
+              color: '#D9D9D9',
+              mixBlendMode: 'difference',
               fontFamily: 'Satoshi, system-ui, sans-serif',
               fontSize: '0.6rem',
               letterSpacing: '0.18em',
@@ -336,12 +338,12 @@ function DesktopPanel({
       {/* Top row */}
       <div
         className="panel-top flex items-center justify-between shrink-0 pb-4"
-        style={{ borderBottom: '1px solid rgba(10,10,10,0.07)' }}
+        style={{ borderBottom: '1px solid rgba(255,255,255,0.25)' }}
       >
-        <span style={{ ...S.label, color: 'rgba(10,10,10,0.25)' }}>
+        <span style={{ ...S.label, color: '#D9D9D9', mixBlendMode: 'difference' }}>
           {num}&nbsp;·&nbsp;{exp.type}
         </span>
-        <span style={{ ...S.micro, color: 'rgba(10,10,10,0.16)', fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ ...S.micro, color: '#D9D9D9', mixBlendMode: 'difference', fontVariantNumeric: 'tabular-nums' }}>
           {num}&nbsp;/&nbsp;{tot}
         </span>
       </div>
@@ -360,7 +362,8 @@ function DesktopPanel({
               fontStyle: 'italic',
               fontWeight: 400,
               fontSize: 'clamp(7rem,18vw,24rem)',
-              color: 'rgba(10,10,10,0.38)',
+              color: '#D9D9D9',
+              mixBlendMode: 'difference',
               letterSpacing: '-0.045em',
               lineHeight: 0.85,
             }}
@@ -379,7 +382,7 @@ function DesktopPanel({
         <div className="flex flex-col justify-center gap-7 flex-1 min-w-0" style={{ maxWidth: '52ch' }}>
           <p
             className="panel-company"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.62rem', letterSpacing: '0.38em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.42)', fontWeight: 700 }}
+            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.62rem', letterSpacing: '0.38em', textTransform: 'uppercase', color: '#EDEDED', mixBlendMode: 'difference', fontWeight: 700 }}
           >
             {exp.company}
           </p>
@@ -390,7 +393,8 @@ function DesktopPanel({
               fontFamily: 'Satoshi, system-ui, sans-serif',
               fontWeight: 900,
               fontSize: 'clamp(2.2rem,4.5vw,5.8rem)',
-              color: 'rgba(10,10,10,0.92)',
+              color: '#FFFFFF',
+              mixBlendMode: 'difference',
               letterSpacing: '-0.042em',
               lineHeight: 0.93,
             }}
@@ -403,9 +407,9 @@ function DesktopPanel({
               <li
                 key={i}
                 className="flex gap-3 leading-relaxed"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.82rem,1vw,0.95rem)', color: 'rgba(10,10,10,0.62)', fontWeight: 500 }}
+                style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.82rem,1vw,0.95rem)', color: '#E0E0E0', mixBlendMode: 'difference', fontWeight: 500 }}
               >
-                <span style={{ marginTop: '0.55em', width: '3px', height: '3px', borderRadius: '50%', background: 'rgba(10,10,10,0.22)', flexShrink: 0 }} />
+                <span style={{ marginTop: '0.55em', width: '3px', height: '3px', borderRadius: '50%', background: '#E0E0E0', flexShrink: 0 }} />
                 {b}
               </li>
             ))}
@@ -415,11 +419,11 @@ function DesktopPanel({
             {exp.stack.map((t) => (
               <span
                 key={t}
-                className="transition-all duration-300 hover:bg-black hover:text-white hover:border-black cursor-default"
+                className="transition-opacity duration-300 hover:opacity-60 cursor-default"
                 style={{
-                  border: '1px solid rgba(10,10,10,0.15)',
-                  background: 'rgba(10,10,10,0.03)',
-                  color: 'rgba(10,10,10,0.48)',
+                  border: '1px solid #D9D9D9',
+                  color: '#D9D9D9',
+                  mixBlendMode: 'difference',
                   fontFamily: 'Satoshi, system-ui, sans-serif',
                   fontSize: '0.6rem',
                   letterSpacing: '0.18em',
@@ -552,7 +556,7 @@ export function Experience() {
     <div className="px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,8vw,10rem)] pb-[clamp(2rem,4vw,4rem)]">
       <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,4rem)]">
         <motion.span
-          style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.6rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.3)', fontWeight: 500 }}
+          style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.6rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: '#D9D9D9', mixBlendMode: 'difference', fontWeight: 500 }}
           className="shrink-0"
           initial={{ opacity: 0, x: -16 }}
           animate={sectionInView ? { opacity: 1, x: 0 } : {}}
@@ -561,8 +565,8 @@ export function Experience() {
           05 / Experience
         </motion.span>
         <motion.div
-          className="flex-1 h-px bg-black/10"
-          style={{ transformOrigin: 'left' }}
+          className="flex-1 h-px"
+          style={{ transformOrigin: 'left', background: '#D9D9D9', mixBlendMode: 'difference' }}
           initial={{ scaleX: 0 }}
           animate={sectionInView ? { scaleX: 1 } : {}}
           transition={{ duration: 1.4, delay: 0.15, ease: EASE }}
@@ -570,7 +574,7 @@ export function Experience() {
       </div>
 
       <h2
-        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 900, fontSize: 'clamp(2.4rem,7vw,8rem)', letterSpacing: '-0.04em', lineHeight: 0.9 }}
+        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 900, fontSize: 'clamp(2.4rem,7vw,8rem)', letterSpacing: '-0.04em', lineHeight: 0.9, color: '#FFFFFF', mixBlendMode: 'difference' }}
       >
         {(['Where', "I've"] as const).map((word, i) => (
           <span key={word} className="inline-block overflow-hidden mr-[0.22em]">
@@ -588,7 +592,7 @@ export function Experience() {
         <span className="inline-block overflow-hidden">
           <motion.span
             className="block"
-            style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, color: 'rgba(10,10,10,0.28)' }}
+            style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, color: '#D9D9D9' }}
             initial={{ y: '110%' }}
             animate={sectionInView ? { y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.28, ease: EASE }}
@@ -604,15 +608,17 @@ export function Experience() {
     <section ref={sectionRef} id="experience" className="w-full border-t border-black/8">
 
       {/* ── Mobile (< lg) ─────────────────────────────────────────── */}
-      <div className="block lg:hidden relative overflow-hidden">
+      <div className="block lg:hidden relative overflow-hidden" style={{ isolation: 'isolate' }}>
         <video
           autoPlay muted loop playsInline preload="auto"
-          poster="/exp.jpg"
+          poster="/exp_arch_poster.jpg"
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         >
-          <source src="/ex_video_opt.mp4" type="video/mp4" />
+          <source src="/exp_arch_opt.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.82)' }} />
+        {/* Light atmospheric lift only — text below is auto-inverting (mix-blend-mode:
+            difference), so it no longer relies on this tint for legibility. */}
+        <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.12)' }} />
         <div className="relative z-10">
           {Header}
           <div>
@@ -629,23 +635,24 @@ export function Experience() {
         <div className="bg-white">{Header}</div>
 
         {/* Pinned horizontal scroll */}
-        <div ref={pinRef} data-cursor="drag" className="h-screen overflow-hidden relative">
+        <div ref={pinRef} data-cursor="drag" className="h-screen overflow-hidden relative" style={{ isolation: 'isolate' }}>
           {/* Video */}
           <video
             autoPlay muted loop playsInline
-            poster="/exp.jpg"
+            poster="/exp_arch_poster.jpg"
             className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
           >
-            <source src="/ex_video_opt.mp4" type="video/mp4" />
+            <source src="/exp_arch_opt.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.74)' }} />
+          <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.12)' }} />
 
-          {/* Top progress bar */}
-          <div className="absolute top-0 left-0 right-0 h-px z-20 pointer-events-none" style={{ background: 'rgba(10,10,10,0.07)' }}>
+          {/* Top progress bar — decorative track, plain translucent white (no blend
+              needed: it reads fine over both the video and the light tint) */}
+          <div className="absolute top-0 left-0 right-0 h-px z-20 pointer-events-none" style={{ background: 'rgba(255,255,255,0.3)' }}>
             <div
               ref={progressRef}
               className="h-full origin-left"
-              style={{ transform: 'scaleX(0)', background: 'rgba(10,10,10,0.4)' }}
+              style={{ transform: 'scaleX(0)', background: 'rgba(255,255,255,0.75)' }}
             />
           </div>
 
@@ -653,14 +660,14 @@ export function Experience() {
           <div
             className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none flex items-center justify-between"
             style={{
-              borderTop: '1px solid rgba(10,10,10,0.07)',
+              borderTop: '1px solid rgba(255,255,255,0.25)',
               padding: 'clamp(0.75rem,1.4vw,1.1rem) clamp(2.5rem,5vw,6rem)',
             }}
           >
-            <span ref={labelRef} style={{ ...S.label, color: 'rgba(10,10,10,0.25)' }}>
+            <span ref={labelRef} style={{ ...S.label, color: '#D9D9D9', mixBlendMode: 'difference' }}>
               01 · Full Stack Developer · Recoverderm
             </span>
-            <span style={{ ...S.micro, color: 'rgba(10,10,10,0.18)' }}>
+            <span style={{ ...S.micro, color: '#D9D9D9', mixBlendMode: 'difference' }}>
               ← Drag to navigate →
             </span>
           </div>

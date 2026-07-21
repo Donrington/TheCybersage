@@ -22,11 +22,17 @@ function NavLink({ label, href, chevron }: { label: string; href: string; chevro
   return (
     <a
       href={href}
-      className="flex items-center gap-1 px-2.5 py-2 rounded-full text-[0.62rem] font-medium tracking-wide uppercase text-white/55 hover:text-white hover:bg-white/8 transition-all duration-200 whitespace-nowrap"
-      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+      className="flex items-center gap-1 px-2.5 py-2 rounded-full text-[0.62rem] font-medium tracking-wide uppercase hover:bg-white/8 transition-all duration-200 whitespace-nowrap"
+      style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
     >
       {label}
-      {chevron && <ChevronDown size={8} strokeWidth={2.5} className="text-white/30 mt-px" />}
+      {chevron && (
+        <ChevronDown
+          size={8}
+          strokeWidth={2.5}
+          style={{ color: '#D9D9D9', mixBlendMode: 'difference', marginTop: '1px' }}
+        />
+      )}
     </a>
   );
 }
@@ -106,6 +112,7 @@ export function Navbar() {
               : '0 8px 40px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.08)',
             transition: 'background-color 0.45s ease, backdrop-filter 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease',
             padding: '6px 10px 6px 14px',
+            isolation: 'isolate',
           }}
         >
           {/* Logo — always left */}

@@ -109,6 +109,7 @@ export function Hero() {
     <section
       ref={containerRef}
       className="relative w-full min-h-screen bg-white overflow-hidden flex flex-col"
+      style={{ isolation: 'isolate' }}
     >
       {/* Video background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -118,12 +119,22 @@ export function Hero() {
           loop
           playsInline
           preload="auto"
-          poster="/hero_image.png"
+          poster="/hero_arch_poster.jpg"
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/hero_vid_revamp_opt.mp4" type="video/mp4" />
+          <source src="/hero_arch_opt.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-white/55" />
+        {/* Soft atmospheric scrim — purely tonal now, not load-bearing for legibility.
+            Text below is auto-inverting (mix-blend-mode: difference), so it reads
+            correctly whatever tone of the video it happens to sit over. This just
+            keeps the overall frame from feeling too flat/uniformly dark. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 72% at 20% 100%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0) 78%)',
+          }}
+        />
       </div>
 
       {/* Content */}
@@ -142,18 +153,21 @@ export function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 1.4, ease: EASE }}
           >
-            <span className="inline-flex items-center gap-2 border border-black/15 px-3 py-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+            <span
+              className="inline-flex items-center gap-2 border px-3 py-1.5"
+              style={{ borderColor: '#FFFFFF', mixBlendMode: 'difference' }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#FFFFFF' }} />
               <span
-                className="text-[0.6rem] font-medium tracking-[0.2em] uppercase text-black/50"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                className="text-[0.6rem] font-medium tracking-[0.2em] uppercase"
+                style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#FFFFFF' }}
               >
                 Available for Work
               </span>
             </span>
             <span
-              className="text-[0.6rem] font-medium tracking-[0.15em] uppercase text-black/30"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+              className="text-[0.6rem] font-medium tracking-[0.15em] uppercase"
+              style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
             >
               Lagos, Nigeria · Remote Worldwide
             </span>
@@ -162,27 +176,31 @@ export function Hero() {
           {/* H1 — massive display name */}
           <h1
             ref={nameRef}
-            className="font-black text-black leading-[0.88] tracking-tighter will-change-transform"
+            className="font-black leading-[0.88] tracking-tighter will-change-transform"
             style={{
               fontFamily: 'Satoshi, system-ui, sans-serif',
               fontWeight: 800,
               fontSize: 'clamp(3.8rem, 11.5vw, 14rem)',
+              color: '#FFFFFF',
+              mixBlendMode: 'difference',
             }}
           >
             <span ref={line1Ref} className="block cursor-default select-none">Abakwe</span>
             <span ref={line2Ref} className="block cursor-default select-none">Carrington</span>
           </h1>
 
-          {/* Italic serif tagline */}
+          {/* Italic serif tagline — auto-inverting like the name above it */}
           <p
             ref={subRef}
-            className="mt-[clamp(1rem,2.5vw,2.5rem)] text-black/45 cursor-default select-none"
+            className="mt-[clamp(1rem,2.5vw,2.5rem)] cursor-default select-none"
             style={{
               fontFamily: 'var(--font-instrument), Georgia, serif',
               fontStyle: 'italic',
               fontSize: 'clamp(1.25rem, 3vw, 3rem)',
               letterSpacing: '-0.01em',
               lineHeight: 1.25,
+              color: '#D9D9D9',
+              mixBlendMode: 'difference',
             }}
           >
             Infrastructure &amp; Systems Architect designing distributed platforms for regulated industries — from embedded edge to cloud.
@@ -196,8 +214,13 @@ export function Hero() {
               {STACK_TAGS.map((tag, i) => (
                 <motion.span
                   key={tag}
-                  className="border border-black/15 px-3 py-1 text-[0.65rem] font-medium tracking-[0.12em] uppercase text-black/45"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                  className="border px-3 py-1 text-[0.65rem] font-medium tracking-[0.12em] uppercase"
+                  style={{
+                    fontFamily: 'Satoshi, system-ui, sans-serif',
+                    color: '#D9D9D9',
+                    borderColor: '#D9D9D9',
+                    mixBlendMode: 'difference',
+                  }}
                   initial={{ opacity: 0, y: 10, clipPath: 'inset(100% 0 0 0)' }}
                   animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' }}
                   transition={{ duration: 0.5, delay: 1.6 + i * 0.07, ease: EASE }}
@@ -227,8 +250,13 @@ export function Hero() {
               <motion.button
                 data-cursor="hire"
                 onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
-                className="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-black/40 hover:text-black border border-black/15 px-6 py-3.5 hover:border-black/40 transition-colors duration-200"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                className="text-[0.7rem] font-medium tracking-[0.18em] uppercase border px-6 py-3.5 transition-opacity duration-200 hover:opacity-70"
+                style={{
+                  fontFamily: 'Satoshi, system-ui, sans-serif',
+                  color: '#FFFFFF',
+                  borderColor: '#FFFFFF',
+                  mixBlendMode: 'difference',
+                }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 2.2, ease: EASE }}
@@ -249,11 +277,12 @@ export function Hero() {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-px h-12 bg-linear-to-b from-black/30 to-transparent"
+            className="w-px h-12 bg-linear-to-b from-white/70 to-transparent"
+            style={{ mixBlendMode: 'difference' }}
           />
           <span
-            className="text-[0.55rem] tracking-[0.22em] uppercase text-black/25"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="text-[0.55rem] tracking-[0.22em] uppercase"
+            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
           >
             Scroll
           </span>
@@ -263,8 +292,8 @@ export function Hero() {
       {/* Side label — desktop */}
       <div className="absolute right-[clamp(1rem,2vw,2.5rem)] top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3 z-10">
         <span
-          className="text-[0.55rem] tracking-[0.25em] uppercase text-black/20 [writing-mode:vertical-rl] rotate-180"
-          style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+          className="text-[0.55rem] tracking-[0.25em] uppercase [writing-mode:vertical-rl] rotate-180"
+          style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
         >
           Systems · Cloud · Distributed · Remote
         </span>
