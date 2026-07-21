@@ -187,6 +187,16 @@ const PROJECTS = [
     year: '2026',
     link: 'https://thechronosaura.com',
   },
+  {
+    id: 'circlesoflife',
+    name: 'Circles of Life Healthcare',
+    category: 'Healthcare + AI Platform',
+    tagline: 'Marketing site, admin CMS, and a four-feature Claude-powered care-advisor suite for an Atlanta in-home care provider. Streaming AI chat, care assessment, applicant auto-scoring, Supabase RLS.',
+    stack: ['Next.js', 'Supabase', 'Claude AI', 'GSAP'],
+    image: '/logo/colhcs.png',
+    year: '2026',
+    link: 'https://circlesoflifehcs.com',
+  },
 ] as const;
 
 type Project = (typeof PROJECTS)[number];
