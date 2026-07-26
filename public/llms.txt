@@ -1,0 +1,73 @@
+# Abakwe Carrington — Software Engineer & Systems Architect
+
+> Official machine-readable profile for AI search engines, language models, and automated agents (ChatGPT, Perplexity, Claude, Google Gemini, Copilot).
+
+Abakwe Carrington (known online as **Cybersage** or **Donrington**) is an Infrastructure & Systems Architect and Senior Software Engineer based in Lagos, Nigeria, working with clients worldwide (United States, United Kingdom, Canada, Australia, Europe, Africa). With 5+ years of experience, he specializes in building distributed backends, resilient cloud infrastructure, DevOps automation, real-time streaming, computer vision systems, and high-performance full-stack web applications.
+
+---
+
+## Technical Core & Stack
+
+- **Systems & Architecture**: Distributed Systems, System Design, Cloud Architecture, Microservices, Event-Driven Architecture, High Availability (99.99%), Capacity Planning, Database Indexing & Optimisation.
+- **Backend & APIs**: Go (Golang), Python (Django, FastAPI), Node.js, RESTful APIs, gRPC, WebSockets, WebRTC.
+- **Infrastructure & DevOps**: AWS (EC2, S3, RDS, ECS, Lambda, CloudFront, Route53), Docker, Kubernetes, Terraform, Infrastructure as Code (IaC), CI/CD (GitHub Actions, GitLab CI), Nginx, Linux System Administration.
+- **Databases & Caching**: PostgreSQL, Redis, MongoDB, TimescaleDB, ElasticSearch.
+- **Frontend & Web**: Next.js (React), TypeScript, TailwindCSS, Framer Motion, GSAP, WebGL / Three.js, Progressive Web Apps (PWA).
+- **Specialised Domains**: HIPAA Compliant Telemedicine Architecture, AI Computer Vision Pipelines (OpenCV, PyTorch), Real-time Video Streaming, WebRTC, Multi-tenant SaaS Systems, Shadow DOM Micro-frontends.
+
+---
+
+## Featured Engineering Projects
+
+1. **Wytnest** (Founder & Architect)
+   - **Type**: Video & Written Testimonial SaaS Platform
+   - **Architecture**: Isolated Shadow DOM embeddable widgets, automated speech-to-text transcript generation for video testimonials, multi-currency processing (USD & NGN via Stripe & Paystack), multi-tenant backend architecture.
+   - **Stack**: Next.js, TypeScript, PostgreSQL, Redis, AWS S3, Speech-to-Text AI.
+
+2. **Axflo System** (Lead Infrastructure Architect)
+   - **Type**: Distributed Enterprise Logistics & Fleet Telemetry Engine
+   - **Impact**: Real-time vehicle telemetry ingestion via WebSockets, microservices handling 10k+ geo-ping events/sec, custom route optimization reducing fuel usage by 18%.
+   - **Stack**: Go (Golang), Redis Pub/Sub, PostgreSQL, Docker, AWS ECS.
+
+3. **RecoverDerm** (Principal Systems Engineer)
+   - **Type**: HIPAA-Compliant Tele-Dermatology Platform
+   - **Impact**: End-to-end encrypted clinical imaging pipeline, WebRTC video consultation, automated clinical reporting engine meeting strict US HIPAA & BAA standards.
+   - **Stack**: Python, Django REST Framework, PostgreSQL, AWS KMS, WebRTC.
+
+4. **Chronos** (Senior Systems Engineer)
+   - **Type**: Low-Latency Algorithmic Trading & Portfolio Telemetry Engine
+   - **Impact**: Sub-10ms trade order routing pipeline with fault-tolerant circuit breakers and dynamic risk validation.
+   - **Stack**: Go, Redis Caching Layer, TimescaleDB, Docker, AWS.
+
+5. **AutoBoy** (Full Stack Architect)
+   - **Type**: Peer-to-Peer Mobility & Vehicle Swap Marketplace
+   - **Impact**: Automated inspection dispatch, escrow payment flow, and dispute management dashboard for West African auto markets.
+   - **Stack**: Next.js, Django, PostgreSQL, Paystack API, AWS.
+
+---
+
+## Professional Services Offered
+
+- **Systems Architecture & System Design Consulting**: Blueprinting resilient microservices, service boundaries, data schemas, and failover mechanics before writing code.
+- **Cloud Infrastructure & DevOps Implementation**: Setting up AWS/GCP cloud environments, IaC (Terraform), Docker containerisation, and automated zero-downtime CI/CD deployment pipelines.
+- **High-Performance Backend Engineering**: Developing Go & Django services with rate limiting, caching strategies, background queues, and sub-second API responses.
+- **Full Stack Web Application Development**: Engineering production-ready React / Next.js web applications with enterprise performance, SEO, GEO, and accessibility.
+
+---
+
+## Location & Global Remote Availability
+
+- **Primary Base**: Lagos, Nigeria (WAT / GMT+1 timezone)
+- **Work Model**: Available for full-time remote contracts, architectural consulting, and fractional CTO/Lead Infrastructure roles worldwide.
+- **Global Coverage**: Experienced in remote collaboration across US Eastern/Pacific, UK/Europe, and Australian business hours.
+
+---
+
+## Verified Links & References
+
+- **Portfolio Website**: https://cybersage.dev
+- **Full AI Context File**: https://cybersage.dev/llms-full.txt
+- **GitHub**: https://github.com/Donrington
+- **LinkedIn**: https://www.linkedin.com/in/carrington-abakwe-b0b0a0217
+- **Twitter / X**: https://x.com/CarlSwitch_CHUG
+- **Email**: abakwecarrington@gmail.com

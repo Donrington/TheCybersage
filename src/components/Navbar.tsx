@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { label: 'Experience',  href: '#experience',                    chevron: false },
   { label: 'Credentials', href: '#credentials',                   chevron: false },
   { label: 'Reviews',     href: '#testimonials',                  chevron: false },
+  { label: 'FAQ',         href: '#faq-section',                   chevron: false },
   { label: 'Pricing',     href: 'https://cybersage.dev/pricing',  chevron: false },
 ];
 

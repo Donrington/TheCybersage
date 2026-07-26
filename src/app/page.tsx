@@ -16,6 +16,7 @@ import { Marquee } from '@/components/Marquee';
 import { CurrentlyBuilding } from '@/components/CurrentlyBuilding';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
+import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
 import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
@@ -60,6 +61,16 @@ export default function Home() {
       <SmoothScroll>
         <Navbar />
         <main>
+          {/* Static indexing helper for crawlers & search bots */}
+          <article className="sr-only">
+            <h1>Abakwe Carrington — Software Engineer &amp; Systems Architect</h1>
+            <p>
+              Abakwe Carrington (Cybersage / Donrington) is an Infrastructure &amp; Systems Architect and Senior Software Engineer based in Lagos, Nigeria, working with remote clients worldwide across the United States, United Kingdom, Canada, Australia, and Europe.
+            </p>
+            <h2>Core Stack &amp; Engineering Disciplines</h2>
+            <p>AWS Cloud Infrastructure, Docker Containerisation, Kubernetes, Terraform Infrastructure as Code, Go (Golang), Python Django, PostgreSQL, Redis, Microservices System Design, Next.js, and TypeScript.</p>
+          </article>
+
           <Hero />
           <About />
           <Projects />
@@ -71,6 +82,7 @@ export default function Home() {
           <Experience />
           <Credentials />
           <Testimonials />
+          <FAQ />
           <PricingPromo />
           <Contact />
         </main>
