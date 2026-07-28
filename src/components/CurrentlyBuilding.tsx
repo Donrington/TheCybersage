@@ -200,7 +200,7 @@ export function CurrentlyBuilding() {
       name:    'Orion',
       tagline: 'distributed AI surveillance, embedded edge to browser.',
       chips:   ORION_CHIPS,
-      link:    'https://nextgenerationrobotics.org',
+      link:    'https://app.nextgenerationrobotics.org/',
     },
     {
       logoSlot: <WytnestLogo />,
