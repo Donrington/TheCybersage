@@ -67,22 +67,34 @@ export function Hero() {
       }, '-=500');
     }
 
-    // ── GSAP: scroll shrink name ───────────────────────────────────────────────
+    // ── GSAP: pin hero, shrink/fade name, release into About ────────────────────
+    // Desktop only — pinning eats an extra viewport-height of scroll, which reads
+    // as intentional dwell time on desktop but as scroll-lock jank on mobile, so
+    // mobile keeps the lighter plain-scrub version (matches Experience.tsx, which
+    // draws the same line for its own scroll-jacking horizontal-scroll section).
     const ctx = gsap.context(() => {
-      if (nameRef.current) {
-        gsap.to(nameRef.current, {
-          scale: 0.92,
-          opacity: 0.4,
-          y: -40,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1.5,
-          },
-        });
-      }
+      if (!nameRef.current || !containerRef.current) return;
+      const isDesktop = window.innerWidth >= 1024;
+
+      gsap.to(nameRef.current, {
+        scale: 0.92,
+        opacity: 0.4,
+        y: -40,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: isDesktop ? '+=100%' : 'bottom top',
+          scrub: 1.5,
+          pin: isDesktop,
+          pinSpacing: isDesktop,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          // Settles fully pinned or fully released rather than leaving the hero
+          // stranded mid-shrink if the user stops scrolling mid-transition.
+          snap: isDesktop ? { snapTo: 1, duration: 0.4, ease: 'power1.inOut' } : undefined,
+        },
+      });
     }, containerRef);
 
     // ── Hover replay ───────────────────────────────────────────────────────────
