@@ -120,9 +120,20 @@ export function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen bg-white overflow-hidden flex flex-col"
-      style={{ isolation: 'isolate' }}
+      className="relative w-full min-h-screen overflow-hidden flex"
+      style={{
+        isolation: 'isolate',
+        background: '#F5F5F3', // --color-off token
+        padding: 'clamp(4px, 0.6vw, 10px)',
+      }}
     >
+      {/* Rounded, clipped card — the section's padding above reveals the page's
+          off-white frame around it, so the pinned hero reads as a card holding
+          still rather than a flat surface hard-cutting to the next section. */}
+      <div
+        className="relative flex-1 w-full overflow-hidden"
+        style={{ borderRadius: 'clamp(16px, 2vw, 28px)' }}
+      >
       {/* Video background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <video
@@ -309,6 +320,7 @@ export function Hero() {
         >
           Systems · Cloud · Distributed · Remote
         </span>
+      </div>
       </div>
     </section>
   );
