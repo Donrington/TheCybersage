@@ -84,10 +84,22 @@ export function Hero() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: isDesktop ? '+=100%' : 'bottom top',
+          // Shorter than a full extra viewport height on purpose: with
+          // pinSpacing:false (below), About's own top collapses into place the
+          // instant the pin starts, so whatever scroll distance the pin holds for
+          // is scroll distance the user never sees the *start* of About cleanly —
+          // it's consumed peeking through the frame gap instead. A long pin here
+          // would mean surfacing well into About's own content the moment it
+          // releases. This is a starting point, not a precisely tuned number —
+          // worth adjusting by feel once you've seen it scroll live.
+          end: isDesktop ? '+=50%' : 'bottom top',
           scrub: 1.5,
           pin: isDesktop,
-          pinSpacing: isDesktop,
+          // false, not the default true: no reserved spacer, so About isn't held
+          // back behind a placeholder — it moves into place immediately and is
+          // occluded by the pinned card except where the transparent frame gap
+          // lets it show through, until the pin releases and it takes over fully.
+          pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           // Settles fully pinned or fully released rather than leaving the hero
@@ -123,15 +135,20 @@ export function Hero() {
       className="relative w-full min-h-screen overflow-hidden flex"
       style={{
         isolation: 'isolate',
-        background: '#F5F5F3', // --color-off token
+        zIndex: 2, // above About's static z-index:auto, so the pinned card occludes it
         padding: 'clamp(4px, 0.6vw, 10px)',
+        // Transparent, not filled — the gap has to be see-through for the
+        // pin-overlap trick below to reveal About underneath it, rather than
+        // blocking it with an opaque tint.
       }}
     >
-      {/* Rounded, clipped card — the section's padding above reveals the page's
-          off-white frame around it, so the pinned hero reads as a card holding
-          still rather than a flat surface hard-cutting to the next section. */}
+      {/* Rounded, clipped card — the section's own background is transparent, so
+          the padding above reveals whatever's actually behind it (the page at
+          rest, About mid-scroll). That's what makes the pin read as a card
+          holding still while the next section slides up behind it, rather than
+          a flat surface hard-cutting into it. */}
       <div
-        className="relative flex-1 w-full overflow-hidden"
+        className="relative flex-1 w-full overflow-hidden flex flex-col"
         style={{ borderRadius: 'clamp(16px, 2vw, 28px)' }}
       >
       {/* Video background */}
@@ -161,7 +178,9 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col flex-1 w-full pl-[clamp(1rem,4vw,5rem)] pr-[clamp(1rem,8vw,14rem)]">
+      {/* Right padding is symmetric with the left on mobile — the wide desktop-only
+          gap exists to dodge the side label, which is hidden below lg */}
+      <div className="relative z-10 flex flex-col flex-1 w-full pl-[clamp(1rem,4vw,5rem)] pr-[clamp(1rem,4vw,5rem)] lg:pr-[clamp(1rem,8vw,14rem)]">
 
         {/* Top bar nav spacer */}
         <div className="pt-22" />
@@ -169,9 +188,9 @@ export function Hero() {
         {/* Main content — grows to fill */}
         <div className="flex flex-col flex-1 justify-end pb-[clamp(2.5rem,6vw,6rem)]">
 
-          {/* Status pill */}
+          {/* Status pill — wraps on narrow phones instead of clipping/overflowing */}
           <motion.div
-            className="flex items-center gap-3 mb-[clamp(1.5rem,3vw,3rem)]"
+            className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-[clamp(1.5rem,3vw,3rem)]"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 1.4, ease: EASE }}
