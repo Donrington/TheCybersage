@@ -28,6 +28,7 @@ function runScramble(el: HTMLElement, duration = 900, delay = 0) {
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
@@ -67,39 +68,35 @@ export function Hero() {
       }, '-=500');
     }
 
-    // ── GSAP: pin hero, shrink/fade name, release into About ────────────────────
+    // ── GSAP: pin hero, shrink/dim the whole card, release into About ───────────
     // Desktop only — pinning eats an extra viewport-height of scroll, which reads
     // as intentional dwell time on desktop but as scroll-lock jank on mobile, so
     // mobile keeps the lighter plain-scrub version (matches Experience.tsx, which
     // draws the same line for its own scroll-jacking horizontal-scroll section).
+    // Targets the card (video + gradient + all text, as one unit) rather than
+    // just the name — everything shrinks/dims/lifts together as one block.
     const ctx = gsap.context(() => {
-      if (!nameRef.current || !containerRef.current) return;
+      if (!cardRef.current || !containerRef.current) return;
       const isDesktop = window.innerWidth >= 1024;
 
-      gsap.to(nameRef.current, {
+      gsap.to(cardRef.current, {
         scale: 0.92,
         opacity: 0.4,
         y: -40,
+        transformOrigin: 'center center',
         ease: 'none',
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          // Shorter than a full extra viewport height on purpose: with
-          // pinSpacing:false (below), About's own top collapses into place the
-          // instant the pin starts, so whatever scroll distance the pin holds for
-          // is scroll distance the user never sees the *start* of About cleanly —
-          // it's consumed peeking through the frame gap instead. A long pin here
-          // would mean surfacing well into About's own content the moment it
-          // releases. This is a starting point, not a precisely tuned number —
-          // worth adjusting by feel once you've seen it scroll live.
           end: isDesktop ? '+=50%' : 'bottom top',
           scrub: 1.5,
           pin: isDesktop,
-          // false, not the default true: no reserved spacer, so About isn't held
-          // back behind a placeholder — it moves into place immediately and is
-          // occluded by the pinned card except where the transparent frame gap
-          // lets it show through, until the pin releases and it takes over fully.
-          pinSpacing: false,
+          // true (the default): reserves proper scroll space for the pin, so
+          // About is fully pushed out of the viewport until the pin actually
+          // releases — no overlap with the pinned card, ever. (Tried false for
+          // a peek-through-the-frame effect; it visibly collided with About's
+          // headline on desktop, not worth the risk.)
+          pinSpacing: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           // Settles fully pinned or fully released rather than leaving the hero
@@ -135,19 +132,18 @@ export function Hero() {
       className="relative w-full min-h-screen overflow-hidden flex"
       style={{
         isolation: 'isolate',
-        zIndex: 2, // above About's static z-index:auto, so the pinned card occludes it
+        zIndex: 2,
         padding: 'clamp(4px, 0.6vw, 10px)',
-        // Transparent, not filled — the gap has to be see-through for the
-        // pin-overlap trick below to reveal About underneath it, rather than
-        // blocking it with an opaque tint.
+        // Transparent — the padding reveals the page behind it (just background
+        // at rest; About never reaches it, since pinSpacing:true below keeps
+        // About fully offscreen for the whole pin duration).
       }}
     >
-      {/* Rounded, clipped card — the section's own background is transparent, so
-          the padding above reveals whatever's actually behind it (the page at
-          rest, About mid-scroll). That's what makes the pin read as a card
-          holding still while the next section slides up behind it, rather than
-          a flat surface hard-cutting into it. */}
+      {/* Rounded, clipped card — the section's small padding shows around it as
+          a light frame, so the pin reads as a card holding still rather than a
+          flat surface hard-cutting into the next section. */}
       <div
+        ref={cardRef}
         className="relative flex-1 w-full overflow-hidden flex flex-col"
         style={{ borderRadius: 'clamp(16px, 2vw, 28px)' }}
       >
@@ -308,27 +304,6 @@ export function Hero() {
             </div>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5, duration: 0.8 }}
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-px h-12 bg-linear-to-b from-white/70 to-transparent"
-            style={{ mixBlendMode: 'difference' }}
-          />
-          <span
-            className="text-[0.55rem] tracking-[0.22em] uppercase"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
-          >
-            Scroll
-          </span>
-        </motion.div>
       </div>
 
       {/* Side label — desktop */}
