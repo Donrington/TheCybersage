@@ -7,6 +7,7 @@ import { SmoothScroll } from '@/lib/SmoothScroll';
 import { PageLoader } from '@/components/PageLoader';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
+import { TechTicker } from '@/components/TechTicker';
 import { About } from '@/components/About';
 import { Projects } from '@/components/Projects';
 import { Services } from '@/components/Services';
@@ -21,6 +22,7 @@ import { PricingPromo } from '@/components/PricingPromo';
 import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
 import { AIAssistant } from '@/components/AIAssistant';
+import { StudioMarquee } from '@/components/StudioMarquee';
 import { CustomCursor } from '@/components/CustomCursor';
 
 function BackToTop() {
@@ -72,6 +74,7 @@ export default function Home() {
           </article>
 
           <Hero />
+          <TechTicker />
           <About />
           <Projects />
           <Marquee />
@@ -84,6 +87,7 @@ export default function Home() {
           <Testimonials />
           <FAQ />
           <PricingPromo />
+          <StudioMarquee />
           <Contact />
         </main>
         <BackToTop />

@@ -11,7 +11,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@_!∆';
 const EASE = [0.22, 1, 0.36, 1] as const;
-const STACK_TAGS = ['AWS', 'Docker', 'Go', 'PostgreSQL', 'Redis', 'Python', 'javascript', 'TypeScript'];
 
 function runScramble(el: HTMLElement, duration = 900, delay = 0) {
   animate(el, {
@@ -246,29 +245,8 @@ export function Hero() {
             Infrastructure &amp; Systems Architect designing distributed platforms for regulated industries — from embedded edge to cloud.
           </p>
 
-          {/* Bottom row: stack + CTA */}
-          <div className="mt-[clamp(2rem,4vw,4.5rem)] flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
-
-            {/* Stack tags — staggered clip-path reveal */}
-            <div className="flex flex-wrap gap-2">
-              {STACK_TAGS.map((tag, i) => (
-                <motion.span
-                  key={tag}
-                  className="border px-3 py-1 text-[0.65rem] font-medium tracking-[0.12em] uppercase"
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    color: '#D9D9D9',
-                    borderColor: '#D9D9D9',
-                    mixBlendMode: 'difference',
-                  }}
-                  initial={{ opacity: 0, y: 10, clipPath: 'inset(100% 0 0 0)' }}
-                  animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' }}
-                  transition={{ duration: 0.5, delay: 1.6 + i * 0.07, ease: EASE }}
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
+          {/* Bottom row: CTA (stack pills now live in the TechTicker below the hero) */}
+          <div className="mt-[clamp(2rem,4vw,4.5rem)] flex flex-col sm:flex-row items-start sm:items-end justify-end gap-8">
 
             {/* CTAs */}
             <div className="flex items-center gap-4 shrink-0">

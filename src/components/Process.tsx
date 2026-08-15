@@ -1,10 +1,20 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { ScrollRevealText, DESC_FONT } from './ScrollRevealText';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Hover accent. The site is a strict monochrome system, so the "shift to red"
+ * from the reference reads as pure white here — on a #0A0A0A section that is
+ * the strongest accent available without importing a colour the brand doesn't
+ * own. Swap this one constant for e.g. '#E5484D' if you want literal red.
+ */
+const ACCENT = '#FFFFFF';
 
 const STEPS = [
   {
@@ -13,6 +23,7 @@ const STEPS = [
     duration: 'Days 1–3',
     body: 'We start with the problem, not the tech. I map your goals, users, and constraints, then turn them into a scoped plan with clear deliverables — so you know exactly what you’re getting and when.',
     tags: ['Goals', 'Scope', 'Timeline'],
+    thumb: '/projects/anoc.png',
   },
   {
     index: '02',
@@ -20,6 +31,7 @@ const STEPS = [
     duration: 'Week 1',
     body: 'I design the system before writing a line of production code — data models, API contracts, infrastructure, and security boundaries. The result is software that scales cleanly instead of collapsing under its own weight.',
     tags: ['System Design', 'Data Models', 'Security'],
+    thumb: '/projects/nextgen.png',
   },
   {
     index: '03',
@@ -27,6 +39,7 @@ const STEPS = [
     duration: 'Core sprint',
     body: 'Tight, visible iterations. You see working software early and often, with weekly check-ins and a live staging URL. Momentum over perfection — high-impact features first, polished relentlessly.',
     tags: ['Iterative', 'Weekly Demos', 'Staging'],
+    thumb: '/projects/wytnest_hero.png',
   },
   {
     index: '04',
@@ -34,12 +47,24 @@ const STEPS = [
     duration: 'Go-live +',
     body: 'Zero-downtime deployment, performance tuning, and a hand-off you can actually maintain. I stay on after launch to monitor, fix, and extend — your platform keeps getting better, not stale.',
     tags: ['Deploy', 'Monitoring', 'Handover'],
+    thumb: '/projects/colhcs_dashbaord.png',
   },
 ];
 
-function Step({ step, i }: { step: typeof STEPS[0]; i: number }) {
+function Step({
+  step,
+  i,
+  onEnter,
+  onLeave,
+}: {
+  step: typeof STEPS[0];
+  i: number;
+  onEnter: (thumb: string, e: React.MouseEvent) => void;
+  onLeave: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-12%' });
+  const [hover, setHover] = useState(false);
 
   return (
     <motion.div
@@ -47,7 +72,11 @@ function Step({ step, i }: { step: typeof STEPS[0]; i: number }) {
       initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: i * 0.06, ease: EASE }}
-      className="relative grid grid-cols-1 md:grid-cols-[auto_1fr] gap-5 md:gap-10 py-[clamp(2rem,4vw,3.5rem)] border-b border-white/8 group"
+      // 'view' turns the custom cursor into the filled preview puck
+      data-cursor="view"
+      onMouseEnter={(e) => { setHover(true); onEnter(step.thumb, e); }}
+      onMouseLeave={() => { setHover(false); onLeave(); }}
+      className="relative grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-5 md:gap-10 py-[clamp(2rem,4vw,3.5rem)] border-b border-white/8 group"
     >
       {/* node + index */}
       <div className="flex items-center md:items-start gap-4 md:w-44">
@@ -61,8 +90,14 @@ function Step({ step, i }: { step: typeof STEPS[0]; i: number }) {
         </span>
         <div>
           <span
-            className="block font-black text-white/85 leading-none tabular-nums"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 900, fontSize: 'clamp(2rem,4vw,3.2rem)' }}
+            className="block font-black leading-none tabular-nums"
+            style={{
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(2rem,4vw,3.2rem)',
+              color: hover ? ACCENT : 'rgba(255,255,255,0.32)',
+              transition: 'color 0.35s ease',
+            }}
           >
             {step.index}
           </span>
@@ -78,17 +113,22 @@ function Step({ step, i }: { step: typeof STEPS[0]; i: number }) {
       {/* content */}
       <div>
         <h3
-          className="font-black text-white tracking-[-0.03em] leading-none mb-4 group-hover:text-white transition-colors"
+          className="font-black text-white tracking-[-0.03em] leading-none mb-4"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: 'clamp(1.6rem,4vw,3rem)' }}
         >
           {step.title}
         </h3>
-        <p
-          className="text-white/50 leading-relaxed max-w-2xl mb-6"
-          style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.95rem,1.4vw,1.1rem)' }}
+
+        <ScrollRevealText
+          className="leading-relaxed max-w-2xl mb-6"
+          style={{ fontSize: 'clamp(0.95rem,1.4vw,1.1rem)' }}
+          rgb="255,255,255"
+          from={0.14}
+          to={0.72}
         >
           {step.body}
-        </p>
+        </ScrollRevealText>
+
         <div className="flex flex-wrap gap-2">
           {step.tags.map((tag) => (
             <span
@@ -101,6 +141,19 @@ function Step({ step, i }: { step: typeof STEPS[0]; i: number }) {
           ))}
         </div>
       </div>
+
+      {/* trailing arrow — shifts to accent with the number */}
+      <div className="hidden md:flex items-center shrink-0 pr-1">
+        <ArrowUpRight
+          size={26}
+          strokeWidth={1.4}
+          style={{
+            color: hover ? ACCENT : 'rgba(255,255,255,0.16)',
+            transform: hover ? 'translate(3px,-3px)' : 'none',
+            transition: 'color 0.35s ease, transform 0.35s ease',
+          }}
+        />
+      </div>
     </motion.div>
   );
 }
@@ -109,6 +162,47 @@ export function Process() {
   const sectionRef = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
 
+  // ── Cursor-tracked preview thumbnail ────────────────────────────────────────
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const [thumb, setThumb] = useState<string | null>(null);
+  const target = useRef({ x: 0, y: 0 });
+  const pos = useRef({ x: 0, y: 0 });
+  const rafRef = useRef(0);
+
+  useEffect(() => {
+    // Pointer-follow is meaningless on touch, and the thumbnail would just sit
+    // stranded wherever the last tap landed.
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
+    const onMove = (e: MouseEvent) => { target.current = { x: e.clientX, y: e.clientY }; };
+    const tick = () => {
+      // Lerp rather than snap so the card trails the pointer slightly — that lag
+      // is what makes it feel attached rather than glued.
+      pos.current.x += (target.current.x - pos.current.x) * 0.14;
+      pos.current.y += (target.current.y - pos.current.y) * 0.14;
+      if (thumbRef.current) {
+        thumbRef.current.style.transform =
+          `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%)`;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  const handleEnter = (t: string, e: React.MouseEvent) => {
+    // Snap to the pointer on first show, otherwise the card flies in from
+    // wherever it was last parked.
+    pos.current = { x: e.clientX, y: e.clientY };
+    target.current = { x: e.clientX, y: e.clientY };
+    setThumb(t);
+  };
+
   return (
     <section
       ref={sectionRef}
@@ -116,6 +210,37 @@ export function Process() {
       data-theme="dark"
       className="w-full bg-[#0A0A0A] border-t border-white/6 relative"
     >
+      {/* Floating preview — fixed to the viewport, follows the pointer */}
+      <div
+        ref={thumbRef}
+        aria-hidden
+        className="hidden md:block pointer-events-none"
+        style={{ position: 'fixed', top: 0, left: 0, zIndex: 40, willChange: 'transform' }}
+      >
+        <AnimatePresence>
+          {thumb && (
+            <motion.div
+              key={thumb}
+              initial={{ opacity: 0, scale: 0.86 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.26, ease: EASE }}
+              style={{
+                position: 'relative',
+                width: 'clamp(210px, 20vw, 300px)',
+                aspectRatio: '16 / 10',
+                borderRadius: 12,
+                overflow: 'hidden',
+                border: '1px solid rgba(255,255,255,0.14)',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.55)',
+              }}
+            >
+              <Image src={thumb} alt="" fill sizes="300px" quality={60} className="object-cover" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       <div className="max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(5rem,10vw,11rem)]">
 
         {/* Section label */}
@@ -173,22 +298,27 @@ export function Process() {
             </span>
           </h2>
 
-          <motion.p
-            className="text-white/45 leading-relaxed"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(1rem,1.4vw,1.2rem)' }}
-            initial={{ opacity: 0, y: 16 }}
-            animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+          <ScrollRevealText
+            className="leading-relaxed"
+            style={{ fontSize: 'clamp(1rem,1.4vw,1.2rem)' }}
+            rgb="255,255,255"
+            from={0.14}
+            to={0.7}
           >
-            Hiring an architect shouldn’t feel like a gamble. Here’s the exact, predictable path
-            from first conversation to a launched, maintainable product — no disappearing acts.
-          </motion.p>
+            Hiring an architect shouldn’t feel like a gamble. Here’s the exact, predictable path from first conversation to a launched, maintainable product — no disappearing acts.
+          </ScrollRevealText>
         </div>
 
         {/* Steps */}
         <div className="border-t border-white/8">
           {STEPS.map((step, i) => (
-            <Step key={step.index} step={step} i={i} />
+            <Step
+              key={step.index}
+              step={step}
+              i={i}
+              onEnter={handleEnter}
+              onLeave={() => setThumb(null)}
+            />
           ))}
         </div>
 
@@ -206,10 +336,10 @@ export function Process() {
             </span>
             <p
               className="text-white/70"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.9rem,1.4vw,1.15rem)' }}
+              style={{ fontFamily: DESC_FONT, fontWeight: 700, fontSize: 'clamp(0.9rem,1.4vw,1.15rem)' }}
             >
               Currently accepting new projects —{' '}
-              <span style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', color: 'rgba(255,255,255,0.55)' }}>
+              <span style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,0.55)' }}>
                 limited slots this quarter.
               </span>
             </p>

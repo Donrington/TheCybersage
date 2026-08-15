@@ -5,6 +5,7 @@ import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
+import { ScrollRevealText } from './ScrollRevealText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -266,30 +267,24 @@ export function About() {
               transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
               className="space-y-5"
             >
-              <p
-                className="text-black/55 leading-relaxed"
-                style={{
-                  fontFamily: 'Satoshi, system-ui, sans-serif',
-                  fontWeight: 400,
-                  fontSize:   'clamp(1.05rem, 1.5vw, 1.3rem)',
-                }}
+              <ScrollRevealText
+                className="leading-relaxed"
+                style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.3rem)' }}
+                rgb="10,10,10"
+                from={0.14}
+                to={0.72}
               >
-                A software engineer based in Lagos, Nigeria — 5+ years designing and running
-                production systems for global clients: multi-tenant compliance platforms, HIPAA
-                medical portals, high-traffic marketplaces. I own the system end-to-end:
-                architecture, infrastructure, backend, delivery.
-              </p>
-              <p
-                className="text-black/40 leading-relaxed"
-                style={{
-                  fontFamily: 'Satoshi, system-ui, sans-serif',
-                  fontWeight: 400,
-                  fontSize:   'clamp(1rem, 1.3vw, 1.15rem)',
-                }}
+                A software engineer based in Lagos, Nigeria — 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery.
+              </ScrollRevealText>
+              <ScrollRevealText
+                className="leading-relaxed"
+                style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
+                rgb="10,10,10"
+                from={0.12}
+                to={0.55}
               >
-                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for
-                when the system needs a face. I care about the whole system — not just the feature.
-              </p>
+                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system — not just the feature.
+              </ScrollRevealText>
 
               <motion.div
                 className="flex gap-4 pt-2"
