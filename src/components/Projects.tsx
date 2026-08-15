@@ -197,6 +197,56 @@ const PROJECTS = [
     year: '2026',
     link: 'https://circlesoflifehcs.com',
   },
+  {
+    id: 'terryonfagan',
+    name: 'Terryon Fagan',
+    category: 'Home Services',
+    tagline: 'Marketing site for a Gloucester, Massachusetts vinyl flooring specialist. Arch-clipped media hero, bento floor range with detail modals, and a hardened contact route — CSRF tokens, rate limiting, Resend delivery.',
+    stack: ['Next.js', 'Tailwind', 'Framer Motion', 'Resend'],
+    image: '/projects/terryonfagan.png',
+    year: '2026',
+    link: 'https://terryonfaganflooring.com',
+  },
+  {
+    id: 'judygolden',
+    name: 'Judy Golden Tiling',
+    category: 'Home Services',
+    tagline: 'Marketing site for a Gulfport, Mississippi tiling company. Hard-edged brand system with a single gold accent, LocalBusiness structured data, and a CSRF-protected contact pipeline that degrades gracefully without keys.',
+    stack: ['Next.js', 'Tailwind', 'Framer Motion', 'Resend'],
+    image: '/projects/judygolden.png',
+    year: '2026',
+    link: 'https://judygoldentiling.com',
+  },
+  {
+    id: 'wynscollections',
+    name: 'Wyns Collections',
+    category: 'Ecommerce Platform',
+    tagline: 'Storefront and back office for a Port Harcourt fashion accessories label. Paystack checkout, Supabase Postgres with row-level security across ten migrations, admin analytics, and order lifecycle management.',
+    stack: ['Next.js', 'Supabase', 'Paystack', 'Recharts'],
+    image: '/projects/wynscollections.png',
+    year: '2026',
+    link: 'https://wyns-collections.vercel.app',
+  },
+  {
+    id: 'theblacke',
+    name: 'The Black-E',
+    category: 'Arts & Culture',
+    tagline: 'Ground-up redesign for Britain’s first community arts centre, in Liverpool since 1967. Dark editorial build with GSAP ScrollTrigger sequences and Lenis smooth scroll, replacing a legacy WordPress stack.',
+    stack: ['Next.js', 'GSAP', 'Lenis', 'Tailwind'],
+    image: '/projects/THE_BLACK-E.png',
+    year: '2026',
+    link: 'https://theblacke.vercel.app',
+  },
+  {
+    id: 'ver',
+    name: 'VER',
+    category: 'Community Platform',
+    tagline: 'Share more. Waste less. Give freely. A community sharing platform connecting givers with receivers — Supabase auth and row-level security, Cloudinary image pipeline, TanStack Query data layer.',
+    stack: ['React', 'Supabase', 'Cloudinary', 'TanStack Query'],
+    image: '/projects/VER.png',
+    year: '2026',
+    link: 'https://ver-share-circle.vercel.app',
+  },
 ] as const;
 
 type Project = (typeof PROJECTS)[number];
@@ -252,8 +302,15 @@ function getCubeTransform(progress: number): { rx: number; ry: number } {
   return { rx: a.rx + (b.rx - a.rx) * f, ry: a.ry + (b.ry - a.ry) * f };
 }
 
+// Must use the SAME segmentation as getCubeTransform above (SCENE_COUNT - 1
+// segments, not SCENE_COUNT). The two previously disagreed, which left the text
+// card describing a different project than the one shown on the cube's
+// front-facing image across ~24% of the scroll range — the "mismatched cards"
+// bug. Rounding (rather than flooring) swaps the card at the rotation midpoint,
+// which is exactly when the next face turns to camera.
 function sceneFromProgress(progress: number): number {
-  return Math.min(SCENE_COUNT - 1, Math.floor(progress * SCENE_COUNT));
+  const t = progress * (SCENE_COUNT - 1);
+  return Math.max(0, Math.min(SCENE_COUNT - 1, Math.round(t)));
 }
 
 // Compute which project image belongs on each face, pre-loading nearby stops
@@ -518,6 +575,151 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
   );
 }
 
+// ─── Mobile card ──────────────────────────────────────────────────────────────
+// Phones get a plain, natively-scrolling list instead of the desktop cube. The
+// cube costs SCENE_COUNT × 100vh of scroll-jacked height (21 screen-heights to
+// get past this one section) and runs heavy 3-D transforms — miserable on touch.
+function MobileProjectCard({ project, index }: { project: Project; index: number }) {
+  const num = String(index + 1).padStart(2, '0');
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        borderRadius: '14px',
+        overflow: 'hidden',
+        background: 'rgba(255,255,255,0.022)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      {/* Media */}
+      <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden' }}>
+        <Image
+          src={project.image}
+          alt={project.name}
+          fill
+          className="object-cover"
+          quality={72}
+          sizes="100vw"
+          loading="lazy"
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.55) 38%, rgba(10,10,10,0.10) 100%)',
+          }}
+        />
+        <span
+          style={{
+            position: 'absolute',
+            top: '0.8rem',
+            left: '0.95rem',
+            fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
+            fontSize: '0.55rem',
+            letterSpacing: '0.2em',
+            color: 'rgba(255,255,255,0.55)',
+          }}
+        >
+          {num}
+        </span>
+
+        <div style={{ position: 'absolute', left: '0.95rem', right: '0.95rem', bottom: '0.8rem' }}>
+          <p
+            style={{
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontSize: '0.5rem',
+              letterSpacing: '0.24em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.5)',
+              marginBottom: '0.4rem',
+            }}
+          >
+            {project.category}&nbsp;·&nbsp;{project.year}
+          </p>
+          <h3
+            style={{
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontWeight: 900,
+              fontSize: 'clamp(1.5rem, 6.5vw, 2rem)',
+              letterSpacing: '-0.04em',
+              lineHeight: 0.95,
+              color: 'rgba(255,255,255,0.96)',
+            }}
+          >
+            {project.name}
+          </h3>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: '1rem 1.1rem 1.15rem' }}>
+        <p
+          style={{
+            fontFamily: 'Satoshi, system-ui, sans-serif',
+            fontSize: '0.78rem',
+            lineHeight: 1.65,
+            color: 'rgba(255,255,255,0.42)',
+            marginBottom: '0.9rem',
+          }}
+        >
+          {project.tagline}
+        </p>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1rem' }}>
+          {project.stack.map((t) => (
+            <span
+              key={t}
+              style={{
+                border: '1px solid rgba(255,255,255,0.12)',
+                color: 'rgba(255,255,255,0.35)',
+                fontFamily: 'Satoshi, system-ui, sans-serif',
+                fontSize: '0.5rem',
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                padding: '0.2rem 0.5rem',
+                borderRadius: '2px',
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {'link' in project && project.link && (
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+              // 44px min tap target — the old layout had ~28px hit areas on mobile
+              minHeight: '44px',
+              padding: '0 1rem',
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: '999px',
+              color: 'rgba(255,255,255,0.75)',
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontSize: '0.55rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+            }}
+          >
+            View Project
+            <ArrowUpRight size={11} />
+          </a>
+        )}
+      </div>
+    </motion.article>
+  );
+}
+
 // ─── Main component ────────────────────────────────────────────────────────────
 export function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -536,12 +738,18 @@ export function Projects() {
 
   useEffect(() => {
     if (!sectionRef.current || !cubeRef.current) return;
+    // Desktop only — mobile renders a plain scrolling list, so there is no cube
+    // to drive and no scroll-jacked height to scrub against.
+    if (window.innerWidth < 768) return;
 
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: true,
+      // A little smoothing instead of `true` (=0): catches up over ~0.35s so a
+      // flung scroll settles into place rather than snapping through scenes.
+      scrub: 0.35,
+      invalidateOnRefresh: true,
       onUpdate(self) {
         const p = self.progress;
 
@@ -590,10 +798,24 @@ export function Projects() {
       ref={sectionRef}
       id="work"
       data-theme="dark"
-      style={{ height: `${SCENE_COUNT * 100}vh`, background: '#0A0A0A', position: 'relative' }}
+      className="projects-section"
+      // Height lives in CSS (see globals.css): the tall scroll-jacked track only
+      // applies at md+. Doing it here in JS would need a post-mount media check,
+      // which flashes the wrong layout on first paint / risks hydration mismatch.
+      style={
+        {
+          '--scene-vh': `${SCENE_COUNT * 100}vh`,
+          background: '#0A0A0A',
+          position: 'relative',
+        } as React.CSSProperties
+      }
     >
-      {/* ── Sticky viewport ─────────────────────────────────────────────────── */}
-      <div data-cursor="view" style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+      {/* ── Sticky viewport — desktop only ──────────────────────────────────── */}
+      <div
+        data-cursor="view"
+        className="hidden md:block"
+        style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}
+      >
 
         {/* ── Background layer — no filter:blur so preserve-3d cube stays sharp ── */}
         <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
@@ -713,9 +935,8 @@ export function Projects() {
           ))}
         </div>
 
-        {/* ── 3-D cube + mobile card ──────────────────────────────────────── */}
+        {/* ── 3-D cube ─────────────────────────────────────────────────────── */}
         <div
-          className={`projects-cube-scene${activeScene > 0 ? ' scene-active' : ''}`}
           style={{
             position: 'absolute',
             inset: 0,
@@ -798,31 +1019,6 @@ export function Projects() {
             })}
           </div>
 
-          {/* Mobile card — directly below cube, hidden on md+ */}
-          <div
-            className="md:hidden"
-            style={{
-              marginTop: '0.75rem',
-              width: 'min(72vw, 700px)',
-              maxWidth: 'calc(100% - 2rem)',
-              flexShrink: 0,
-              pointerEvents: 'auto',
-            }}
-          >
-            <AnimatePresence mode="wait">
-              {activeScene > 0 && project && (
-                <motion.div
-                  key={`mob-${activeScene}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.32 }}
-                >
-                  <ProjectCard project={project} align="left" />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </div>
 
         {/* ── Intro card — desktop (md+) fades out on scroll ───────────────── */}
@@ -890,169 +1086,68 @@ export function Projects() {
           )}
         </AnimatePresence>
 
-        {/* ── Intro title — mobile: slides from center → top as user scrolls ── */}
-        <div
-          className="md:hidden absolute left-1/2 z-10 pointer-events-none"
-          style={{
-            top: activeScene === 0 ? '50%' : '3.5rem',
-            transform: `translateX(-50%) translateY(${activeScene === 0 ? '-50%' : '0'})`,
-            transition: 'top 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)',
-            textAlign: 'center',
-            maxWidth: 'calc(100vw - 4rem)',
-            width: 'max-content',
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {activeScene === 0 ? (
-              <motion.div
-                key="mob-full"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.22 }}
-              >
-                <p
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.52rem',
-                    letterSpacing: '0.28em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.2)',
-                    marginBottom: '1.25rem',
-                  }}
-                >
-                  Selected Work&nbsp;·&nbsp;{PROJECTS.length} Projects
-                </p>
-                <h2
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontWeight: 900,
-                    fontSize: 'clamp(3rem, 9vw, 5.5rem)',
-                    letterSpacing: '-0.05em',
-                    lineHeight: 0.88,
-                    color: 'rgba(255,255,255,0.92)',
-                  }}
-                >
-                  Selected{' '}
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-instrument), Georgia, serif',
-                      fontStyle: 'italic',
-                      fontWeight: 400,
-                      color: 'rgba(255,255,255,0.18)',
-                    }}
-                  >
-                    Work
-                  </span>
-                </h2>
-                <p
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.6rem',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.15)',
-                    marginTop: '1.75rem',
-                  }}
-                >
-                  Scroll to explore
-                </p>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="mob-compact"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.42rem',
-                    letterSpacing: '0.25em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.18)',
-                    marginBottom: '0.3rem',
-                  }}
-                >
-                  02 / Work
-                </p>
-                <h2
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontWeight: 900,
-                    fontSize: 'clamp(2rem, 8vw, 3rem)',
-                    letterSpacing: '-0.04em',
-                    lineHeight: 1,
-                    color: 'rgba(255,255,255,0.5)',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Selected{' '}
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-instrument), Georgia, serif',
-                      fontStyle: 'italic',
-                      fontWeight: 400,
-                    }}
-                  >
-                    Work
-                  </span>
-                </h2>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
         {/* ── Project cards — desktop left slot ─────────────────────────────── */}
+        {/* No `mode="wait"`: it holds the incoming card until the outgoing one
+            finishes its 0.38s exit, so a fast scroll queues transitions faster
+            than they can drain and the slot stalls on a stale (or blank) card
+            until the section is fully re-entered. Default sync mode lets them
+            overlap; the grid stack below keeps overlapping cards from
+            displacing each other instead of relying on the queue. */}
         <div
-          className="absolute hidden md:block z-10"
+          className="absolute hidden md:grid z-10"
           style={{
             left: 'clamp(4rem, 7vw, 7rem)',
-            top: '50%',
-            transform: 'translateY(-50%)',
+            top: 0,
+            bottom: 0,
+            alignContent: 'center',
             width: 'min(21rem, 28%)',
           }}
         >
-          <AnimatePresence mode="wait">
-            {!isRight && activeScene > 0 && project && (
-              <motion.div
-                key={`left-${activeScene}`}
-                initial={{ opacity: 0, x: -14 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -14 }}
-                transition={{ duration: 0.38 }}
-              >
-                <ProjectCard project={project} align="left" />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div style={{ display: 'grid' }}>
+            <AnimatePresence>
+              {!isRight && activeScene > 0 && project && (
+                <motion.div
+                  key={`left-${activeScene}`}
+                  style={{ gridArea: '1 / 1' }}
+                  initial={{ opacity: 0, x: -14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -14 }}
+                  transition={{ duration: 0.38 }}
+                >
+                  <ProjectCard project={project} align="left" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* ── Project cards — desktop right slot ────────────────────────────── */}
         <div
-          className="absolute hidden md:block z-10"
+          className="absolute hidden md:grid z-10"
           style={{
             right: 'clamp(4rem, 7vw, 7rem)',
-            top: '50%',
-            transform: 'translateY(-50%)',
+            top: 0,
+            bottom: 0,
+            alignContent: 'center',
             width: 'min(21rem, 28%)',
           }}
         >
-          <AnimatePresence mode="wait">
-            {isRight && activeScene > 0 && project && (
-              <motion.div
-                key={`right-${activeScene}`}
-                initial={{ opacity: 0, x: 14 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 14 }}
-                transition={{ duration: 0.38 }}
-              >
-                <ProjectCard project={project} align="right" />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div style={{ display: 'grid' }}>
+            <AnimatePresence>
+              {isRight && activeScene > 0 && project && (
+                <motion.div
+                  key={`right-${activeScene}`}
+                  style={{ gridArea: '1 / 1' }}
+                  initial={{ opacity: 0, x: 14 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 14 }}
+                  transition={{ duration: 0.38 }}
+                >
+                  <ProjectCard project={project} align="right" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* ── Scene counter — bottom right ──────────────────────────────────── */}
@@ -1106,6 +1201,66 @@ export function Projects() {
           </div>
         </div>
 
+      </div>
+
+      {/* ── Mobile (< md) — plain scrolling list, no scroll-jack, no cube ───── */}
+      <div className="md:hidden px-5 pt-[clamp(4rem,14vw,6rem)] pb-[clamp(4rem,12vw,5rem)]">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-7">
+          <span
+            style={{
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontSize: '0.52rem',
+              letterSpacing: '0.25em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.28)',
+            }}
+          >
+            02 / Work
+          </span>
+          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+          <span
+            style={{
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontSize: '0.52rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.22)',
+            }}
+          >
+            {PROJECTS.length} Projects
+          </span>
+        </div>
+
+        <h2
+          style={{
+            fontFamily: 'Satoshi, system-ui, sans-serif',
+            fontWeight: 900,
+            fontSize: 'clamp(2.8rem, 13vw, 4.5rem)',
+            letterSpacing: '-0.05em',
+            lineHeight: 0.88,
+            color: 'rgba(255,255,255,0.94)',
+            marginBottom: 'clamp(2rem, 8vw, 3rem)',
+          }}
+        >
+          Selected{' '}
+          <span
+            style={{
+              fontFamily: 'var(--font-instrument), Georgia, serif',
+              fontStyle: 'italic',
+              fontWeight: 400,
+              color: 'rgba(255,255,255,0.3)',
+            }}
+          >
+            Work
+          </span>
+        </h2>
+
+        <div className="flex flex-col gap-5">
+          {PROJECTS.map((p, i) => (
+            <MobileProjectCard key={p.id} project={p} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   );

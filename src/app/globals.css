@@ -64,12 +64,17 @@ body {
 ::-webkit-scrollbar-track { background: #FFFFFF; }
 ::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.15); border-radius: 2px; }
 
-/* ── Projects: mobile cube + card centering ───────────────────────────────── */
-.projects-cube-scene {
-  transition: padding-top 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+/* ── Projects: responsive section height ──────────────────────────────────────
+   Mobile renders a plain scrolling list (natural height). Only md+ gets the
+   tall scroll-jacked track that the sticky cube scrubs against. Kept in CSS so
+   the correct height applies on first paint — doing it in JS would need a
+   post-mount media check and would flash the wrong layout / risk a hydration
+   mismatch. --scene-vh is set inline by the component. */
+.projects-section {
+  height: auto;
 }
-@media (max-width: 767px) {
-  .projects-cube-scene.scene-active {
-    padding-top: clamp(5.5rem, 15vw, 7rem);
+@media (min-width: 768px) {
+  .projects-section {
+    height: var(--scene-vh);
   }
 }

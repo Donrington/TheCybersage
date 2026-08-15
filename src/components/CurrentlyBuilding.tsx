@@ -19,6 +19,18 @@ const WYTNEST_CHIPS = [
   { label: 'Dual payments', detail: 'Paystack NGN · Stripe USD' },
 ];
 
+const BLACKE_CHIPS = [
+  { label: 'ScrollTrigger', detail: 'pinned cinematic sequences' },
+  { label: 'Lenis',         detail: 'smooth scroll layer' },
+  { label: 'In progress',   detail: 'events, archive & facilities routes' },
+];
+
+const VER_CHIPS = [
+  { label: 'Supabase',       detail: 'auth + RLS on ver_* tables' },
+  { label: 'Cloudinary',     detail: 'item image upload pipeline' },
+  { label: 'TanStack Query', detail: 'data and cache layer' },
+];
+
 /* Wytnest inline logo — "wyt" white, "nest" subdued, indigo circle */
 function WytnestLogo() {
   return (
@@ -209,6 +221,38 @@ export function CurrentlyBuilding() {
       chips:    WYTNEST_CHIPS,
       link:     'https://wytnest.vercel.app',
     },
+    {
+      logoSlot: (
+        <div className="relative h-6 w-32 opacity-75">
+          <Image
+            src="/logo/theblacke.png"
+            alt="The Black-E"
+            fill
+            className="object-contain object-left"
+          />
+        </div>
+      ),
+      name:    'The Black-E',
+      tagline: 'redesign for Britain’s first community arts centre, Liverpool since 1967.',
+      chips:   BLACKE_CHIPS,
+      link:    'https://theblacke.vercel.app',
+    },
+    {
+      logoSlot: (
+        <div className="relative h-8 w-20 opacity-75">
+          <Image
+            src="/logo/ver.png"
+            alt="VER"
+            fill
+            className="object-contain object-left"
+          />
+        </div>
+      ),
+      name:    'VER',
+      tagline: 'share more, waste less — community platform connecting givers with receivers.',
+      chips:   VER_CHIPS,
+      link:    'https://ver-share-circle.vercel.app',
+    },
   ];
 
   return (
@@ -231,8 +275,15 @@ export function CurrentlyBuilding() {
 
       <div className="relative z-10 max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(2rem,4vw,3.5rem)]">
         <div className="flex flex-col gap-[clamp(1.25rem,2.5vw,1.75rem)]">
-          <Row build={BUILDS[0]} inView={inView} delay={0}    divided={false} />
-          <Row build={BUILDS[1]} inView={inView} delay={0.14} divided={true}  />
+          {BUILDS.map((build, i) => (
+            <Row
+              key={build.name}
+              build={build}
+              inView={inView}
+              delay={i * 0.14}
+              divided={i > 0}
+            />
+          ))}
         </div>
       </div>
     </section>
