@@ -1,0 +1,30 @@
+Yes — I pulled both background videos directly (`hero_arch_opt.mp4` and `exp_arch_opt.mp4`) and inspected them closely. Here's my honest read.
+
+**What's actually there:** Both are short, looping monochrome 3D renders. The hero shows a flat black silhouette of a person sitting cross-legged on a floating platform with a glowing white rectangle standing in for a laptop, next to a wireframe tower/grid structure, a soft blurred moon, and drifting fog. The experience section uses the same visual language: a wireframe low-poly city skyline floating in dark haze with a single glowing point of light. Stylistically they're consistent with each other, which is good, but visually they read as simple procedural/wireframe 3D renders rather than cinematic or photoreal footage.
+
+**Why it doesn't feel "ultra realistic":** A few concrete things are giving it away. The human figure has zero surface detail — it's a pure silhouette with no rim lighting, cloth folds, hair, or subsurface skin tones, so it reads as a cardboard cutout rather than a person. The "laptop" is a flat glowing plane with no keyboard, hinge, or screen glow falloff. The architecture (both the hero's tower and the experience skyline) is wireframe-only geometry — no solid mass, reflections, or material response to light, which is a deliberate stylization but currently looks closer to a CAD/BIM preview than a moody realistic environment. The fog and moon are soft, low-frequency blurs without volumetric shafts, grain response, or depth-based parallax, so the atmosphere feels flat rather than three-dimensional. And the overall image is fairly low in micro-contrast and fine detail, so at any scale above a thumbnail it loses believability.
+
+One more thing worth flagging separately from aesthetics: on desktop widths, the experience section's video currently isn't rendering at all for real visitors — I found a CSS/breakpoint bug where the desktop version of that background video stays `display:none` (I had to force it visible in the DOM just to inspect it). So right now desktop users are likely seeing a plain black experience section with no motion at all. That's worth having your developer fix independent of any regeneration.
+
+
+
+
+
+
+
+
+
+
+**If you regenerate these, here's what I'd change to get an ultra-realistic-but-still-dark, cinematic result that matches this site's aesthetic:**
+
+For the subject and props, model or generate an actual human figure with real anatomy, subtle rim/edge lighting from the laptop glow and ambient moonlight, and fabric/hair detail even if it stays mostly in silhouette — realism comes from correct light falloff and micro-detail, not from adding brightness. Give the laptop real geometry: hinge, keys, screen bezel, and a believable screen glow that casts light onto the face and hands.
+
+For the environment, replace flat wireframes with solid, physically-based materials — brushed concrete or dark metal for the platform, glass and steel with real reflectance for any towers/skyline — rendered with a proper PBR engine (Blender Cycles, Octane, or Unreal with Lumen/ray tracing) rather than a wireframe-shader look. Keep the wireframe motif if you like it conceptually, but layer it as an overlay/accent on top of solid geometry rather than as the only geometry.
+
+For atmosphere, use real volumetric fog and light shafts instead of a blurred gradient, add fine film grain and subtle chromatic/lens imperfections (vignette, slight lens distortion) so it reads as captured footage rather than a flat render, and give the moon actual surface detail and a soft but directional key light that rakes across the scene to create shadows and depth separation between foreground/midground/background.
+
+For camera and motion, a slow, physically-plausible camera drift (parallax between layers, subtle handheld micro-jitter, or a slow dolly/orbit) will sell realism far more than a static loop — right now both videos feel like near-still images with minor atmospheric drift. A 6–10 second loop with a longer, smoother camera move and a seamless crossfade at the loop point would feel far more premium.
+
+Finally, keep resolution and bitrate high (both files are only 1920x1080 — for a full-bleed hero background on large monitors, 2560x1440 or higher with a higher bitrate export will avoid the softness you're seeing when scaled up), and keep the same color grade (deep blacks, cool monochrome, single warm/white accent light) across both sections so hero and experience still feel like one continuous world.
+
+If you want, I can help you write a detailed prompt for an AI video/3D generation tool (like Runway, Luma, or a Blender/Cinema4D brief for a freelancer) based on this exact direction — just let me know which route you're taking.

@@ -21,7 +21,7 @@ const CLIENTS: { name: string; logo: string; scale?: number }[] = [
   { name: 'Tuan Tling', logo: '/logo/tuantling.png' },
   { name: 'Cybersage', logo: '/logo/logo_white_horizontal.png' },
   { name: 'TQL', logo: '/logo/TQL LOGO 2-01.png' },
-  { name: 'Circles of Life Healthcare', logo: '/logo/colhcs.png' },
+  { name: 'Circles of Life Healthcare', logo: '/logo/colhcs_logo_light.png' },
   { name: 'Terryon Fagan', logo: '/logo/terryonfagan.png' },
   { name: 'Judy Golden Tiling', logo: '/logo/judygolden.png' },
   { name: 'The Black-E', logo: '/logo/theblacke.png' },
