@@ -155,20 +155,22 @@ export function Hero() {
           loop
           playsInline
           preload="auto"
-          poster="/hero_arch_poster.jpg"
+          poster="/hero_cine_poster.jpg"
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/hero_arch_opt.mp4" type="video/mp4" />
+          <source src="/hero_cine.mp4" type="video/mp4" />
         </video>
-        {/* Soft atmospheric scrim — purely tonal now, not load-bearing for legibility.
-            Text below is auto-inverting (mix-blend-mode: difference), so it reads
-            correctly whatever tone of the video it happens to sit over. This just
-            keeps the overall frame from feeling too flat/uniformly dark. */}
+        {/* Dark scrim, NOT white. The text is white on mix-blend-mode: difference,
+            which renders |255 - backdrop| — so it vanishes over mid-grey (~128)
+            and is brightest over near-black. The old white scrim lifted this
+            corner to ~150 and made ~27% of the headline zone unreadable; a dark
+            scrim pushes it the other way (measured ~2%) and deepens the blacks
+            the brand wants. Keep any scrim here dark for that reason. */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 80% 72% at 20% 100%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0) 78%)',
+              'radial-gradient(ellipse 85% 78% at 18% 100%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.32) 42%, rgba(0,0,0,0) 80%)',
           }}
         />
       </div>

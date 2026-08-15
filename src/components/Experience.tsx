@@ -609,16 +609,22 @@ export function Experience() {
 
       {/* ── Mobile (< lg) ─────────────────────────────────────────── */}
       <div className="block lg:hidden relative overflow-hidden" style={{ isolation: 'isolate' }}>
+        {/* preload="none": this section sits far below the fold, so the 2.9MB
+            loop must not compete with the hero video for bandwidth on first
+            paint — it fetches when the browser gets to it, showing the poster
+            meanwhile. */}
         <video
-          autoPlay muted loop playsInline preload="auto"
-          poster="/exp_arch_poster.jpg"
+          autoPlay muted loop playsInline preload="none"
+          poster="/exp_cine_poster.jpg"
           className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
         >
-          <source src="/exp_arch_opt.mp4" type="video/mp4" />
+          <source src="/exp_cine.mp4" type="video/mp4" />
         </video>
-        {/* Light atmospheric lift only — text below is auto-inverting (mix-blend-mode:
-            difference), so it no longer relies on this tint for legibility. */}
-        <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.12)' }} />
+        {/* Dark scrim, NOT a white lift. Panel text is white on mix-blend-mode:
+            difference, so it disappears over mid-grey backdrops. Measured against
+            this footage: the old white 0.12 lift left ~30% of the frame in the
+            unreadable band, no scrim ~22%, black 0.5 ~2%. */}
+        <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(0,0,0,0.5)' }} />
         <div className="relative z-10">
           {Header}
           <div>
@@ -638,13 +644,13 @@ export function Experience() {
         <div ref={pinRef} data-cursor="drag" className="h-screen overflow-hidden relative" style={{ isolation: 'isolate' }}>
           {/* Video */}
           <video
-            autoPlay muted loop playsInline
-            poster="/exp_arch_poster.jpg"
+            autoPlay muted loop playsInline preload="none"
+            poster="/exp_cine_poster.jpg"
             className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
           >
-            <source src="/exp_arch_opt.mp4" type="video/mp4" />
+            <source src="/exp_cine.mp4" type="video/mp4" />
           </video>
-          <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(255,255,255,0.12)' }} />
+          <div className="absolute inset-0 z-1 pointer-events-none" style={{ background: 'rgba(0,0,0,0.5)' }} />
 
           {/* Top progress bar — decorative track, plain translucent white (no blend
               needed: it reads fine over both the video and the light tint) */}
