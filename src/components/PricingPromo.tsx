@@ -6,10 +6,16 @@ import { ArrowUpRight } from 'lucide-react';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+// Mirrors the 5 real categories on cybersage.dev/pricing — starting price is
+// the cheapest tier within each. Labels are shortened slightly for this
+// compact list (e.g. "E-Commerce" not "E-Commerce Solutions") but map 1:1
+// to the categories there; keep these in sync if pricing-data.ts changes.
 const TIERS = [
-  { label: 'Starter',       note: 'Single-scope delivery' },
-  { label: 'Professional',  note: 'Multi-service engagement' },
-  { label: 'Enterprise',    note: 'Full systems architecture' },
+  { label: 'Static & Landing', note: 'Landing pages & portfolios', price: 'From $300' },
+  { label: 'Corporate & CMS',  note: 'Corporate sites & blogs',    price: 'From $1,100' },
+  { label: 'E-Commerce',       note: 'Full commerce platforms',    price: 'From $1,600' },
+  { label: 'Web Applications', note: 'Dashboards & SaaS builds',   price: 'From $1,500' },
+  { label: 'Maintenance',      note: 'Monthly care & support',     price: 'From $125/mo' },
 ];
 
 export function PricingPromo() {
@@ -46,8 +52,17 @@ export function PricingPromo() {
           />
         </div>
 
-        {/* Two-column layout — headline left, copy + CTA right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(3rem,6vw,8rem)] items-end">
+        {/* Two-column layout — headline left, copy + CTA right.
+            1.3fr/1fr (not an even split — matches Process.tsx's headline row):
+            "Transparent" is one unbroken word, so it can't wrap to fit a
+            narrower column the way multi-word headlines elsewhere can. The
+            font-size clamp below is sized against this column's actual
+            worst-case width (~430px at the 1024px lg breakpoint, capped at
+            ~608px once the 1440px container max-width takes over), not the
+            full viewport — the previous 9vw/11rem formula was sized for a
+            full-width single-column headline and overflowed at every
+            desktop width once this became a 2-column layout. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-[clamp(3rem,6vw,8rem)] items-end">
 
           {/* Left — display headline */}
           <div>
@@ -56,7 +71,7 @@ export function PricingPromo() {
               style={{
                 fontFamily: 'Satoshi, system-ui, sans-serif',
                 fontWeight: 900,
-                fontSize:   'clamp(3.5rem, 9vw, 11rem)',
+                fontSize:   'clamp(2.5rem, 5.85vw, 5.25rem)',
               }}
             >
               {['Transparent'].map((word, i) => (
@@ -110,26 +125,42 @@ export function PricingPromo() {
               the tier that fits, and get started the same week.
             </p>
 
-            {/* Tier pills */}
+            {/* Category rows — label+price share a line (with a wrap fallback
+                in case a future longer label ever gets tight), note sits
+                below on its own line rather than squeezing three strings
+                onto one row. */}
             <div className="flex flex-col gap-3">
               {TIERS.map((tier, i) => (
                 <motion.div
                   key={tier.label}
-                  className="flex items-center justify-between border-b border-black/8 pb-3"
+                  className="flex flex-col gap-1 border-b border-black/8 pb-3"
                   initial={{ opacity: 0, x: -12 }}
                   animate={inView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.5, delay: 0.35 + i * 0.08, ease: EASE }}
                 >
-                  <span
-                    className="font-black text-black tracking-tight"
-                    style={{
-                      fontFamily: 'Satoshi, system-ui, sans-serif',
-                      fontWeight: 800,
-                      fontSize:   'clamp(1.1rem, 1.6vw, 1.35rem)',
-                    }}
-                  >
-                    {tier.label}
-                  </span>
+                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
+                    <span
+                      className="font-black text-black tracking-tight"
+                      style={{
+                        fontFamily: 'Satoshi, system-ui, sans-serif',
+                        fontWeight: 800,
+                        fontSize:   'clamp(1.1rem, 1.6vw, 1.35rem)',
+                      }}
+                    >
+                      {tier.label}
+                    </span>
+                    <span
+                      className="text-black/55"
+                      style={{
+                        fontFamily: 'Satoshi, system-ui, sans-serif',
+                        fontWeight: 700,
+                        fontSize:   '0.85rem',
+                        letterSpacing: '0.01em',
+                      }}
+                    >
+                      {tier.price}
+                    </span>
+                  </div>
                   <span
                     className="text-black/35"
                     style={{
