@@ -10,7 +10,7 @@ const NAV_LINKS = [
   { label: 'Services',    href: '#services',                      chevron: false },
   { label: 'Process',     href: '#process',                       chevron: false },
   { label: 'About',       href: '#about',                         chevron: false },
-  { label: 'Experience',  href: '#experience',                    chevron: false },
+  { label: 'Systems',     href: '#systems',                       chevron: false },
   { label: 'Credentials', href: '#credentials',                   chevron: false },
   { label: 'Reviews',     href: '#testimonials',                  chevron: false },
   { label: 'FAQ',         href: '#faq-section',                   chevron: false },
