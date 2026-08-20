@@ -27,7 +27,7 @@ export function PricingPromo() {
     <section
       ref={ref}
       id="pricing"
-      className="w-full bg-white border-t border-black/[0.08] overflow-hidden"
+      className="w-full bg-white border-t border-black/[0.08]"
     >
       <div className="max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(4rem,8vw,9rem)]">
 
@@ -61,11 +61,22 @@ export function PricingPromo() {
             ~608px once the 1440px container max-width takes over), not the
             full viewport — the previous 9vw/11rem formula was sized for a
             full-width single-column headline and overflowed at every
-            desktop width once this became a 2-column layout. */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-[clamp(3rem,6vw,8rem)] items-end">
+            desktop width once this became a 2-column layout.
 
-          {/* Left — display headline */}
-          <div>
+            items-start (not items-end): the right column (paragraph + 5
+            tier rows + CTA) is naturally taller than the 2-line headline,
+            so the grid row's height already tracks the right column. With
+            items-start both columns begin at the same top edge, which is
+            what the lg:sticky headline below needs — it pins at top-22
+            (clearing the fixed navbar pill) and releases on its own once
+            the right column's bottom (=row bottom) scrolls into range. No
+            manual scroll-distance math needed; this is CSS-native and
+            resizes/reflows correctly for free. Desktop-only via lg:. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-[clamp(3rem,6vw,8rem)] items-start">
+
+          {/* Left — display headline, pinned on desktop while the right
+              column scrolls past it */}
+          <div className="lg:sticky lg:top-22 lg:self-start">
             <h2
               className="font-black text-black tracking-tighter leading-[0.88]"
               style={{
