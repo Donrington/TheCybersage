@@ -265,7 +265,6 @@ export function AIAssistant() {
         onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
         className="fixed bottom-8 left-8 z-50 flex items-center text-white"
         style={{
-          position: 'relative',
           background: '#0a0a0a',
           border: '1px solid rgba(255,255,255,0.12)',
           padding: '0.7rem 1.1rem',
