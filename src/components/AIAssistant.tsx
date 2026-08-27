@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles, ArrowUpRight } from 'lucide-react';
+import { ThinkingOrb } from 'thinking-orbs';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -67,10 +68,14 @@ function MessageContent({ content }: { content: string }) {
 }
 
 /* Goo-merged blobs (SVG feGaussianBlur + feColorMatrix, the standard metaball
-   recipe) drifting inside a soft halo — a monochrome stand-in for the
-   "solving orb" reference. Reduced-motion swaps the drifting blobs for a
-   single static circle rather than removing the indicator outright. */
-function ThinkingOrb() {
+   recipe) drifting inside a soft halo — the in-thread "AI is replying" cue.
+   Named MessageOrb (not ThinkingOrb) to avoid colliding with the thinking-orbs
+   package import used for the header avatar below — kept as its own
+   implementation rather than swapped for the package, since this spot's
+   animation predates this turn's request and wasn't asked to change.
+   Reduced-motion swaps the drifting blobs for a single static circle rather
+   than removing the indicator outright. */
+function MessageOrb() {
   const reduced = useReducedMotion();
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.3rem 0' }}>
@@ -395,20 +400,16 @@ export function AIAssistant() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  {/* Icon box */}
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '1px solid rgba(255,255,255,0.1)',
-                      background: 'rgba(255,255,255,0.03)',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <Sparkles size={12} style={{ color: 'rgba(255,255,255,0.45)' }} />
+                  {/* Solving orb — the assistant's avatar. thinking-orbs is
+                      strictly monochrome and auto-detects dark/light from
+                      the nearest data-theme attribute (this panel sets
+                      data-theme="dark" above), so no theme prop is needed.
+                      64px is the package's own "chat-avatar" preset — left
+                      unframed (no border/chip) since it's a complete visual
+                      unit on its own, unlike the flat Sparkles glyph it
+                      replaces. */}
+                  <div style={{ width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <ThinkingOrb state="solving" size={64} />
                   </div>
 
                   <div>
@@ -640,7 +641,7 @@ export function AIAssistant() {
                     >
                       {msg.role === 'assistant' ? (
                         msg.content === '' ? (
-                          <ThinkingOrb />
+                          <MessageOrb />
                         ) : (
                           <MessageContent content={msg.content} />
                         )
