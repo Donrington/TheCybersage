@@ -160,8 +160,34 @@ body {
   mix-blend-mode: overlay;
 }
 
+/* Light variants — for the one CTA on a white fill (Navbar's pill), where
+   the dark-tuned bands/highlight above would barely register. Same
+   mask/animation mechanics, just inverted tonally: dark bands read against
+   white the way light bands read against black, and multiply darkens a
+   light surface the way overlay brightens a dark one. */
+.metal-edge-light {
+  background: conic-gradient(
+    from var(--metal-angle),
+    #ffffff 0%, #c4c4c4 8%, #3a3a3a 16%, #9a9a9a 24%, #ffffff 34%,
+    #4a4a4a 46%, #d8d8d8 58%, #2a2a2a 68%, #b8b8b8 78%, #ffffff 88%,
+    #5a5a5a 96%, #ffffff 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation-name: metal-rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.metal-highlight-light {
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(0, 0, 0, 0.18), transparent 65%);
+  opacity: var(--mh, 0);
+  transition: opacity 0.35s ease;
+  mix-blend-mode: multiply;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .beam-ring, .metal-edge, .metal-sheen {
+  .beam-ring, .metal-edge, .metal-sheen, .metal-edge-light {
     animation: none !important;
   }
 }

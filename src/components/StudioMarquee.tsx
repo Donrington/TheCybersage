@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -110,6 +111,7 @@ function Row({
 export function StudioMarquee() {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: '-12%' });
+  const reduced = useReducedMotion();
 
   return (
     <section
@@ -168,18 +170,33 @@ export function StudioMarquee() {
           <motion.a
             href="#work"
             data-cursor="view"
+            onPointerMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+              e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+            }}
+            onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+            onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
             className="group hidden sm:inline-flex items-center gap-2 border border-white/18 px-6 py-3 text-white/55 hover:text-white hover:border-white/45 transition-colors duration-300 shrink-0"
+            style={{ position: 'relative' }}
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
           >
+            {!reduced && (
+              <>
+                <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+                <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, animationDuration: '5.5s' }} />
+              </>
+            )}
+            <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
             <span
               className="text-[0.6rem] tracking-[0.2em] uppercase font-medium"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+              style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
             >
               More Work
             </span>
-            <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+            <ArrowUpRight size={12} style={{ position: 'relative', zIndex: 1 }} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
           </motion.a>
         </div>
       </div>

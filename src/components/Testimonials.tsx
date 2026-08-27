@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react';
 import Image from 'next/image';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -106,6 +107,7 @@ export function Testimonials() {
   const headerRef = useRef<HTMLDivElement>(null);
   const showcaseRef = useRef<HTMLDivElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  const reduced = useReducedMotion();
 
   const [active, setActive] = useState(0);
   const [dir, setDir] = useState(1);
@@ -373,6 +375,9 @@ export function Testimonials() {
             <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b border-r border-white/20 pointer-events-none z-20" />
 
             <div className="relative w-full aspect-[4/5] sm:aspect-[5/5] bg-white/[0.02] border border-white/10 overflow-hidden">
+              {!reduced && (
+                <span aria-hidden className="beam-ring" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', zIndex: 20, animationDuration: '6s' }} />
+              )}
               <AnimatePresence mode="wait" custom={dir}>
                 <motion.div
                   key={active}

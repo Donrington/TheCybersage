@@ -5,6 +5,7 @@ import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDownRight, ArrowUpRight, GitCommitHorizontal, ExternalLink } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,30 +87,42 @@ function MagneticBtn({ href }: { href: string }) {
   const rawY = useMotionValue(0);
   const x = useSpring(rawX, { stiffness: 300, damping: 28 });
   const y = useSpring(rawY, { stiffness: 300, damping: 28 });
+  const reduced = useReducedMotion();
 
   return (
     <motion.a
       href={href}
       download
-      style={{ x, y, display: 'inline-flex', alignItems: 'center', gap: '0.75rem' }}
+      style={{ x, y, display: 'inline-flex', alignItems: 'center', gap: '0.75rem', position: 'relative' }}
       onMouseMove={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         rawX.set((e.clientX - rect.left - rect.width / 2) * 0.32);
         rawY.set((e.clientY - rect.top - rect.height / 2) * 0.32);
+        e.currentTarget.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+        e.currentTarget.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
       }}
-      onMouseLeave={() => { rawX.set(0); rawY.set(0); }}
+      onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+      onMouseLeave={(e) => { rawX.set(0); rawY.set(0); e.currentTarget.style.setProperty('--mh', '0'); }}
       className="group border border-white/20 px-8 py-4 text-white/60 hover:text-white hover:border-white/50 transition-colors duration-300"
       whileHover={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
       transition={{ duration: 0.3 }}
     >
+      {!reduced && (
+        <>
+          <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+          <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, animationDuration: '5.5s' }} />
+        </>
+      )}
+      <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       <span
         className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
-        style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         Download Resume
       </span>
       <ArrowDownRight
         size={13}
+        style={{ position: 'relative', zIndex: 1 }}
         className="group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform duration-200"
       />
     </motion.a>
@@ -276,6 +289,7 @@ function ContribGrid({ contributions }: { contributions: GHDay[] }) {
 function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
   const ref    = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-8%' });
+  const reduced = useReducedMotion();
   const [data, setData]         = useState<GHData | null>(null);
   const [loading, setLoading]   = useState(true);
   const [unavailable, setUnavailable] = useState(false);
@@ -322,6 +336,9 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
         className="relative border border-white/10 overflow-hidden"
         style={{ background: 'rgba(255,255,255,0.015)' }}
       >
+        {!reduced && (
+          <span aria-hidden className="beam-ring" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', animationDuration: '6s' }} />
+        )}
         {/* Corner accents */}
         <div className="absolute top-0 right-0 pointer-events-none">
           <div className="absolute top-0 right-0 w-px h-8 bg-white/18" />
@@ -485,6 +502,7 @@ export function Credentials() {
   const resumeRef    = useRef<HTMLDivElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
   const resumeInView  = useInView(resumeRef,  { once: true, margin: '-8%'  });
+  const reduced = useReducedMotion();
   const [hoveredCert, setHoveredCert] = useState<number | null>(null);
   const floatItems = useMemo(buildFloatItems, []);
 
@@ -663,6 +681,9 @@ export function Credentials() {
           animate={resumeInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, ease: EASE }}
         >
+          {!reduced && (
+            <span aria-hidden className="beam-ring" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', animationDuration: '6.5s' }} />
+          )}
           {/* Gradient wash */}
           <div
             className="absolute inset-0 pointer-events-none"

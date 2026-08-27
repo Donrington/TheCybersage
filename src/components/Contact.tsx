@@ -8,6 +8,7 @@ import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
 import Image from 'next/image';
 import { ContactCanvas } from './ContactCanvas';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -57,20 +58,24 @@ function MagneticCTA({
   const rawY = useMotionValue(0);
   const x = useSpring(rawX, { stiffness: 280, damping: 26 });
   const y = useSpring(rawY, { stiffness: 280, damping: 26 });
+  const reduced = useReducedMotion();
 
   const solid = variant === 'solid';
 
   return (
     <motion.button
       data-cursor="hire"
-      style={{ x, y }}
+      style={{ x, y, position: 'relative' }}
       onClick={onClick}
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
         rawX.set((e.clientX - r.left - r.width / 2) * 0.3);
         rawY.set((e.clientY - r.top - r.height / 2) * 0.3);
+        e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+        e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
       }}
-      onMouseLeave={() => { rawX.set(0); rawY.set(0); }}
+      onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+      onMouseLeave={(e) => { rawX.set(0); rawY.set(0); e.currentTarget.style.setProperty('--mh', '0'); }}
       className={
         solid
           ? 'group inline-flex items-center gap-3 bg-white text-black px-8 py-4 hover:bg-white/85 transition-colors duration-300'
@@ -78,13 +83,24 @@ function MagneticCTA({
       }
       whileHover={!solid ? { backgroundColor: 'rgba(255,255,255,0.04)' } : undefined}
     >
+      {/* Liquid metal — light variant, since the solid button is a white
+          fill. Only on solid: this is the primary conversion CTA, kept
+          visually distinct from the plain outline "Send a Message" button
+          beside it so the effect still reads as "primary," not applied to
+          every button in the pair. */}
+      {solid && !reduced && (
+        <span aria-hidden className="metal-edge-light" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+      )}
+      {solid && (
+        <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+      )}
       <span
         className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
-        style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         {label}
       </span>
-      <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+      <ArrowUpRight size={13} style={{ position: 'relative', zIndex: 1 }} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
     </motion.button>
   );
 }
@@ -112,9 +128,11 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
   });
   const [touched, setTouched] = useState({ name: false, email: false, message: false });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const reduced = useReducedMotion();
 
   const errors = getErrors(form);
   const isValid = !errors.name && !errors.email && !errors.message;
+  const canSubmit = status !== 'sending' && isValid;
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -181,6 +199,13 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
           <div className="absolute bottom-0 left-0 w-px h-12 bg-white/10" />
           <div className="absolute bottom-0 left-0 w-12 h-px bg-white/10" />
         </div>
+
+        {/* Beam — traces the full panel edge; the corner accents above sit on
+            top of it at just two corners, same layering as AIAssistant's own
+            panel which pairs the two treatments successfully. */}
+        {!reduced && (
+          <span aria-hidden className="beam-ring" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', animationDuration: '5s' }} />
+        )}
 
         <div className="p-8 sm:p-10">
           {/* Header */}
@@ -340,11 +365,26 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 <button
                   type="submit"
-                  disabled={status === 'sending' || !isValid}
-                  className="w-full bg-white text-black py-4 text-[0.62rem] tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+                  disabled={!canSubmit}
+                  onMouseMove={(e) => {
+                    const r = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+                    e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+                  onMouseLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
+                  className="relative w-full bg-white text-black py-4 text-[0.62rem] tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
-                  {status === 'sending' ? 'Sending...' : intent === 'call' ? 'Request Call' : 'Send Message'}
+                  {!reduced && canSubmit && (
+                    <span aria-hidden className="metal-edge-light" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '6s' }} />
+                  )}
+                  {canSubmit && (
+                    <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+                  )}
+                  <span style={{ position: 'relative', zIndex: 1 }}>
+                    {status === 'sending' ? 'Sending...' : intent === 'call' ? 'Request Call' : 'Send Message'}
+                  </span>
                 </button>
               </motion.form>
             )}

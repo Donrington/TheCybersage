@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { ScrollRevealText, DESC_FONT } from './ScrollRevealText';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -161,6 +162,7 @@ function Step({
 export function Process() {
   const sectionRef = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  const reduced = useReducedMotion();
 
   // ── Cursor-tracked preview thumbnail ────────────────────────────────────────
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -347,12 +349,26 @@ export function Process() {
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
             data-cursor="hire"
-            className="group inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 text-white/65 hover:text-white hover:border-white/50 hover:bg-white/[0.04] transition-colors duration-300 shrink-0"
+            onMouseMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+              e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+            onMouseLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
+            className="group relative inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 text-white/65 hover:text-white hover:border-white/50 hover:bg-white/[0.04] transition-colors duration-300 shrink-0"
           >
-            <span className="text-[0.62rem] tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+            {!reduced && (
+              <>
+                <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+                <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, animationDuration: '5.5s' }} />
+              </>
+            )}
+            <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+            <span className="text-[0.62rem] tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}>
               Start a Project
             </span>
-            <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+            <ArrowUpRight size={13} style={{ position: 'relative', zIndex: 1 }} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
           </button>
         </motion.div>
       </div>

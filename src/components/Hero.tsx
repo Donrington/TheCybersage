@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDownRight } from 'lucide-react';
 import { animate, createTimeline, scrambleText } from 'animejs';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +33,7 @@ export function Hero() {
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     // ── Scramble entrance ──────────────────────────────────────────────────────
@@ -146,6 +148,18 @@ export function Hero() {
         className="relative flex-1 w-full overflow-hidden flex flex-col"
         style={{ borderRadius: 'clamp(16px, 2vw, 28px)' }}
       >
+      {/* Beam — the site's biggest surface, so a thicker ring (2px vs the
+          standard 1px) and a slower rotation (9s) read better at this scale
+          than the button-sized defaults. overflow-hidden above is safe here:
+          it only breaks position:sticky (a different bug, fixed earlier in
+          PricingPromo), not an inset:0 absolute child like this. */}
+      {!reduced && (
+        <span
+          aria-hidden
+          className="beam-ring"
+          style={{ position: 'absolute', inset: 0, padding: 2, pointerEvents: 'none', zIndex: 20, animationDuration: '9s', borderRadius: 'inherit' }}
+        />
+      )}
       {/* Video background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <video
@@ -253,17 +267,34 @@ export function Hero() {
               <motion.a
                 href="#work"
                 data-cursor="view"
+                onPointerMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+                  e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+                }}
+                onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+                onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
                 className="group flex items-center gap-2 bg-black text-white px-6 py-3.5 text-[0.7rem] font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative' }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 2.1, ease: EASE }}
+                whileTap={{ scale: 0.96 }}
               >
-                View Work
-                <ArrowDownRight
-                  size={12}
-                  className="group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform"
-                />
+                {!reduced && (
+                  <>
+                    <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+                    <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, animationDuration: '5.5s' }} />
+                  </>
+                )}
+                <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+                <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  View Work
+                  <ArrowDownRight
+                    size={12}
+                    className="group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform"
+                  />
+                </span>
               </motion.a>
               <motion.button
                 data-cursor="hire"

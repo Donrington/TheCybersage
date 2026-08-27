@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -437,9 +438,11 @@ function BackgroundCanvas() {
 // ─── Card ─────────────────────────────────────────────────────────────────────
 function ProjectCard({ project, align }: { project: Project; align: 'left' | 'right' }) {
   const right = align === 'right';
+  const reduced = useReducedMotion();
   return (
     <div
       style={{
+        position: 'relative',
         padding: '1.75rem 1.5rem',
         background: 'rgba(12,12,12,0.92)',
         borderTop: '1px solid rgba(255,255,255,0.07)',
@@ -448,6 +451,9 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
         borderRight: right ? '1px solid rgba(255,255,255,0.07)' : 'none',
       }}
     >
+      {!reduced && (
+        <span aria-hidden className="beam-ring" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', animationDuration: '6s' }} />
+      )}
       {/* Accent line */}
       <div
         style={{

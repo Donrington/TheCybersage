@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const NAV_LINKS = [
   { label: 'Work',        href: '#work',                          chevron: false },
@@ -39,18 +40,35 @@ function NavLink({ label, href, chevron }: { label: string; href: string; chevro
 }
 
 function HireBtn() {
+  const reduced = useReducedMotion();
   return (
     <button
       onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
+      onPointerMove={(e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+        e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+      }}
+      onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+      onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
       className="group flex items-center bg-white rounded-full overflow-hidden hover:bg-white/80 transition-colors duration-200 shrink-0"
+      style={{ position: 'relative' }}
     >
+      {/* Light-tuned liquid metal — this pill is white, not the site's usual
+          dark fill, so it uses the -light gradient variants (dark bands +
+          multiply blend) rather than the ones built for dark buttons. */}
+      {!reduced && (
+        <span aria-hidden className="metal-edge-light" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s', borderRadius: 'inherit' }} />
+      )}
+      <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 'inherit' }} />
+
       <span
         className="pl-4 pr-1.5 py-1.75 text-black text-[0.61rem] font-medium tracking-[0.14em] uppercase whitespace-nowrap"
-        style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+        style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         Hire Me
       </span>
-      <span className="w-7 h-7 flex items-center justify-center rounded-full bg-black/10 group-hover:bg-black/15 transition-colors mr-0.5 shrink-0">
+      <span className="w-7 h-7 flex items-center justify-center rounded-full bg-black/10 group-hover:bg-black/15 transition-colors mr-0.5 shrink-0" style={{ position: 'relative', zIndex: 1 }}>
         <ArrowRight size={11} className="text-black" />
       </span>
     </button>
