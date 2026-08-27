@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles, ArrowUpRight } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -65,23 +66,59 @@ function MessageContent({ content }: { content: string }) {
   );
 }
 
-function TypingIndicator() {
+/* Goo-merged blobs (SVG feGaussianBlur + feColorMatrix, the standard metaball
+   recipe) drifting inside a soft halo — a monochrome stand-in for the
+   "solving orb" reference. Reduced-motion swaps the drifting blobs for a
+   single static circle rather than removing the indicator outright. */
+function ThinkingOrb() {
+  const reduced = useReducedMotion();
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0' }}>
-      {[0, 1, 2].map((i) => (
-        <motion.span
-          key={i}
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.3rem 0' }}>
+      <div style={{ position: 'relative', width: 22, height: 22, flexShrink: 0 }}>
+        <motion.div
+          aria-hidden
           style={{
-            display: 'block',
-            width: 3,
-            height: 3,
+            position: 'absolute',
+            inset: -6,
             borderRadius: '50%',
-            background: 'rgba(255,255,255,0.3)',
+            background: 'radial-gradient(circle, rgba(255,255,255,0.28), transparent 70%)',
+            filter: 'blur(4px)',
           }}
-          animate={{ opacity: [0.2, 1, 0.2], scale: [1, 1.3, 1] }}
-          transition={{ duration: 1.1, delay: i * 0.18, repeat: Infinity, ease: 'easeInOut' }}
+          animate={reduced ? undefined : { opacity: [0.4, 0.85, 0.4], scale: [0.9, 1.15, 0.9] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
         />
-      ))}
+        <svg width="22" height="22" viewBox="0 0 22 22" style={{ position: 'relative' }}>
+          <defs>
+            <filter id="orb-goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur" />
+              <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+            </filter>
+            <radialGradient id="orb-fill" cx="35%" cy="30%" r="75%">
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="55%" stopColor="rgba(255,255,255,0.75)" />
+              <stop offset="100%" stopColor="rgba(255,255,255,0.25)" />
+            </radialGradient>
+          </defs>
+          <g filter="url(#orb-goo)">
+            {reduced ? (
+              <circle cx="11" cy="11" r="5" fill="url(#orb-fill)" />
+            ) : (
+              <>
+                <motion.circle
+                  cx="11" cy="11" r="4.6" fill="url(#orb-fill)"
+                  animate={{ cx: [9, 13, 8, 11], cy: [9, 12, 13, 9] }}
+                  transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+                />
+                <motion.circle
+                  cx="11" cy="11" r="3.2" fill="url(#orb-fill)"
+                  animate={{ cx: [13, 8, 12, 13], cy: [12, 13, 8, 12] }}
+                  transition={{ duration: 4.1, repeat: Infinity, ease: 'easeInOut' }}
+                />
+              </>
+            )}
+          </g>
+        </svg>
+      </div>
       <span
         style={{
           fontFamily: 'Satoshi, system-ui, sans-serif',
@@ -89,7 +126,6 @@ function TypingIndicator() {
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
           color: 'rgba(255,255,255,0.2)',
-          marginLeft: '0.25rem',
         }}
       >
         thinking
@@ -137,6 +173,8 @@ export function AIAssistant() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLInputElement>(null);
   const abortRef  = useRef<AbortController | null>(null);
+  const reduced   = useReducedMotion();
+  const canSend   = input.trim().length > 0 && !streaming;
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 350);
@@ -218,8 +256,16 @@ export function AIAssistant() {
       <motion.button
         data-cursor="ask"
         onClick={() => setOpen(true)}
-        className="fixed bottom-8 left-8 z-50 flex items-center gap-3 text-white"
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
+          e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
+        }}
+        onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
+        onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
+        className="fixed bottom-8 left-8 z-50 flex items-center text-white"
         style={{
+          position: 'relative',
           background: '#0a0a0a',
           border: '1px solid rgba(255,255,255,0.12)',
           padding: '0.7rem 1.1rem',
@@ -228,37 +274,51 @@ export function AIAssistant() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 4.5, duration: 0.6, ease: EASE }}
         whileHover={{ borderColor: 'rgba(255,255,255,0.28)' }}
+        whileTap={{ scale: 0.96 }}
         aria-label="Open AI Assistant"
       >
-        {/* Pulse dot */}
-        <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 6, height: 6 }}>
-          <motion.span
+        {/* Liquid-metal edge + cursor-following sheen — decorative, inert to
+            pointer/AT. Skipped under reduced-motion; the static 1px border
+            above already fully defines the button's edge on its own. */}
+        {!reduced && (
+          <>
+            <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
+            <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, animationDuration: '5.5s' }} />
+          </>
+        )}
+        <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
+
+        <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Pulse dot */}
+          <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 6, height: 6 }}>
+            <motion.span
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: 'rgba(255,255,255,0.25)',
+              }}
+              animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0, 0.6] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', display: 'block' }} />
+          </span>
+
+          <Sparkles size={11} style={{ color: 'rgba(255,255,255,0.45)' }} />
+
+          <span
             style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.25)',
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontSize: '0.6rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              fontWeight: 500,
+              color: 'rgba(255,255,255,0.65)',
             }}
-            animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0, 0.6] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', display: 'block' }} />
-        </span>
-
-        <Sparkles size={11} style={{ color: 'rgba(255,255,255,0.45)' }} />
-
-        <span
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontSize: '0.6rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            color: 'rgba(255,255,255,0.65)',
-          }}
-        >
-          Ask AI
+          >
+            Ask AI
+          </span>
         </span>
       </motion.button>
 
@@ -295,9 +355,31 @@ export function AIAssistant() {
               initial={{ opacity: 0, y: 40, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 28, scale: 0.97 }}
-              transition={{ duration: 0.38, ease: EASE }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.5 }}
             >
               <CornerAccents />
+
+              {/* Beam — a bright arc tracing the panel's perimeter, mostly
+                  transparent the rest of the way round (see .beam-ring in
+                  globals.css). Runs continuously while open as an ambient
+                  presence; speeds up and brightens while the AI is actively
+                  streaming a reply, so the effect also reads as live status,
+                  not just decoration. */}
+              {!reduced && (
+                <span
+                  aria-hidden
+                  className="beam-ring"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    padding: 1,
+                    pointerEvents: 'none',
+                    opacity: streaming ? 1 : 0.55,
+                    animationDuration: streaming ? '2s' : '5s',
+                    transition: 'opacity 0.6s ease',
+                  }}
+                />
+              )}
 
               {/* Subtle top highlight */}
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 40%, rgba(255,255,255,0.1) 60%, transparent)', pointerEvents: 'none' }} />
@@ -559,7 +641,7 @@ export function AIAssistant() {
                     >
                       {msg.role === 'assistant' ? (
                         msg.content === '' ? (
-                          <TypingIndicator />
+                          <ThinkingOrb />
                         ) : (
                           <MessageContent content={msg.content} />
                         )
@@ -589,7 +671,8 @@ export function AIAssistant() {
                     background: 'rgba(255,255,255,0.02)',
                     transition: 'border-color 0.2s',
                   }}
-                  onFocus={() => {}}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.24)'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; }}
                 >
                   <input
                     ref={inputRef}
@@ -610,10 +693,12 @@ export function AIAssistant() {
                       letterSpacing: '0.01em',
                     }}
                   />
-                  <button
+                  <motion.button
                     onClick={() => send(input)}
-                    disabled={!input.trim() || streaming}
+                    disabled={!canSend}
+                    whileTap={canSend ? { scale: 0.9 } : undefined}
                     style={{
+                      position: 'relative',
                       width: 38,
                       height: 38,
                       display: 'flex',
@@ -621,14 +706,26 @@ export function AIAssistant() {
                       justifyContent: 'center',
                       background: 'transparent',
                       border: 'none',
-                      color: input.trim() && !streaming ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.18)',
-                      cursor: input.trim() && !streaming ? 'pointer' : 'default',
+                      color: canSend ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.18)',
+                      cursor: canSend ? 'pointer' : 'default',
                       flexShrink: 0,
                       transition: 'color 0.2s',
                     }}
                   >
-                    <Send size={12} />
-                  </button>
+                    {/* Same liquid-metal material as the trigger button, but
+                        only animated while the message is actually sendable
+                        — ties it to real affordance instead of idling on a
+                        disabled control. */}
+                    {!reduced && canSend && (
+                      <>
+                        <span aria-hidden className="metal-edge" style={{ position: 'absolute', inset: 0, padding: 1, pointerEvents: 'none', animationDuration: '6s' }} />
+                        <span aria-hidden className="metal-sheen" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.5, animationDuration: '4.5s' }} />
+                      </>
+                    )}
+                    <span style={{ position: 'relative', zIndex: 1, display: 'flex' }}>
+                      <Send size={12} />
+                    </span>
+                  </motion.button>
                 </div>
 
                 <p

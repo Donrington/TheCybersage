@@ -64,6 +64,108 @@ body {
 ::-webkit-scrollbar-track { background: #FFFFFF; }
 ::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.15); border-radius: 2px; }
 
+/* ── AI Assistant: animated materials ─────────────────────────────────────────
+   Beam = a short bright arc traveling around a mostly-transparent conic
+   gradient (the "Border Beam" pattern). Metal = a full-coverage banded conic
+   gradient standing in for a liquid-chrome edge. Both use the mask/
+   mask-composite:exclude trick — an inset padding on the ring element creates
+   a content-box smaller than the border-box, and XOR-ing the two masks leaves
+   only the thin ring between them, so the gradient paints just the edge, not
+   the whole fill. @property registration is required at the stylesheet root
+   (not reachable inside a class) — it's what makes --beam-angle/--metal-angle
+   interpolate smoothly as an <angle> instead of snapping like a plain string
+   custom property would. Initial-value must match the keyframe's "from" state
+   and the "to" state must be initial+360 (not a flat 0→360) so the loop never
+   visibly snaps at the seam. */
+@property --beam-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --metal-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 115deg;
+}
+
+.beam-ring {
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0%,
+    transparent 83%,
+    rgba(255, 255, 255, 0.85) 90%,
+    #ffffff 93%,
+    rgba(255, 255, 255, 0.85) 96%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation-name: beam-rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes beam-rotate {
+  to { --beam-angle: 360deg; }
+}
+
+.metal-edge {
+  background: conic-gradient(
+    from var(--metal-angle),
+    #0a0a0a 0%, #5a5a5a 8%, #f0f0f0 16%, #7a7a7a 24%, #0a0a0a 34%,
+    #e8e8e8 46%, #2a2a2a 58%, #f0f0f0 68%, #4a4a4a 78%, #0a0a0a 88%,
+    #d8d8d8 96%, #0a0a0a 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation-name: metal-rotate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes metal-rotate {
+  to { --metal-angle: 475deg; }
+}
+
+.metal-sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.55) 52%,
+    transparent 65%
+  );
+  background-size: 260% 260%;
+  mix-blend-mode: overlay;
+  animation-name: sheen-sweep;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes sheen-sweep {
+  0%   { background-position: 120% -20%; }
+  100% { background-position: -20% 120%; }
+}
+
+/* Cursor-reactive highlight — real chrome shifts its reflection as you move
+   around it, so this one is driven directly by pointer position (--mx/--my,
+   set via onPointerMove) rather than a scripted loop. Left out of the
+   reduced-motion rule below on purpose: it only moves in direct response to
+   the user's own pointer, not on a timer, so it isn't the kind of automatic
+   motion prefers-reduced-motion is meant to suppress. */
+.metal-highlight {
+  background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.5), transparent 65%);
+  opacity: var(--mh, 0);
+  transition: opacity 0.35s ease;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam-ring, .metal-edge, .metal-sheen {
+    animation: none !important;
+  }
+}
+
 /* ── Projects: responsive section height ──────────────────────────────────────
    Mobile renders a plain scrolling list (natural height). Only md+ gets the
    tall scroll-jacked track that the sticky cube scrubs against. Kept in CSS so

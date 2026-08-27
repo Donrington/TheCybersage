@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useState, useSyncExternalStore } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -72,25 +73,6 @@ const LAYERS: Layer[] = [
     proof: 'Deployment time cut 45% — NextGen Robotics',
   },
 ];
-
-const REDUCE_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(callback: () => void) {
-  const mq = window.matchMedia(REDUCE_MOTION_QUERY);
-  mq.addEventListener('change', callback);
-  return () => mq.removeEventListener('change', callback);
-}
-function getReducedMotionSnapshot() {
-  return window.matchMedia(REDUCE_MOTION_QUERY).matches;
-}
-function getReducedMotionServerSnapshot() {
-  return false;
-}
-
-/** Also reacts live if the OS-level setting changes while the page is open. */
-function useReducedMotion() {
-  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, getReducedMotionServerSnapshot);
-}
 
 /* ── Desktop: horizontal blueprint diagram ──────────────────────────────── */
 function BlueprintDesktop({ layers }: { layers: Layer[] }) {
