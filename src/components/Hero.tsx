@@ -168,10 +168,10 @@ export function Hero() {
           loop
           playsInline
           preload="auto"
-          poster="/hero_cine_poster.jpg"
+          poster="/hero_vide_new_poster.jpg"
           className="absolute inset-0 w-full h-full object-cover"
         >
-          <source src="/hero_cine.mp4" type="video/mp4" />
+          <source src="/hero_vide_new.mp4" type="video/mp4" />
         </video>
         {/* Dark scrim, NOT white. The text is white on mix-blend-mode: difference,
             which renders |255 - backdrop| — so it vanishes over mid-grey (~128)
