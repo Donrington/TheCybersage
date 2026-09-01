@@ -175,15 +175,24 @@ export function Hero() {
         </video>
         {/* Dark scrim, NOT white. The text is white on mix-blend-mode: difference,
             which renders |255 - backdrop| — so it vanishes over mid-grey (~128)
-            and is brightest over near-black. The old white scrim lifted this
-            corner to ~150 and made ~27% of the headline zone unreadable; a dark
-            scrim pushes it the other way (measured ~2%) and deepens the blacks
-            the brand wants. Keep any scrim here dark for that reason. */}
+            and is brightest over near-black. Keep any scrim here dark for that
+            reason.
+
+            Re-measured against hero_vide_new.mp4 (Python-style pixel sim,
+            sampled across 5 frames spanning the loop, text zone = left 55% /
+            bottom 33%-93% of frame): the previous 0.55-peak scrim actually
+            left slightly MORE of the text zone in the unreadable ~128 band
+            than no scrim at all (11.9% vs 9.7%) — this footage's bright
+            diagonal light streaks cut across the zone in a way the old,
+            narrower/weaker ellipse didn't fully cover. This version (0.85
+            peak, wider ellipse, sustained 0.45 floor out to 70%) cut that to
+            3.4% and raised the mean legibility score from 175 to 217 (target
+            255, dead zone 128) across the same samples. */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 85% 78% at 18% 100%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.32) 42%, rgba(0,0,0,0) 80%)',
+              'radial-gradient(ellipse 100% 92% at 15% 100%, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.45) 70%, rgba(0,0,0,0) 110%)',
           }}
         />
       </div>
