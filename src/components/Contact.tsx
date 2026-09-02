@@ -583,10 +583,10 @@ export function Contact() {
                 transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
               >
                 <Image
-                  src="/sage/sage_horiz1_white_trimmed.png"
+                  src="/sage/sage_horiz1_white.png"
                   alt="Cybersage"
-                  width={939}
-                  height={411}
+                  width={800}
+                  height={311}
                   className="opacity-95"
                   style={{ height: 'clamp(3.25rem, 6vw, 5.25rem)', width: 'auto' }}
                 />
