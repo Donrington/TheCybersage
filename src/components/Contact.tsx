@@ -399,8 +399,10 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 export function Contact() {
   const sectionRef   = useRef<HTMLElement>(null);
   const emailRef     = useRef<HTMLAnchorElement>(null);
-  const wordmarkRef  = useRef<HTMLSpanElement>(null);
+  const footerRef    = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  const footerInView  = useInView(footerRef, { once: true, margin: '-10%' });
+  const reduced = useReducedMotion();
   const [modal, setModal] = useState<null | 'message' | 'call'>(null);
 
   useEffect(() => {
@@ -410,88 +412,6 @@ export function Contact() {
     };
     window.addEventListener('open-contact-modal', handler);
     return () => window.removeEventListener('open-contact-modal', handler);
-  }, []);
-
-  /* ── CYBERSAGE wordmark animation ── */
-  useEffect(() => {
-    const el = wordmarkRef.current;
-    if (!el) return;
-
-    let glitchTimer: ReturnType<typeof setTimeout> | undefined;
-
-    const ctx = gsap.context(() => {
-      const split = new SplitText(el, { type: 'chars' });
-      const chars = split.chars as HTMLElement[];
-
-      /*
-       * The span's text color is already rgba(255,255,255,0.032).
-       * Animating GSAP `opacity` would compound with that color alpha
-       * and make the text invisible. Instead, we set an explicit `color`
-       * on each char and animate THAT — leaving CSS opacity untouched.
-       */
-      gsap.set(chars, {
-        color: 'rgba(255,255,255,0)',
-        y: -40,
-        skewX: () => (Math.random() - 0.5) * 10,
-      });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: el,
-          start: 'top bottom', // fire as soon as any part enters viewport
-          toggleActions: 'play none none none',
-        },
-      });
-
-      /* 1 — fly in with a bright flash */
-      tl.to(chars, {
-        color: 'rgba(255,255,255,0.22)',
-        y: 0,
-        skewX: 0,
-        duration: 1.6,
-        stagger: { amount: 0.55, from: 'random' },
-        ease: 'expo.out',
-      });
-
-      /* 2 — settle to the original ghost opacity */
-      tl.to(chars, {
-        color: 'rgba(255,255,255,0.045)',
-        duration: 2,
-        stagger: { amount: 0.4 },
-        ease: 'power2.inOut',
-      }, '-=0.7');
-
-      /* 3 — continuous idle float (y only — never touches color) */
-      chars.forEach((char, i) => {
-        gsap.to(char, {
-          y: `${2 + Math.sin(i * 0.9) * 3}px`,
-          duration: 3.5 + i * 0.2,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-          delay: i * 0.09,
-        });
-      });
-
-      /* 4 — periodic glitch on a random character (color-based, not opacity) */
-      const scheduleGlitch = (delay = 4200) => {
-        glitchTimer = setTimeout(() => {
-          if (!chars.length) return;
-          const i = Math.floor(Math.random() * chars.length);
-          gsap.timeline()
-            .to(chars[i], { color: 'rgba(255,255,255,0.32)', x: 3, skewX: 7, duration: 0.055 })
-            .to(chars[i], { color: 'rgba(255,255,255,0.01)', x: -2, skewX: -5, duration: 0.055 })
-            .to(chars[i], { color: 'rgba(255,255,255,0.045)', x: 0, skewX: 0, duration: 0.1 });
-          scheduleGlitch(1500 + Math.random() * 3000);
-        }, delay);
-      };
-      scheduleGlitch();
-    }, el);
-
-    return () => {
-      clearTimeout(glitchTimer);
-      ctx.revert();
-    };
   }, []);
 
   /* ── Email SplitText animation ── */
@@ -637,141 +557,103 @@ export function Contact() {
           </motion.div>
         </div>
 
-        {/* ── Footer ──────────────────────────────────────────────────────── */}
-        <footer className="border-t border-white/6 mt-0 relative z-10 overflow-hidden">
+        {/* ── Footer ──────────────────────────────────────────────────────────
+            Deliberately restrained: no photo, no continuous jitter/glitch —
+            one calm scroll-triggered reveal on the giant wordmark, then it
+            rests. Asymmetric top split (logo left / nav+socials right)
+            instead of the previous centered-everything layout. */}
+        <footer ref={footerRef} className="relative z-10 overflow-hidden">
 
-          {/* Atmospheric backdrop — ambient glow underneath, the Higgsfield
-              artifact image on top. A single radial mask (not a top-only
-              fade) vignettes the photo on all four sides at once — the
-              source frame has a lighter grey floor filling its right/
-              bottom two-thirds, which would otherwise show as a hard-
-              edged rectangle against the section's near-black background. */}
+          {/* Soft material fade instead of a hard 1px divider line */}
           <div
             aria-hidden
-            className="absolute inset-x-0 bottom-0 pointer-events-none select-none"
-            style={{
-              height: 'clamp(20rem, 45vw, 32rem)',
-              background: 'radial-gradient(ellipse 65% 80% at 50% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, transparent 75%)',
-              maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%)',
-            }}
+            className="h-24 -mb-24 pointer-events-none"
+            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), transparent)' }}
           />
-          <div
-            aria-hidden
-            className="absolute inset-x-0 bottom-0 pointer-events-none select-none"
-            style={{
-              height: 'clamp(20rem, 45vw, 32rem)',
-              maskImage: 'radial-gradient(ellipse 75% 70% at 50% 60%, black 35%, transparent 88%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 75% 70% at 50% 60%, black 35%, transparent 88%)',
-            }}
-          >
-            <Image
-              src="/footer-artifact.jpg"
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover"
-              style={{ opacity: 0.85, mixBlendMode: 'screen' }}
-            />
-          </div>
 
-          {/* Big background wordmark */}
-          <div
-            aria-hidden
-            className="absolute bottom-0 left-0 right-0 pointer-events-none select-none flex justify-center items-end"
-          >
-            <span
-              ref={wordmarkRef}
-              style={{
-                fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontWeight: 900,
-                fontSize: 'clamp(4.5rem, 18vw, 22rem)',
-                letterSpacing: '-0.02em',
-                color: 'rgba(255,255,255,0.045)',
-                lineHeight: 0.82,
-                whiteSpace: 'nowrap',
-                userSelect: 'none',
-              }}
-            >
-              CYBERSAGE
-            </span>
-          </div>
+          <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,7vw,6rem)] pb-[clamp(2.5rem,5vw,3.5rem)]">
 
-          <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(3rem,5vw,5rem)]">
+            {/* Top split — big logo + tagline (left) / nav + socials (right) */}
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 lg:gap-16 mb-[clamp(3rem,6vw,5rem)]">
 
-            {/* Top row: logo + socials */}
-            <div className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-8 mb-10 sm:mb-12">
-              {/* Logo */}
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
+                className="flex flex-col gap-5 max-w-xs"
+                initial={{ opacity: 0, y: 14 }}
                 animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
+                transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
               >
                 <Image
-                  src="/sage/sage_prim_white.png"
+                  src="/sage/sage_horiz1_white_trimmed.png"
                   alt="Cybersage"
-                  width={130}
-                  height={32}
-                  className="opacity-40 hover:opacity-70 transition-opacity duration-300"
+                  width={939}
+                  height={411}
+                  className="opacity-95"
+                  style={{ height: 'clamp(3.25rem, 6vw, 5.25rem)', width: 'auto' }}
                 />
+                <p
+                  style={{
+                    fontFamily: 'var(--font-instrument), Georgia, serif',
+                    fontStyle: 'italic',
+                    fontSize: 'clamp(0.85rem, 1.2vw, 1rem)',
+                    color: 'rgba(255,255,255,0.32)',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Infrastructure &amp; systems architecture for teams that ship.
+                </p>
               </motion.div>
 
-              {/* Socials */}
               <motion.div
-                className="flex items-center justify-center gap-3"
-                initial={{ opacity: 0 }}
-                animate={sectionInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.7, ease: EASE }}
+                className="flex flex-col sm:flex-row-reverse lg:flex-col items-start lg:items-end gap-8 lg:gap-7"
+                initial={{ opacity: 0, y: 14 }}
+                animate={sectionInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.7, delay: 0.65, ease: EASE }}
               >
-                {SOCIALS.map(({ label, href, svg }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="w-9 h-9 border border-white/12 flex items-center justify-center text-white/25 hover:text-white hover:border-white/35 transition-all duration-200"
-                  >
-                    {svg}
-                  </a>
-                ))}
+                <div className="flex items-center gap-3">
+                  {SOCIALS.map(({ label, href, svg }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="w-9 h-9 border border-white/12 flex items-center justify-center text-white/25 hover:text-white hover:border-white/35 transition-all duration-200"
+                    >
+                      {svg}
+                    </a>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-10 gap-y-2.5 text-left lg:text-right">
+                  {[
+                    { label: 'About', href: '#about' },
+                    { label: 'Projects', href: '#work' },
+                    { label: 'Services', href: '#services' },
+                    { label: 'Process', href: '#process' },
+                    { label: 'Systems', href: '#systems' },
+                    { label: 'Credentials', href: '#credentials' },
+                    { label: 'Reviews', href: '#testimonials' },
+                    { label: 'Contact', href: '#contact' },
+                  ].map(({ label, href }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      className="text-[0.58rem] tracking-[0.2em] uppercase text-white/22 hover:text-white/60 transition-colors duration-200 font-medium"
+                      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
               </motion.div>
             </div>
 
-            {/* Middle: nav links */}
+            {/* Launch record badge */}
             <motion.div
-              className="grid grid-cols-3 sm:flex sm:flex-wrap gap-y-4 sm:gap-x-8 sm:gap-y-3 mb-10 sm:mb-12"
+              className="mb-[clamp(3rem,6vw,5rem)]"
               initial={{ opacity: 0 }}
               animate={sectionInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.75, ease: EASE }}
-            >
-              {[
-                { label: 'About', href: '#about' },
-                { label: 'Projects', href: '#work' },
-                { label: 'Services', href: '#services' },
-                { label: 'Process', href: '#process' },
-                { label: 'Systems', href: '#systems' },
-                { label: 'Credentials', href: '#credentials' },
-                { label: 'Reviews', href: '#testimonials' },
-                { label: 'Contact', href: '#contact' },
-              ].map(({ label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="text-[0.58rem] tracking-[0.2em] uppercase text-white/22 hover:text-white/60 transition-colors duration-200 font-medium text-center sm:text-left"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                >
-                  {label}
-                </a>
-              ))}
-            </motion.div>
-
-            {/* Launch record badge */}
-            <motion.div
-              className="flex justify-center sm:justify-start mb-10 sm:mb-12"
-              initial={{ opacity: 0 }}
-              animate={sectionInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.8, ease: EASE }}
             >
               <a
                 href="https://websitelaunches.com/site/cybersage.dev"
@@ -813,8 +695,37 @@ export function Contact() {
                 />
               </a>
             </motion.div>
+          </div>
 
-            {/* Bottom bar */}
+          {/* Giant wordmark — left-aligned (not centered) so it reads as
+              confidently overflowing the grid rather than politely fitted
+              to it; footer's own overflow-hidden crops it on narrow
+              viewports. One reveal on scroll-into-view, then it rests —
+              no idle float, no glitch. */}
+          <div className="pl-[clamp(1.25rem,5vw,5rem)] pb-[clamp(1.5rem,3vw,2.5rem)]">
+            <motion.span
+              aria-hidden
+              style={{
+                display: 'block',
+                fontFamily: 'Satoshi, system-ui, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(4.5rem, 18vw, 21rem)',
+                letterSpacing: '-0.035em',
+                color: 'rgba(255,255,255,0.05)',
+                lineHeight: 0.8,
+                whiteSpace: 'nowrap',
+                userSelect: 'none',
+              }}
+              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 48 }}
+              animate={footerInView ? (reduced ? { opacity: 1 } : { opacity: 1, y: 0 }) : {}}
+              transition={{ duration: 1.2, ease: EASE }}
+            >
+              CYBERSAGE
+            </motion.span>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pb-[clamp(2rem,4vw,3rem)]">
             <motion.div
               className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 border-t border-white/6 pt-8"
               initial={{ opacity: 0 }}
@@ -834,7 +745,7 @@ export function Contact() {
                 Designed &amp; Developed by Carrington
               </p>
             </motion.div>
-          </div>  {/* end z-10 wrapper */}
+          </div>
         </footer>
       </section>
 
