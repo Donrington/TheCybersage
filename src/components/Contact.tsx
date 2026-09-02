@@ -640,13 +640,12 @@ export function Contact() {
         {/* ── Footer ──────────────────────────────────────────────────────── */}
         <footer className="border-t border-white/6 mt-0 relative z-10 overflow-hidden">
 
-          {/* Atmospheric backdrop — a soft radial glow standing in for now.
-              A Higgsfield-generated cinematic image lands in this same
-              layer (behind the wordmark, in front of the flat section bg)
-              once the MCP connection is back — this div is that slot.
-              Masked to fade to transparent at its own top edge so whatever
-              fills it blends into the section above rather than cutting
-              off with a hard rectangle. */}
+          {/* Atmospheric backdrop — ambient glow underneath, the Higgsfield
+              artifact image on top. A single radial mask (not a top-only
+              fade) vignettes the photo on all four sides at once — the
+              source frame has a lighter grey floor filling its right/
+              bottom two-thirds, which would otherwise show as a hard-
+              edged rectangle against the section's near-black background. */}
           <div
             aria-hidden
             className="absolute inset-x-0 bottom-0 pointer-events-none select-none"
@@ -657,6 +656,24 @@ export function Contact() {
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%)',
             }}
           />
+          <div
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 pointer-events-none select-none"
+            style={{
+              height: 'clamp(20rem, 45vw, 32rem)',
+              maskImage: 'radial-gradient(ellipse 75% 70% at 50% 60%, black 35%, transparent 88%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 75% 70% at 50% 60%, black 35%, transparent 88%)',
+            }}
+          >
+            <Image
+              src="/footer-artifact.jpg"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover"
+              style={{ opacity: 0.85, mixBlendMode: 'screen' }}
+            />
+          </div>
 
           {/* Big background wordmark */}
           <div
