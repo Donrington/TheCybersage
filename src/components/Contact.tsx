@@ -577,17 +577,17 @@ export function Contact() {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 lg:gap-16 mb-[clamp(3rem,6vw,5rem)]">
 
               <motion.div
-                className="flex flex-col gap-5 max-w-xs"
+                className="flex flex-col items-center text-center lg:items-start lg:text-left gap-5 max-w-xs"
                 initial={{ opacity: 0, y: 14 }}
                 animate={sectionInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
               >
                 <Image
-                  src="/sage/sage_horiz1_white.png"
+                  src="/sage/sage_horiz1_white_trimmed.png"
                   alt="Cybersage"
-                  width={800}
-                  height={311}
-                  className="opacity-95"
+                  width={939}
+                  height={411}
+                  className="block object-contain opacity-95"
                   style={{ height: 'clamp(3.25rem, 6vw, 5.25rem)', width: 'auto' }}
                 />
                 <p
@@ -604,7 +604,7 @@ export function Contact() {
               </motion.div>
 
               <motion.div
-                className="flex flex-col sm:flex-row-reverse lg:flex-col items-start lg:items-end gap-8 lg:gap-7"
+                className="flex flex-col items-center text-center lg:items-end lg:text-right gap-8 lg:gap-7"
                 initial={{ opacity: 0, y: 14 }}
                 animate={sectionInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.7, delay: 0.65, ease: EASE }}
@@ -624,7 +624,7 @@ export function Contact() {
                   ))}
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-10 gap-y-2.5 text-left lg:text-right">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-2.5">
                   {[
                     { label: 'About', href: '#about' },
                     { label: 'Projects', href: '#work' },
@@ -650,7 +650,7 @@ export function Contact() {
 
             {/* Launch record badge */}
             <motion.div
-              className="mb-[clamp(3rem,6vw,5rem)]"
+              className="flex justify-center lg:justify-start mb-[clamp(3rem,6vw,5rem)]"
               initial={{ opacity: 0 }}
               animate={sectionInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.75, ease: EASE }}
@@ -697,25 +697,31 @@ export function Contact() {
             </motion.div>
           </div>
 
-          {/* Giant wordmark — left-aligned (not centered) so it reads as
-              confidently overflowing the grid rather than politely fitted
-              to it; footer's own overflow-hidden crops it on narrow
-              viewports. One reveal on scroll-into-view, then it rests —
-              no idle float, no glitch. */}
-          <div className="pl-[clamp(1.25rem,5vw,5rem)] pb-[clamp(1.5rem,3vw,2.5rem)]">
+          {/* Giant wordmark — lives in the same max-w-360/px container as the
+              rest of the footer so its left edge lines up with the logo and
+              nav above it (a standalone pl-only div doesn't track a centered
+              max-width container once the viewport exceeds it, which is what
+              was throwing the alignment off). Font-size clamp is sized to
+              the container's own usable width so "CYBERSAGE" fits inside it
+              at every breakpoint rather than overflowing off the right
+              edge — overflow-hidden here is a safety margin, not the
+              containment strategy. One reveal on scroll-into-view, then it
+              rests — no idle float, no glitch. */}
+          <div className="max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pb-[clamp(1.5rem,3vw,2.5rem)] overflow-hidden">
             <motion.span
               aria-hidden
               style={{
                 display: 'block',
                 fontFamily: 'Satoshi, system-ui, sans-serif',
                 fontWeight: 900,
-                fontSize: 'clamp(4.5rem, 18vw, 21rem)',
-                letterSpacing: '-0.035em',
+                fontSize: 'clamp(3.5rem, 13vw, 11rem)',
+                letterSpacing: '-0.03em',
                 color: 'rgba(255,255,255,0.05)',
                 lineHeight: 0.8,
                 whiteSpace: 'nowrap',
                 userSelect: 'none',
               }}
+              className="text-center lg:text-left"
               initial={reduced ? { opacity: 0 } : { opacity: 0, y: 48 }}
               animate={footerInView ? (reduced ? { opacity: 1 } : { opacity: 1, y: 0 }) : {}}
               transition={{ duration: 1.2, ease: EASE }}
