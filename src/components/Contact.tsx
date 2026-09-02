@@ -445,7 +445,7 @@ export function Contact() {
 
       /* 1 — fly in with a bright flash */
       tl.to(chars, {
-        color: 'rgba(255,255,255,0.18)',
+        color: 'rgba(255,255,255,0.22)',
         y: 0,
         skewX: 0,
         duration: 1.6,
@@ -455,7 +455,7 @@ export function Contact() {
 
       /* 2 — settle to the original ghost opacity */
       tl.to(chars, {
-        color: 'rgba(255,255,255,0.032)',
+        color: 'rgba(255,255,255,0.045)',
         duration: 2,
         stagger: { amount: 0.4 },
         ease: 'power2.inOut',
@@ -479,9 +479,9 @@ export function Contact() {
           if (!chars.length) return;
           const i = Math.floor(Math.random() * chars.length);
           gsap.timeline()
-            .to(chars[i], { color: 'rgba(255,255,255,0.28)', x: 3, skewX: 7, duration: 0.055 })
+            .to(chars[i], { color: 'rgba(255,255,255,0.32)', x: 3, skewX: 7, duration: 0.055 })
             .to(chars[i], { color: 'rgba(255,255,255,0.01)', x: -2, skewX: -5, duration: 0.055 })
-            .to(chars[i], { color: 'rgba(255,255,255,0.032)', x: 0, skewX: 0, duration: 0.1 });
+            .to(chars[i], { color: 'rgba(255,255,255,0.045)', x: 0, skewX: 0, duration: 0.1 });
           scheduleGlitch(1500 + Math.random() * 3000);
         }, delay);
       };
@@ -640,6 +640,24 @@ export function Contact() {
         {/* ── Footer ──────────────────────────────────────────────────────── */}
         <footer className="border-t border-white/6 mt-0 relative z-10 overflow-hidden">
 
+          {/* Atmospheric backdrop — a soft radial glow standing in for now.
+              A Higgsfield-generated cinematic image lands in this same
+              layer (behind the wordmark, in front of the flat section bg)
+              once the MCP connection is back — this div is that slot.
+              Masked to fade to transparent at its own top edge so whatever
+              fills it blends into the section above rather than cutting
+              off with a hard rectangle. */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 pointer-events-none select-none"
+            style={{
+              height: 'clamp(20rem, 45vw, 32rem)',
+              background: 'radial-gradient(ellipse 65% 80% at 50% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 45%, transparent 75%)',
+              maskImage: 'linear-gradient(to bottom, transparent 0%, black 25%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 25%)',
+            }}
+          />
+
           {/* Big background wordmark */}
           <div
             aria-hidden
@@ -652,7 +670,7 @@ export function Contact() {
                 fontWeight: 900,
                 fontSize: 'clamp(4.5rem, 18vw, 22rem)',
                 letterSpacing: '-0.02em',
-                color: 'rgba(255,255,255,0.032)',
+                color: 'rgba(255,255,255,0.045)',
                 lineHeight: 0.82,
                 whiteSpace: 'nowrap',
                 userSelect: 'none',
