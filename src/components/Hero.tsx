@@ -265,7 +265,7 @@ export function Hero() {
               mixBlendMode: 'difference',
             }}
           >
-            Infrastructure &amp; Systems Architect designing distributed platforms for regulated industries — from embedded edge to cloud.
+            Infrastructure &amp; Systems Architect building reliable backend systems and cloud infrastructure for companies that can&apos;t afford downtime.
           </p>
 
           {/* Bottom row: CTA (stack pills now live in the TechTicker below the hero) */}
