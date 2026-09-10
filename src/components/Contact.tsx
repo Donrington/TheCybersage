@@ -428,7 +428,7 @@ function FooterNavRow() {
           width={130}
           height={32}
           className="block object-contain"
-          style={{ height: 18, width: 'auto' }}
+          style={{ height: 34, width: 'auto' }}
         />
       </a>
 
@@ -667,7 +667,7 @@ export function Contact() {
             transition={{ duration: 0.6, delay: 0.55, ease: EASE }}
           >
             {[
-              { label: 'Location', value: 'Lagos, Nigeria · Remote Worldwide' },
+              { label: 'Location', value: 'Remote Worldwide' },
               { label: 'Response', value: 'Within 24 hours' },
               { label: 'Status', value: 'Available for projects', pulse: true },
             ].map((item, i) => (
