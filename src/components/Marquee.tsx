@@ -43,11 +43,13 @@ function Row({
   reverse,
   speed,
   onTween,
+  onHoverChange,
 }: {
   clients: typeof CLIENTS;
   reverse: boolean;
   speed: number;
   onTween: (tween: gsap.core.Tween) => void;
+  onHoverChange: (hovering: boolean) => void;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -84,6 +86,8 @@ function Row({
         {items.map((client, i) => (
           <div
             key={`${client.name}-${i}`}
+            onMouseEnter={() => onHoverChange(true)}
+            onMouseLeave={() => onHoverChange(false)}
             className="relative shrink-0 flex items-center justify-center border border-white/8"
             style={{
               width: 'clamp(130px, 15vw, 210px)',
@@ -115,6 +119,25 @@ export function Marquee() {
   // Fixed slots (not push) so a StrictMode dev double-mount overwrites each
   // row's own entry instead of accumulating stale, already-killed tweens.
   const tweensRef = useRef<(gsap.core.Tween | undefined)[]>([]);
+  // Two independent reasons to be paused — offscreen and hovered — tracked
+  // separately so leaving a card doesn't resume the rows while the section
+  // is also currently offscreen, and vice versa.
+  const isVisibleRef = useRef(false);
+  const isHoveredRef = useRef(false);
+
+  const applyPauseState = () => {
+    const shouldPause = !isVisibleRef.current || isHoveredRef.current;
+    for (const tween of tweensRef.current) {
+      if (!tween) continue;
+      if (shouldPause) tween.pause();
+      else tween.resume();
+    }
+  };
+
+  const handleHoverChange = (hovering: boolean) => {
+    isHoveredRef.current = hovering;
+    applyPauseState();
+  };
 
   // Pause both rows' tweens while the section is off-screen — a continuous
   // background animation has no reason to keep ticking when nobody can see
@@ -125,16 +148,44 @@ export function Marquee() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        for (const tween of tweensRef.current) {
-          if (!tween) continue;
-          if (entry.isIntersecting) tween.resume();
-          else tween.pause();
-        }
+        isVisibleRef.current = entry.isIntersecting;
+        applyPauseState();
       },
       { threshold: 0 },
     );
     observer.observe(section);
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Scrolling the page gives the rows a burst of speed via GSAP's own
+  // timeScale (not the tween's core duration/x target, which stays put) —
+  // ramps up fast on each scroll event, then eases back down to normal once
+  // scrolling actually stops. A paused (hovered/offscreen) tween just holds
+  // the new timeScale until it next resumes, so this never fights the hover
+  // or visibility pausing above.
+  useEffect(() => {
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const onScroll = () => {
+      for (const tween of tweensRef.current) {
+        if (!tween) continue;
+        gsap.to(tween, { timeScale: 4.5, duration: 0.25, ease: 'power1.out', overwrite: true });
+      }
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        for (const tween of tweensRef.current) {
+          if (!tween) continue;
+          gsap.to(tween, { timeScale: 1, duration: 0.9, ease: 'power2.out', overwrite: true });
+        }
+      }, 120);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(settleTimer);
+    };
   }, []);
 
   return (
@@ -158,8 +209,8 @@ export function Marquee() {
           strip of logos peeking out below it. */}
       <div className="relative">
         <div className="flex flex-col" style={{ gap: 'clamp(0.6rem,1.4vw,1.25rem)' }}>
-          <Row clients={ROW_A} reverse={false} speed={70} onTween={(t) => { tweensRef.current[0] = t; }} />
-          <Row clients={ROW_B} reverse speed={58} onTween={(t) => { tweensRef.current[1] = t; }} />
+          <Row clients={ROW_A} reverse={false} speed={70} onTween={(t) => { tweensRef.current[0] = t; }} onHoverChange={handleHoverChange} />
+          <Row clients={ROW_B} reverse speed={58} onTween={(t) => { tweensRef.current[1] = t; }} onHoverChange={handleHoverChange} />
         </div>
 
         <div
