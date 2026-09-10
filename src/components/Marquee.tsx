@@ -270,7 +270,7 @@ function Heading() {
           maxWidth: '32ch',
         }}
       >
-        20+ products shipped — from local businesses to funded startups.
+        50+ products shipped — from local businesses to funded startups.
       </p>
     </>
   );

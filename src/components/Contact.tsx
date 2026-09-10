@@ -9,6 +9,7 @@ import { ArrowUpRight, X } from 'lucide-react';
 import Image from 'next/image';
 import { ContactCanvas } from './ContactCanvas';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { useSplitReveal } from '@/lib/useSplitReveal';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -395,13 +396,153 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
   );
 }
 
+/* ── Footer sub-components ───────────────────────────────────────────────── */
+
+/* Shared "dimmed until hovered" nav language — used by both the top utility
+   nav and the bottom bar so they read as one consistent system. Scoped to
+   @media(hover:hover) so touch devices just show the dim resting state
+   rather than risking a hover state that never properly clears on tap. */
+const DIM_HOVER = 'opacity-30 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
+
+function FooterNavRow() {
+  const linkClass = `${DIM_HOVER} text-[0.62rem] tracking-[0.2em] uppercase font-medium whitespace-nowrap`;
+  return (
+    <nav
+      className="relative flex items-center justify-between text-white"
+      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+      aria-label="Footer"
+    >
+      <div className="flex items-center gap-6 sm:gap-8">
+        <a href="#work" className={linkClass}>Work.</a>
+        <a href="#services" className={linkClass}>Services.</a>
+      </div>
+
+      <a
+        href="#"
+        aria-label="Cybersage — back to top"
+        className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${DIM_HOVER}`}
+      >
+        <Image
+          src="/sage/sage_prim_white.png"
+          alt=""
+          width={130}
+          height={32}
+          className="block object-contain"
+          style={{ height: 18, width: 'auto' }}
+        />
+      </a>
+
+      <div className="flex items-center gap-6 sm:gap-8">
+        <a href="#about" className={linkClass}>About.</a>
+        <a href="#contact" className={linkClass}>Contact.</a>
+      </div>
+    </nav>
+  );
+}
+
+/* Per-character 3D flip-up reveal on both lines of a heading at once — see
+   useSplitReveal. The ref'd span (containing both visual lines as block
+   children) is what gets its text split into characters; it's aria-hidden
+   since the actual accessible text lives in the sr-only sibling. */
+function FlipHeading({
+  lines,
+  plainText,
+  align,
+}: {
+  lines: [string, string];
+  plainText: string;
+  align: 'left' | 'right';
+}) {
+  const ref = useSplitReveal<HTMLSpanElement>({ stagger: 0.025, duration: 0.38 });
+  return (
+    <h2
+      className="font-black text-center lg:text-left"
+      style={{
+        fontFamily: 'Satoshi, system-ui, sans-serif',
+        fontWeight: 900,
+        fontSize: 'clamp(2.5rem, 7vw, 6rem)',
+        letterSpacing: '-0.03em',
+        lineHeight: 0.88,
+        textTransform: 'uppercase',
+        color: '#ECEEEE',
+      }}
+    >
+      <span ref={ref} aria-hidden="true" className={align === 'right' ? 'lg:text-right' : 'lg:text-left'} style={{ display: 'inline-block' }}>
+        <span className="block">{lines[0]}</span>
+        <span className="block">{lines[1]}</span>
+      </span>
+      <span className="sr-only">{plainText}</span>
+    </h2>
+  );
+}
+
+function FooterCtaBlock({ onContact }: { onContact: () => void }) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-4 items-center gap-10 lg:gap-6">
+      <div className="order-1 lg:col-span-1">
+        <FlipHeading lines={['You Bring', 'The Brief.']} plainText="You Bring The Brief." align="left" />
+      </div>
+
+      <div className="order-3 lg:order-2 lg:col-span-2 flex flex-col items-center gap-5">
+        <div
+          className="relative w-full max-w-md overflow-hidden aspect-[4/5] lg:aspect-[3/2]"
+          style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+        >
+          <Image src="/hero_vide_new_poster.jpg" alt="" fill sizes="400px" className="object-cover" />
+          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.2)' }} />
+        </div>
+        <MagneticCTA label="Contact Us." variant="solid" onClick={onContact} />
+      </div>
+
+      <div className="order-2 lg:order-3 lg:col-span-1">
+        <FlipHeading lines={['It Gets', 'Shipped.']} plainText="It Gets Shipped." align="right" />
+      </div>
+    </div>
+  );
+}
+
+function FooterBottomBar() {
+  return (
+    <div
+      className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/6 text-white"
+      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+    >
+      <a
+        href="https://websitelaunches.com/site/cybersage.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${DIM_HOVER} text-[0.55rem] tracking-[0.16em] uppercase font-medium text-center sm:text-left`}
+      >
+        © 2026 Abakwe Carrington · Cybersage — Established Online ↗
+      </a>
+
+      <div className="flex items-center gap-4">
+        {SOCIALS.map(({ label, href, svg }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className={`${DIM_HOVER} w-8 h-8 flex items-center justify-center`}
+          >
+            {svg}
+          </a>
+        ))}
+      </div>
+
+      <p className={`${DIM_HOVER} text-[0.55rem] tracking-[0.14em] uppercase text-center sm:text-right`}>
+        Designed &amp; Developed by Carrington
+      </p>
+    </div>
+  );
+}
+
 /* ── Main section ─────────────────────────────────────────────────────────── */
 export function Contact() {
   const sectionRef   = useRef<HTMLElement>(null);
   const emailRef     = useRef<HTMLAnchorElement>(null);
-  const footerRef    = useRef<HTMLElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
-  const footerInView  = useInView(footerRef, { once: true, margin: '-10%' });
   const reduced = useReducedMotion();
   const [modal, setModal] = useState<null | 'message' | 'call'>(null);
 
@@ -558,198 +699,36 @@ export function Contact() {
         </div>
 
         {/* ── Footer ──────────────────────────────────────────────────────────
-            Deliberately restrained: no photo, no continuous jitter/glitch —
-            one calm scroll-triggered reveal on the giant wordmark, then it
-            rests. Asymmetric top split (logo left / nav+socials right)
-            instead of the previous centered-everything layout. */}
-        <footer ref={footerRef} className="relative z-10 overflow-hidden">
-
-          {/* Soft material fade instead of a hard 1px divider line */}
+            Full rebuild: three stacked rows (dimmed utility nav / CTA block
+            with a per-character flip reveal / dimmed bottom bar), replacing
+            the previous asymmetric-split + giant-wordmark layout entirely —
+            nothing lingers or floats in the background anymore; the section
+            is just the three rows on a flat near-black canvas.
+            Height is intentionally NOT forced to 100vh (unlike the reference
+            this was adapted from) — every other section on this site sizes
+            itself from content + clamp-based padding, and breaking that
+            convention here for one section would make it the odd one out. */}
+        <footer className="relative z-10 border-t border-white/6">
           <div
-            aria-hidden
-            className="h-24 -mb-24 pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), transparent)' }}
-          />
-
-          <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,7vw,6rem)] pb-[clamp(2.5rem,5vw,3.5rem)]">
-
-            {/* Top split — big logo + tagline (left) / nav + socials (right) */}
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-10 lg:gap-16 mb-[clamp(3rem,6vw,5rem)]">
-
-              <motion.div
-                className="flex flex-col items-center text-center lg:items-start lg:text-left gap-5 max-w-xs"
-                initial={{ opacity: 0, y: 14 }}
-                animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.55, ease: EASE }}
-              >
-                <Image
-                  src="/sage/sage_horiz1_white_trimmed.png"
-                  alt="Cybersage"
-                  width={939}
-                  height={411}
-                  className="block object-contain opacity-95"
-                  style={{ height: 'clamp(3.25rem, 6vw, 5.25rem)', width: 'auto' }}
-                />
-                <p
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 'clamp(0.85rem, 1.2vw, 1rem)',
-                    color: 'rgba(255,255,255,0.32)',
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Infrastructure &amp; systems architecture for teams that ship.
-                </p>
-              </motion.div>
-
-              <motion.div
-                className="flex flex-col items-center text-center lg:items-end lg:text-right gap-8 lg:gap-7"
-                initial={{ opacity: 0, y: 14 }}
-                animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.65, ease: EASE }}
-              >
-                <div className="flex items-center gap-3">
-                  {SOCIALS.map(({ label, href, svg }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      className="w-9 h-9 border border-white/12 flex items-center justify-center text-white/25 hover:text-white hover:border-white/35 transition-all duration-200"
-                    >
-                      {svg}
-                    </a>
-                  ))}
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-2.5">
-                  {[
-                    { label: 'About', href: '#about' },
-                    { label: 'Projects', href: '#work' },
-                    { label: 'Services', href: '#services' },
-                    { label: 'Process', href: '#process' },
-                    { label: 'Systems', href: '#systems' },
-                    { label: 'Credentials', href: '#credentials' },
-                    { label: 'Reviews', href: '#testimonials' },
-                    { label: 'Contact', href: '#contact' },
-                  ].map(({ label, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      className="text-[0.58rem] tracking-[0.2em] uppercase text-white/22 hover:text-white/60 transition-colors duration-200 font-medium"
-                      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                    >
-                      {label}
-                    </a>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Launch record badge */}
+            className="max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] flex flex-col"
+            style={{ paddingTop: 'clamp(2rem,4vw,3rem)', paddingBottom: 'clamp(2rem,4vw,3rem)', gap: 'clamp(3.5rem,8vw,7rem)' }}
+          >
             <motion.div
-              className="flex justify-center lg:justify-start mb-[clamp(3rem,6vw,5rem)]"
-              initial={{ opacity: 0 }}
-              animate={sectionInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.75, ease: EASE }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
             >
-              <a
-                href="https://websitelaunches.com/site/cybersage.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 border border-white/10 px-4 py-3 hover:border-white/22 transition-all duration-300"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-white/22 group-hover:bg-white/50 shrink-0 transition-colors duration-300" />
-                <div className="flex flex-col gap-[3px]">
-                  <span
-                    style={{
-                      fontFamily: 'Satoshi, system-ui, sans-serif',
-                      fontSize: '0.52rem',
-                      letterSpacing: '0.28em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.35)',
-                      fontWeight: 600,
-                    }}
-                    className="group-hover:text-white/58 transition-colors duration-300"
-                  >
-                    Established Online
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'Satoshi, system-ui, sans-serif',
-                      fontSize: '0.44rem',
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      color: 'rgba(255,255,255,0.16)',
-                      fontWeight: 500,
-                    }}
-                  >
-                    Public launch record
-                  </span>
-                </div>
-                <ArrowUpRight
-                  size={9}
-                  className="text-white/18 group-hover:text-white/45 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0"
-                />
-              </a>
+              <FooterNavRow />
             </motion.div>
-          </div>
 
-          {/* Giant wordmark — lives in the same max-w-360/px container as the
-              rest of the footer so its left edge lines up with the logo and
-              nav above it (a standalone pl-only div doesn't track a centered
-              max-width container once the viewport exceeds it, which is what
-              was throwing the alignment off). Font-size clamp is sized to
-              the container's own usable width so "CYBERSAGE" fits inside it
-              at every breakpoint rather than overflowing off the right
-              edge — overflow-hidden here is a safety margin, not the
-              containment strategy. One reveal on scroll-into-view, then it
-              rests — no idle float, no glitch. */}
-          <div className="max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pb-[clamp(1.5rem,3vw,2.5rem)] overflow-hidden">
-            <motion.span
-              aria-hidden
-              style={{
-                display: 'block',
-                fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontWeight: 900,
-                fontSize: 'clamp(3.5rem, 13vw, 11rem)',
-                letterSpacing: '-0.03em',
-                color: 'rgba(255,255,255,0.05)',
-                lineHeight: 0.8,
-                whiteSpace: 'nowrap',
-                userSelect: 'none',
-              }}
-              className="text-center lg:text-left"
-              initial={reduced ? { opacity: 0 } : { opacity: 0, y: 48 }}
-              animate={footerInView ? (reduced ? { opacity: 1 } : { opacity: 1, y: 0 }) : {}}
-              transition={{ duration: 1.2, ease: EASE }}
-            >
-              CYBERSAGE
-            </motion.span>
-          </div>
+            <FooterCtaBlock onContact={() => setModal('message')} />
 
-          {/* Bottom bar */}
-          <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pb-[clamp(2rem,4vw,3rem)]">
             <motion.div
-              className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 border-t border-white/6 pt-8"
               initial={{ opacity: 0 }}
               animate={sectionInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.85, ease: EASE }}
+              transition={{ duration: 0.5, delay: 0.6, ease: EASE }}
             >
-              <p
-                className="text-[0.55rem] tracking-[0.16em] uppercase text-white/18 font-medium text-center sm:text-left"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-              >
-                © 2026 Abakwe Carrington · Cybersage · Software Engineer, Lagos, Nigeria
-              </p>
-              <p
-                className="text-[0.55rem] tracking-[0.14em] uppercase text-white/12 text-center sm:text-right"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-              >
-                Designed &amp; Developed by Carrington
-              </p>
+              <FooterBottomBar />
             </motion.div>
           </div>
         </footer>
