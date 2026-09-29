@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
       images: [
         `${BASE_URL}/me.png`,
-        `${BASE_URL}/cybersage_og.png`,
+        `${BASE_URL}/sage/cybersage_og_whatsapp.png`,
         `${BASE_URL}/sage/icon-512.png`,
         `${BASE_URL}/hero_image.png`,
         `${BASE_URL}/projects/axflo.png`,

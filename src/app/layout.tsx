@@ -187,9 +187,7 @@ export const metadata: Metadata = {
       'Abakwe Carrington — Software Engineer & Systems Architect',
     description:
       'Software engineer & Infrastructure Architect. 5+ years architecting production-grade distributed systems. AWS · Docker · Go · Django · PostgreSQL. Available worldwide.',
-    // Kept on the original OG image deliberately — X reads twitter:image,
-    // not og:image, so it's unaffected by the WhatsApp/LinkedIn swap above.
-    images: [`${BASE_URL}/cybersage_og.png`],
+    images: [`${BASE_URL}/sage/cybersage_og_whatsapp.png`],
   },
 
   robots: {
