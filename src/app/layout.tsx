@@ -158,10 +158,15 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: `${BASE_URL}/cybersage_og.png`,
+        // WhatsApp and LinkedIn both read og:image (there's no separate
+        // "whatsapp:image"/"linkedin:image" tag) — this is the one that
+        // shows in link previews on both. X/Twitter reads its own
+        // twitter:image tag instead (set separately below), so it isn't
+        // affected by this file.
+        url: `${BASE_URL}/sage/cybersage_og_whatsapp.png`,
         width: 1200,
         height: 630,
-        alt: 'Abakwe Carrington — Software Engineer & Systems Architect',
+        alt: 'Cybersage — Abakwe Carrington, Software Engineer & Systems Architect',
         type: 'image/png',
       },
       {
@@ -182,6 +187,8 @@ export const metadata: Metadata = {
       'Abakwe Carrington — Software Engineer & Systems Architect',
     description:
       'Software engineer & Infrastructure Architect. 5+ years architecting production-grade distributed systems. AWS · Docker · Go · Django · PostgreSQL. Available worldwide.',
+    // Kept on the original OG image deliberately — X reads twitter:image,
+    // not og:image, so it's unaffected by the WhatsApp/LinkedIn swap above.
     images: [`${BASE_URL}/cybersage_og.png`],
   },
 
