@@ -147,7 +147,7 @@ HIPAA-compliant healthcare platform with patient portals, treatment tracking, he
 Anoc.ng, 2025, Audit and Finance Platform, anoc.ng.
 Encrypted compliance platform for Chartered Accountants. Multi-tenant architecture, fifty-plus concurrent enterprise cases, manual processing time cut in half.
 
-Deets, 2025, Industrial Manufacturing System, deetsnigeria.org.
+Deets, 2025, Industrial Manufacturing System.
 Manufacturing operations platform with real-time production tracking, compliance workflows, and WebSocket-powered reporting dashboards.
 
 Axflo Oil and Gas, 2025, Enterprise CMS, axfloo.com.
@@ -159,7 +159,7 @@ Corporate site with custom GSAP animations. 98/100 Lighthouse, sub-second LCP, f
 Tuan Tling Vinyl Flooring, 2026, Home Services, tuantlingvinylflooring.com.
 SEO-optimised service platform with quote funnels and sub-second LCP.
 
-Twerk Queen Lagos, 2024, Event Portfolio.
+Twerk Queen Lagos, 2024, Event Portfolio, twerkqueenlagos.vercel.app.
 GSAP-driven event portfolio and booking engine for a professional performer. Sixty frames per second scroll animations, sub-800ms FCP.
 
 Chris Cleans Texas, 2025, Cleaning Agency, chriscleanstexas.com.

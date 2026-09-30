@@ -90,7 +90,6 @@ const PROJECTS = [
     stack: ['React', 'Node.js', 'PostgreSQL'],
     image: '/projects/deets.png',
     year: '2025',
-    link: 'https://deetsnigeria.org',
   },
   {
     id: 'handyman',
@@ -109,6 +108,7 @@ const PROJECTS = [
     stack: ['Next.js', 'Tailwind', 'GSAP'],
     image: '/projects/twerkqueenlagos.jpg',
     year: '2024',
+    link: 'https://twerkqueenlagos.vercel.app',
   },
   {
     id: 'chrisconteras',
