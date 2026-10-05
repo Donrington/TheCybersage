@@ -10,7 +10,7 @@
 
 - **Primary Focus**: Infrastructure Engineering, Distributed Systems, Cloud Architecture, DevOps, Go/Django Backends, Web Performance.
 - **Geography & Availability**: Based in Lagos, Nigeria (GMT+1). Operates globally for remote contracts, consulting engagements, and senior engineering positions worldwide.
-- **Contact Email**: abakwecarrington@gmail.com
+- **Contact Email**: hello@cybersage.dev
 - **Official Domain**: https://cybersage.dev
 - **GitHub**: https://github.com/Donrington
 - **LinkedIn**: https://www.linkedin.com/in/carrington-abakwe-b0b0a0217
@@ -96,7 +96,7 @@ A: Abakwe Carrington provides four core services:
 A: His core tech stack includes AWS, Docker, Kubernetes, Terraform, Go (Golang), Python (Django, FastAPI), PostgreSQL, Redis, Next.js, React, and TypeScript.
 
 ### Q: How can clients or recruiters hire Abakwe Carrington?
-A: Abakwe Carrington can be contacted directly via email at `abakwecarrington@gmail.com` or through his official portfolio website at `https://cybersage.dev`. He is available for remote full-time positions, contract engineering roles, and system architecture consulting engagements.
+A: Abakwe Carrington can be contacted directly via email at `hello@cybersage.dev` or through his official portfolio website at `https://cybersage.dev`. He is available for remote full-time positions, contract engineering roles, and system architecture consulting engagements.
 
 ---
 

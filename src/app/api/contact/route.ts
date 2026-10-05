@@ -141,7 +141,7 @@ function emailTemplate({ name, email, message }: { name: string; email: string; 
                   </td>
                   <td align="right">
                     <p style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.18);">
-                      abakwecarrington@gmail.com
+                      hello@cybersage.dev
                     </p>
                   </td>
                 </tr>
@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
 
     const { error } = await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'abakwecarrington@gmail.com',
+      to: 'hello@cybersage.dev',
       replyTo: email,
       subject: `New message from ${name} — Portfolio`,
       html: emailTemplate({ name, email, message }),

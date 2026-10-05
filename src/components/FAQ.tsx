@@ -54,7 +54,7 @@ const FAQS: FAQItem[] = [
     category: 'Engagement',
     question: 'How can I hire or contact Abakwe Carrington for a project?',
     answer:
-      'You can reach out directly via email at abakwecarrington@gmail.com, connect on LinkedIn or Twitter (@CarlSwitch_CHUG), or send a message through the contact section below. He is available for remote full-time engineering roles, contract infrastructure work, and system architecture consulting.',
+      'You can reach out directly via email at hello@cybersage.dev, connect on LinkedIn or Twitter (@CarlSwitch_CHUG), or send a message through the contact section below. He is available for remote full-time engineering roles, contract infrastructure work, and system architecture consulting.',
   },
 ];
 

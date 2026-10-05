@@ -279,7 +279,7 @@ const personSchema = {
   jobTitle: ['Infrastructure & Systems Architect', 'Software Engineer', 'Senior Backend Engineer'],
   description:
     'Abakwe Carrington is a software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria, with 5+ years of experience designing distributed, production-grade platforms — cloud infrastructure, DevOps pipelines, and resilient backends on AWS, Docker, Go, Django, and PostgreSQL — for clients worldwide.',
-  email: 'abakwecarrington@gmail.com',
+  email: 'hello@cybersage.dev',
   nationality: { '@type': 'Country', name: 'Nigeria' },
   address: {
     '@type': 'PostalAddress',
@@ -409,7 +409,7 @@ const personSchema = {
   ],
   contactPoint: {
     '@type': 'ContactPoint',
-    email: 'abakwecarrington@gmail.com',
+    email: 'hello@cybersage.dev',
     contactType: 'professional inquiry',
     availableLanguage: 'English',
     areaServed: 'Worldwide',
@@ -450,7 +450,7 @@ const orgSchema = {
     'Software Engineering', 'Systems Architecture', 'Cloud Infrastructure',
     'DevOps', 'Distributed Systems', 'Backend Engineering',
   ],
-  email: 'abakwecarrington@gmail.com',
+  email: 'hello@cybersage.dev',
   sameAs: [
     'https://github.com/Donrington',
     'https://www.linkedin.com/in/carrington-abakwe-b0b0a0217',
@@ -539,7 +539,7 @@ const faqSchema = {
       name: 'How can I hire or contact Abakwe Carrington?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'You can contact Abakwe Carrington directly via email at abakwecarrington@gmail.com or submit a message through his official portfolio website at https://cybersage.dev.',
+        text: 'You can contact Abakwe Carrington directly via email at hello@cybersage.dev or submit a message through his official portfolio website at https://cybersage.dev.',
       },
     },
   ],
