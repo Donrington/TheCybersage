@@ -177,8 +177,11 @@ export async function POST(req: NextRequest) {
     }
 
     const { error } = await resend.emails.send({
+      // Resend's shared sender (onboarding@resend.dev) only delivers to the
+      // account's own verified email until cybersage.dev is a verified
+      // sending domain. Switch `to` to hello@cybersage.dev once it is.
       from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'hello@cybersage.dev',
+      to: 'abakwecarrington@gmail.com',
       replyTo: email,
       subject: `New message from ${name} — Portfolio`,
       html: emailTemplate({ name, email, message }),
