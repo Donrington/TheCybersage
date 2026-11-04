@@ -248,6 +248,16 @@ const PROJECTS = [
     year: '2026',
     link: 'https://ver-share-circle.vercel.app',
   },
+  {
+    id: 'tuffapp',
+    name: 'TUFF',
+    category: 'Fitness Challenge Platform',
+    tagline: 'Team fitness challenges, streaks and leaderboards. Next.js App Router frontend, Express/MongoDB API, dual-cookie JWT auth with Google OAuth — every stat computed live from logged activity, not stored counters.',
+    stack: ['Next.js', 'Express', 'MongoDB', 'TypeScript'],
+    image: '/projects/tuff-app-home.png',
+    year: '2026',
+    link: 'https://thetuffapp.com',
+  },
 ] as const;
 
 type Project = (typeof PROJECTS)[number];
