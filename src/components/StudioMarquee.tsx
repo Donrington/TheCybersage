@@ -93,7 +93,7 @@ function Row({
                 aria-hidden
                 fill
                 loading="lazy"
-                quality={60}
+                quality={75}
                 sizes="(max-width: 768px) 45vw, 30vw"
                 className="object-cover"
               />

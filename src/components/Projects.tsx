@@ -638,7 +638,7 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
           alt={project.name}
           fill
           className="object-cover"
-          quality={72}
+          quality={75}
           sizes="100vw"
           loading="lazy"
         />

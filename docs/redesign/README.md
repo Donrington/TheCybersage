@@ -51,6 +51,18 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 10 | Contact and footer | |
 | 11 | Final pass (Lighthouse, four widths, a11y, metadata) | |
 
+## Open items from Prompt 1 (not fixed — need a decision or dedicated pass)
+
+1. **Static `/` vs the CSP nonce.** See "Open decision" in `docs/perf/budget.md`. The highest-impact
+   remaining fix; blocked on a security trade-off only the owner should sign off on.
+2. **19 pre-existing ESLint errors**, surfaced by the Next.js 16.4.5 upgrade's stricter
+   `react-hooks/*` (React Compiler) rules — not introduced by this redesign, not present in the
+   16.2.6 config, and not build-blocking (`next build` succeeds either way). Files: `not-found.tsx`,
+   `AIAssistant.tsx`, `ContactCanvas.tsx`, `Credentials.tsx`, `CustomCursor.tsx`, `Stack.tsx`. Rules:
+   `react-hooks/immutability`, `react-hooks/set-state-in-effect`, `react-hooks/use-memo`. Worth a
+   dedicated pass since these touch files Prompt 2+ will rework anyway (CustomCursor, Credentials).
+   Run `npx eslint src` for the current list.
+
 ## Working rules
 
 1. Build each redesigned section as a new component next to the old one (`HeroV2`, `WorkV2`, ...); swap the

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 import { SmoothScroll } from '@/lib/SmoothScroll';
@@ -21,9 +22,13 @@ import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
 import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
-import { AIAssistant } from '@/components/AIAssistant';
 import { StudioMarquee } from '@/components/StudioMarquee';
-import { CustomCursor } from '@/components/CustomCursor';
+
+// Both are fixed-position chrome with no layout footprint of their own, so a
+// client-only chunk (no SSR, no server-rendered placeholder) costs nothing
+// visually and keeps thinking-orbs / the cursor's rAF loop out of the main bundle.
+const AIAssistant = dynamic(() => import('@/components/AIAssistant').then((m) => m.AIAssistant), { ssr: false });
+const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) => m.CustomCursor), { ssr: false });
 
 function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -63,13 +68,14 @@ export default function Home() {
       <SmoothScroll>
         <Navbar />
         <main>
-          {/* Static indexing helper for crawlers & search bots */}
+          {/* Static indexing helper for crawlers & search bots. h2 (not h1):
+              the page's one h1 is the visible name in Hero, just below. */}
           <article className="sr-only">
-            <h1>Abakwe Carrington — Software Engineer &amp; Systems Architect</h1>
+            <h2>Abakwe Carrington — Software Engineer &amp; Systems Architect</h2>
             <p>
               Abakwe Carrington (Cybersage / Donrington) is an Infrastructure &amp; Systems Architect and Senior Software Engineer based in Lagos, Nigeria, working with remote clients worldwide across the United States, United Kingdom, Canada, Australia, and Europe.
             </p>
-            <h2>Core Stack &amp; Engineering Disciplines</h2>
+            <h3>Core Stack &amp; Engineering Disciplines</h3>
             <p>AWS Cloud Infrastructure, Docker Containerisation, Kubernetes, Terraform Infrastructure as Code, Go (Golang), Python Django, PostgreSQL, Redis, Microservices System Design, Next.js, and TypeScript.</p>
           </article>
 

@@ -204,6 +204,7 @@ export function CurrentlyBuilding() {
               src="/logo/NEXTGEN PL (Landscape) WHITE.png"
               alt="NextGen Robotics"
               fill
+              sizes="128px"
               className="object-contain object-left"
             />
           </div>
@@ -228,6 +229,7 @@ export function CurrentlyBuilding() {
             src="/logo/theblacke.png"
             alt="The Black-E"
             fill
+            sizes="128px"
             className="object-contain object-left"
           />
         </div>
@@ -244,6 +246,7 @@ export function CurrentlyBuilding() {
             src="/logo/ver.png"
             alt="VER"
             fill
+            sizes="80px"
             className="object-contain object-left"
           />
         </div>

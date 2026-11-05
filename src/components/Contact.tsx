@@ -7,9 +7,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
 import Image from 'next/image';
-import { ContactCanvas } from './ContactCanvas';
+import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
+
+// three + @react-three/fiber in their own chunk, fetched only once Contact is
+// reached (it is the bottom-most section) and never under reduced motion.
+const ContactCanvas = dynamic(() => import('./ContactCanvas').then((m) => m.ContactCanvas), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -488,7 +492,7 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
           className="relative w-full max-w-md overflow-hidden aspect-[4/5] lg:aspect-[3/2]"
           style={{ border: '1px solid rgba(255,255,255,0.08)' }}
         >
-          <Image src="/hero_vide_new_poster.jpg" alt="" fill sizes="400px" className="object-cover" />
+          <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover" />
           <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.2)' }} />
         </div>
         <MagneticCTA label="Contact Us." variant="solid" onClick={onContact} />
@@ -583,9 +587,10 @@ export function Contact() {
         data-theme="dark"
         className="w-full bg-[#0A0A0A] border-t border-white/6 relative overflow-hidden"
       >
-        {/* Constellation background */}
+        {/* Constellation background. Skipped entirely under reduced motion,
+            and not mounted until the section is actually in view. */}
         <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
-          <ContactCanvas />
+          {sectionInView && !reduced && <ContactCanvas />}
         </div>
 
         <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(5rem,10vw,11rem)] pb-0">

@@ -130,8 +130,8 @@ export function PageLoader({ onDone }: { onDone: () => void }) {
           src="/sage/sage_prim_white.png"
           alt="Cybersage"
           width={520}
-          height={140}
-          priority
+          height={533}
+          preload
           style={{ height: 'clamp(60px, 12vw, 130px)', width: 'auto', objectFit: 'contain', opacity: 0.88 }}
         />
 

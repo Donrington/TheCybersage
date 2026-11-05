@@ -286,6 +286,7 @@ export function Testimonials() {
                         src={t.logo}
                         alt={t.company}
                         fill
+                        sizes="128px"
                         className="object-contain object-left"
                         style={t.logoScale ? { transform: `scale(${t.logoScale})`, transformOrigin: 'left center' } : undefined}
                       />

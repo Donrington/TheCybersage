@@ -524,8 +524,8 @@ export function Navbar() {
               src="/sage/sage_horiz1_white.png"
               alt="Cybersage"
               width={200}
-              height={50}
-              priority
+              height={88}
+              loading="eager"
               className="block object-contain"
               style={{ height: 46, width: 'auto' }}
             />
@@ -575,8 +575,8 @@ export function Navbar() {
               src="/sage/sage_horiz1_white.png"
               alt="Cybersage"
               width={200}
-              height={50}
-              priority
+              height={88}
+              loading="eager"
               className="block object-contain"
               style={{ height: 38, width: 'auto' }}
             />

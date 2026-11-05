@@ -70,6 +70,15 @@ const nextConfig: NextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
+      // Media files are not content-hashed (unlike /_next/static), so avoid
+      // `immutable`: replacing one in place should still reach returning
+      // visitors within a day.
+      {
+        source: '/(.*)\\.(mp4|webm|jpe?g|webp)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+        ],
+      },
     ];
   },
 };

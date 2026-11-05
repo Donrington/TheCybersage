@@ -237,7 +237,7 @@ export function Process() {
                 boxShadow: '0 24px 60px rgba(0,0,0,0.55)',
               }}
             >
-              <Image src={thumb} alt="" fill sizes="300px" quality={60} className="object-cover" />
+              <Image src={thumb} alt="" fill sizes="300px" quality={75} className="object-cover" />
             </motion.div>
           )}
         </AnimatePresence>

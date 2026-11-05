@@ -192,6 +192,21 @@ body {
   }
 }
 
+/* Global safety net: most sections already check prefers-reduced-motion in
+   JS (useReducedMotion) before animating, but several don't yet (tracked in
+   docs/redesign/map-brand.md). This stops every CSS transition and keyframe
+   animation outright as a floor, regardless of whether a component checks.
+   It cannot stop GSAP ScrollTrigger scrub/pin or rAF-driven motion — those
+   still need a JS-level check, which is part of the Prompt 2/8 pass. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Projects: responsive section height ──────────────────────────────────────
    Mobile renders a plain scrolling list (natural height). Only md+ gets the
    tall scroll-jacked track that the sticky cube scrubs against. Kept in CSS so

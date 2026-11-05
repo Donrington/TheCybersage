@@ -160,19 +160,30 @@ export function Hero() {
           style={{ position: 'absolute', inset: 0, padding: 2, pointerEvents: 'none', zIndex: 20, animationDuration: '9s', borderRadius: 'inherit' }}
         />
       )}
-      {/* Video background */}
+      {/* Video background. Reduced motion shows the poster only: no video
+          element, no bytes fetched. (Re-encoded 2026-11-05: 2.9MB -> 508KB,
+          silent, same frames — see docs/perf/budget.md.) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          poster="/hero_vide_new_poster.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/hero_vide_new.mp4" type="video/mp4" />
-        </video>
+        {reduced ? (
+          // eslint-disable-next-line @next/next/no-img-element -- plain background image, not a next/image layout slot
+          <img
+            src="/hero-poster.jpg"
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/hero-poster.jpg"
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src="/hero-loop.mp4" type="video/mp4" />
+          </video>
+        )}
         {/* Dark scrim, NOT white. The text is white on mix-blend-mode: difference,
             which renders |255 - backdrop| — so it vanishes over mid-grey (~128)
             and is brightest over near-black. Keep any scrim here dark for that
