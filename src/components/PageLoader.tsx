@@ -147,12 +147,11 @@ export function PageLoader({ onDone }: { onDone: () => void }) {
           />
           <span
             style={{
-              fontFamily: 'var(--font-instrument), Georgia, serif',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              fontSize: 'clamp(1.1rem, 2.2vw, 1.5rem)',
-              color: 'rgba(255,255,255,0.28)',
-              letterSpacing: '0.05em',
+              fontFamily: 'Satoshi, system-ui, sans-serif',
+              fontWeight: 500,
+              fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
+              color: 'rgba(255,255,255,0.56)',
+              letterSpacing: '0.02em',
             }}
           >
             Loading portfolio
@@ -193,7 +192,7 @@ export function PageLoader({ onDone }: { onDone: () => void }) {
         className="absolute bottom-7 left-6 z-10 pointer-events-none"
         style={{
           fontFamily: 'Satoshi, system-ui, sans-serif',
-          fontSize: '0.5rem',
+          fontSize: '0.75rem',
           letterSpacing: '0.26em',
           textTransform: 'uppercase',
           color: 'rgba(255,255,255,0.14)',

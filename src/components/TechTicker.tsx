@@ -55,7 +55,7 @@ export function TechTicker() {
                 fontWeight: 700,
                 fontSize: 'clamp(1.1rem,2.6vw,2.1rem)',
                 letterSpacing: '-0.01em',
-                color: 'rgba(10,10,10,0.22)',
+                color: 'rgba(10,10,10,0.58)',
               }}
             >
               {t}

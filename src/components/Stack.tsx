@@ -13,8 +13,9 @@ const WORDS = [
   'Idempotent',  'Distributed',  'Type-safe',     'Secure',
 ];
 
-const LINE1 = 'Built to Scale.';
-const LINE2 = 'Engineered.';
+// One statement across two lines (src/content/site.ts → SECTIONS.stack).
+const LINE1 = 'The stack behind';
+const LINE2 = 'every build.';
 
 // ─── Seeded pseudo-random — stable across SSR/CSR ─────────────────────────────
 function sr(seed: number) {
@@ -233,14 +234,8 @@ export function Stack() {
       >
         {/* Section label */}
         <motion.p
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontSize: '0.52rem',
-            letterSpacing: '0.28em',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.18)',
-            marginBottom: 'clamp(2rem, 4vw, 3.5rem)',
-          }}
+          className="t-label text-on-ink-3"
+          style={{ marginBottom: 'clamp(2rem, 4vw, 3.5rem)' }}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -249,19 +244,22 @@ export function Stack() {
           Technologies
         </motion.p>
 
-        {/* Line 1 — heavy, interactive */}
+        {/* One heading over two lines, both interactive. Was two <h2>s with the
+            second in ghosted italic serif; now one statement, one typeface. */}
         <h2
+          aria-label={`${LINE1} ${LINE2}`}
           style={{
             fontFamily: 'Satoshi, system-ui, sans-serif',
             fontWeight: 900,
-            fontSize: 'clamp(3.2rem, 10vw, 9.5rem)',
+            fontSize: 'clamp(2.6rem, 7.5vw, 7rem)',
             letterSpacing: '-0.05em',
-            lineHeight: 0.9,
-            color: 'rgba(255,255,255,0.92)',
+            lineHeight: 0.92,
+            color: 'rgba(255,255,255,0.94)',
             display: 'block',
             margin: 0,
           }}
         >
+          <span aria-hidden style={{ display: 'block' }}>
           {l1.map((char, i) => (
             <span
               key={i}
@@ -274,22 +272,8 @@ export function Stack() {
               {char === ' ' ? ' ' : char}
             </span>
           ))}
-        </h2>
-
-        {/* Line 2 — italic serif, dim */}
-        <h2
-          style={{
-            fontFamily: 'var(--font-instrument), Georgia, serif',
-            fontWeight: 400,
-            fontStyle: 'italic',
-            fontSize: 'clamp(3.2rem, 10vw, 9.5rem)',
-            letterSpacing: '-0.03em',
-            lineHeight: 0.9,
-            color: 'rgba(255,255,255,0.12)',
-            display: 'block',
-            margin: 0,
-          }}
-        >
+          </span>
+          <span aria-hidden style={{ display: 'block' }}>
           {l2.map((char, i) => (
             <span
               key={i}
@@ -302,6 +286,7 @@ export function Stack() {
               {char === ' ' ? ' ' : char}
             </span>
           ))}
+          </span>
         </h2>
 
         {/* Hairline divider */}
@@ -322,10 +307,10 @@ export function Stack() {
         <motion.p
           style={{
             fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontSize: 'clamp(0.6rem, 1.4vw, 0.78rem)',
+            fontSize: 'clamp(0.75rem, 1.4vw, 0.78rem)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.2)',
+            color: 'rgba(255,255,255,0.56)',
             maxWidth: '28rem',
             margin: '0 auto',
             lineHeight: 2,
@@ -373,10 +358,10 @@ export function Stack() {
               <div
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',
-                  fontSize: '0.48rem',
+                  fontSize: '0.75rem',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,0.2)',
+                  color: 'rgba(255,255,255,0.56)',
                   marginTop: '0.5rem',
                 }}
               >

@@ -232,14 +232,14 @@ export function Hero() {
             >
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#FFFFFF' }} />
               <span
-                className="text-[0.6rem] font-medium tracking-[0.2em] uppercase"
+                className="text-xs font-medium tracking-[0.2em] uppercase"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#FFFFFF' }}
               >
                 Available for Work
               </span>
             </span>
             <span
-              className="text-[0.6rem] font-medium tracking-[0.15em] uppercase"
+              className="text-xs font-medium tracking-[0.15em] uppercase"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
             >
               Lagos, Nigeria · Remote Worldwide
@@ -294,7 +294,7 @@ export function Hero() {
                 }}
                 onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
                 onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
-                className="group flex items-center gap-2 bg-black text-white px-6 py-3.5 text-[0.7rem] font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
+                className="group flex items-center gap-2 bg-black text-white px-6 py-3.5 text-xs font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative' }}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -319,7 +319,7 @@ export function Hero() {
               <motion.button
                 data-cursor="hire"
                 onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
-                className="text-[0.7rem] font-medium tracking-[0.18em] uppercase border px-6 py-3.5 transition-opacity duration-200 hover:opacity-70"
+                className="text-xs font-medium tracking-[0.18em] uppercase border px-6 py-3.5 transition-opacity duration-200 hover:opacity-70"
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',
                   color: '#FFFFFF',
@@ -340,7 +340,7 @@ export function Hero() {
       {/* Side label — desktop */}
       <div className="absolute right-[clamp(1rem,2vw,2.5rem)] top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-3 z-10">
         <span
-          className="text-[0.55rem] tracking-[0.25em] uppercase [writing-mode:vertical-rl] rotate-180"
+          className="text-xs tracking-[0.25em] uppercase [writing-mode:vertical-rl] rotate-180"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
         >
           Systems · Cloud · Distributed · Remote

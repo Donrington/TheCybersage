@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import { ScrollRevealText } from './ScrollRevealText';
+import { SECTIONS } from '@/content/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -144,10 +145,9 @@ export function About() {
             initial={{ opacity: 0, x: -12 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-black/30 font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-canvas-3"
           >
-            01 / About
+            {SECTIONS.about.label}
           </motion.span>
           <div ref={lineRef} className="flex-1 h-px bg-black/10" />
         </div>
@@ -157,24 +157,9 @@ export function About() {
           initial={{ opacity: 0, y: 32 }}
           animate={sectionInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, delay: 0.1, ease: EASE }}
-          className="font-black text-black tracking-tighter leading-[0.88] mb-[clamp(3rem,6vw,7rem)]"
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 900,
-            fontSize:   'clamp(4rem, 10vw, 13rem)',
-          }}
+          className="t-h2 text-ink max-w-[18ch] mb-[clamp(3rem,6vw,7rem)]"
         >
-          About{' '}
-          <span
-            style={{
-              fontFamily: 'var(--font-instrument), Georgia, serif',
-              fontStyle:  'italic',
-              fontWeight: 400,
-              color:      'rgba(10,10,10,0.30)',
-            }}
-          >
-            Me
-          </span>
+          {SECTIONS.about.heading}
         </motion.h2>
 
         {/* Grid */}
@@ -210,7 +195,7 @@ export function About() {
                   initial={{ opacity: 0 }}
                   animate={statsInView ? { opacity: 1 } : {}}
                   transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: EASE }}
-                  className="mt-2 text-[0.75rem] font-semibold tracking-[0.14em] uppercase text-black/40"
+                  className="mt-2 text-[0.75rem] font-semibold tracking-[0.14em] uppercase text-on-canvas-3"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {stat.label}
@@ -234,7 +219,7 @@ export function About() {
             transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
           >
             <p
-              className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase text-black/35 mb-4"
+              className="text-xs font-semibold tracking-[0.18em] uppercase text-on-canvas-3 mb-4"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               Shipped across
@@ -246,7 +231,7 @@ export function About() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={statsInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.6 + i * 0.05, ease: EASE }}
-                  className="border border-black/12 px-3 py-1.5 text-[0.68rem] font-medium tracking-[0.06em] text-black/50"
+                  className="border border-black/12 px-3 py-1.5 text-xs font-medium tracking-[0.06em] text-black/50"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {country}
@@ -296,7 +281,7 @@ export function About() {
                   href="https://github.com/Donrington"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[0.65rem] tracking-[0.18em] uppercase font-medium text-black/40 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
+                  className="text-xs tracking-[0.18em] uppercase font-medium text-on-canvas-3 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   GitHub
@@ -305,7 +290,7 @@ export function About() {
                   href="https://www.linkedin.com/in/carrington-abakwe-b0b0a0217"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[0.65rem] tracking-[0.18em] uppercase font-medium text-black/40 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
+                  className="text-xs tracking-[0.18em] uppercase font-medium text-on-canvas-3 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   LinkedIn

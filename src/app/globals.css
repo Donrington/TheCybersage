@@ -22,6 +22,8 @@
   --font-serif: var(--font-instrument), Georgia, serif;
   --font-mono:  ui-monospace, 'JetBrains Mono', monospace;
 
+  /* Brand palette (unchanged): ink, canvas, off-white. Monochrome by design;
+     the only non-neutral colour on the site is the emerald "live" dot. */
   --color-ink:       #0A0A0A;
   --color-ink-60:    rgba(10,10,10,0.60);
   --color-ink-40:    rgba(10,10,10,0.40);
@@ -31,11 +33,60 @@
   --color-off:       #F5F5F3;
   --color-dark:      #0A0A0A;
   --color-on-dark:   #FFFFFF;
+
+  /* Text tints. Every readable step clears WCAG 4.5:1 on its own surface:
+     on ink, white .56 = 6.4:1; on canvas, ink .58 = 5.4:1. Below these,
+     colour is for hairlines and decoration only, never for words. */
+  --color-on-ink-1:  rgba(255,255,255,0.94);
+  --color-on-ink-2:  rgba(255,255,255,0.72);
+  --color-on-ink-3:  rgba(255,255,255,0.56);
+  --color-on-ink-line: rgba(255,255,255,0.10);
+  --color-on-canvas-1: rgba(10,10,10,0.92);
+  --color-on-canvas-2: rgba(10,10,10,0.70);
+  --color-on-canvas-3: rgba(10,10,10,0.58);
+  --color-on-canvas-line: rgba(10,10,10,0.10);
+  --color-live:      #34D399; /* emerald-400: status dot only */
+
+  /* One easing curve for the whole site (fast start, long soft landing). */
+  --ease-sig: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* ── Custom cursor — hide native on pointer:fine desktop ─────────────────── */
-@media (pointer: fine) and (min-width: 768px) {
-  *, *::before, *::after { cursor: none !important; }
+/* Motion durations: three, no others. Mirrored in src/lib/motion.ts. */
+:root {
+  --dur-fast: 200ms;
+  --dur-base: 600ms;
+  --dur-slow: 1000ms;
+}
+
+/* ── Type scale. Nothing on the site goes below 12px (0.75rem). ─────────── */
+.t-display { font-weight: 900; font-size: clamp(2.75rem, 7vw, 6.5rem); line-height: 0.92; letter-spacing: -0.045em; }
+.t-h2      { font-weight: 900; font-size: clamp(2rem, 4.6vw, 4rem);    line-height: 0.98; letter-spacing: -0.04em; text-wrap: balance; }
+.t-h3      { font-weight: 800; font-size: clamp(1.25rem, 2vw, 1.625rem); line-height: 1.15; letter-spacing: -0.025em; }
+.t-lede    { font-weight: 400; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.6; }
+.t-body    { font-weight: 400; font-size: 1rem; line-height: 1.65; }
+.t-label   { font-weight: 600; font-size: 0.75rem; line-height: 1.3; letter-spacing: 0.16em; text-transform: uppercase; }
+.t-mono    { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; }
+
+/* ── Reveal (src/components/ui/Reveal.tsx) ────────────────────────────────
+   Elements are visible by default (server HTML, no JS, reduced motion).
+   Reveal only marks below-the-fold elements as pending after mount, so
+   nothing above the fold ever flashes. */
+[data-reveal="pending"] { opacity: 0; transform: translateY(24px); }
+[data-reveal="in"] {
+  opacity: 1; transform: none;
+  transition: opacity var(--dur-base) var(--ease-sig), transform var(--dur-slow) var(--ease-sig);
+}
+
+/* SplitHeading line masks */
+.split-line      { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.split-line > span { display: inline-block; will-change: transform; }
+
+/* ── Custom cursor ────────────────────────────────────────────────────────
+   The native cursor is hidden only while CustomCursor is actually mounted
+   (it adds .has-custom-cursor). Before it loads, without JS, on touch, and
+   under reduced motion, visitors keep the native cursor. Never zero, never two. */
+html.has-custom-cursor, html.has-custom-cursor *, html.has-custom-cursor *::before, html.has-custom-cursor *::after {
+  cursor: none !important;
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */

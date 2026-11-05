@@ -60,7 +60,7 @@ function WytnestLogo() {
         }}
       >
         wyt
-        <span style={{ fontWeight: 300, color: 'rgba(255,255,255,0.42)' }}>nest</span>
+        <span style={{ fontWeight: 300, color: 'rgba(255,255,255,0.56)' }}>nest</span>
       </span>
     </div>
   );
@@ -124,10 +124,8 @@ function Row({
             {build.name}{' '}
             <span
               style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle:  'italic',
                 fontWeight: 400,
-                color:      'rgba(255,255,255,0.38)',
+                color:      'rgba(255,255,255,0.56)',
               }}
             >
               — {build.tagline}
@@ -139,7 +137,7 @@ function Row({
               <span key={chip.label} className="flex items-center gap-2">
                 <span className="w-1 h-1 rounded-full bg-white/30 shrink-0" />
                 <span
-                  className="text-[0.6rem] tracking-[0.05em] text-white/35"
+                  className="text-xs tracking-[0.05em] text-on-ink-3"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   <span className="text-white/55">{chip.label}</span>
@@ -156,13 +154,13 @@ function Row({
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="view"
-          className="group inline-flex items-center gap-2 text-white/35 hover:text-white transition-colors duration-200 shrink-0"
+          className="group inline-flex items-center gap-2 text-on-ink-3 hover:text-white transition-colors duration-200 shrink-0"
           initial={{ opacity: 0, x: 20 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.6, delay: delay + 0.16, ease: EASE }}
         >
           <span
-            className="text-[0.58rem] tracking-[0.2em] uppercase font-medium"
+            className="text-xs tracking-[0.2em] uppercase font-medium"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           >
             View Live
@@ -192,7 +190,7 @@ export function CurrentlyBuilding() {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             </span>
             <span
-              className="text-[0.55rem] tracking-[0.24em] uppercase text-emerald-300/70 font-semibold"
+              className="text-xs tracking-[0.24em] uppercase text-emerald-300/70 font-semibold"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               Currently Building

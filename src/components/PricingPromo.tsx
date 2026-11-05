@@ -3,6 +3,8 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -22,6 +24,7 @@ export function PricingPromo() {
   const ref     = useRef<HTMLElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const inView  = useInView(ref, { once: true, margin: '-10%' });
+  const reduced = useReducedMotion();
 
   return (
     <section
@@ -34,13 +37,12 @@ export function PricingPromo() {
         {/* Section label */}
         <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,4rem)]">
           <motion.span
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-black/30 font-medium shrink-0"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-canvas-3 shrink-0"
             initial={{ opacity: 0, x: -12 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            07 / Pricing
+            {SECTIONS.pricing.label}
           </motion.span>
           <motion.div
             ref={lineRef}
@@ -77,42 +79,19 @@ export function PricingPromo() {
           {/* Left — display headline, pinned on desktop while the right
               column scrolls past it */}
           <div className="lg:sticky lg:top-22 lg:self-start">
-            <h2
-              className="font-black text-black tracking-tighter leading-[0.88]"
-              style={{
-                fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontWeight: 900,
-                fontSize:   'clamp(2.5rem, 5.85vw, 5.25rem)',
-              }}
-            >
-              {['Transparent'].map((word, i) => (
-                <span key={word} className="block overflow-hidden">
+            <h2 aria-label={SECTIONS.pricing.heading} className="t-h2 text-ink max-w-[14ch]">
+              {SECTIONS.pricing.heading.split(' ').map((word, i) => (
+                <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
                   <motion.span
                     className="block"
-                    initial={{ y: '110%' }}
+                    initial={reduced ? false : { y: '110%' }}
                     animate={inView ? { y: 0 } : {}}
-                    transition={{ duration: 0.75, delay: 0.05 + i * 0.1, ease: EASE }}
+                    transition={{ duration: 0.75, delay: 0.05 + i * 0.06, ease: EASE }}
                   >
                     {word}
                   </motion.span>
                 </span>
               ))}
-              <span className="block overflow-hidden">
-                <motion.span
-                  className="block"
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle:  'italic',
-                    fontWeight: 400,
-                    color:      'rgba(10,10,10,0.28)',
-                  }}
-                  initial={{ y: '110%' }}
-                  animate={inView ? { y: 0 } : {}}
-                  transition={{ duration: 0.75, delay: 0.18, ease: EASE }}
-                >
-                  Pricing
-                </motion.span>
-              </span>
             </h2>
           </div>
 
@@ -173,11 +152,11 @@ export function PricingPromo() {
                     </span>
                   </div>
                   <span
-                    className="text-black/35"
+                    className="text-on-canvas-3"
                     style={{
                       fontFamily: 'Satoshi, system-ui, sans-serif',
                       fontWeight: 400,
-                      fontSize:   '0.72rem',
+                      fontSize:   '0.75rem',
                       letterSpacing: '0.04em',
                     }}
                   >
@@ -197,7 +176,7 @@ export function PricingPromo() {
               <a
                 href="https://cybersage.dev/pricing"
                 data-cursor="view"
-                className="group flex items-center gap-2 bg-black text-white px-7 py-3.5 text-[0.68rem] font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
+                className="group flex items-center gap-2 bg-black text-white px-7 py-3.5 text-xs font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 View All Tiers
@@ -207,10 +186,10 @@ export function PricingPromo() {
                 />
               </a>
               <span
-                className="text-black/30"
+                className="text-on-canvas-3"
                 style={{
                   fontFamily:    'Satoshi, system-ui, sans-serif',
-                  fontSize:      '0.65rem',
+                  fontSize:      '0.75rem',
                   letterSpacing: '0.06em',
                 }}
               >

@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowLeft, ArrowRight, Quote } from 'lucide-react';
 import Image from 'next/image';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -93,7 +94,7 @@ const TESTIMONIALS: Testimonial[] = [
 function SourceBadge({ source }: { source: Source }) {
   return (
     <span
-      className="inline-flex items-center gap-1.5 border border-white/12 px-2.5 py-1 text-[0.5rem] tracking-[0.2em] uppercase text-white/35 font-medium"
+      className="inline-flex items-center gap-1.5 border border-white/12 px-2.5 py-1 text-xs tracking-[0.2em] uppercase text-on-ink-3 font-medium"
       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
     >
       <span className="w-1 h-1 rounded-full bg-white/40" />
@@ -177,13 +178,12 @@ export function Testimonials() {
         {/* Section label */}
         <div ref={headerRef} className="flex items-center gap-4 mb-[clamp(2.5rem,5vw,5rem)]">
           <motion.span
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-ink-3 shrink-0"
             initial={{ opacity: 0, x: -16 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            07 / Testimonials
+            {SECTIONS.testimonials.label}
           </motion.span>
           <motion.div
             className="flex-1 h-px bg-white/10"
@@ -195,41 +195,21 @@ export function Testimonials() {
 
         {/* Headline */}
         <h2
-          className="font-black text-white tracking-[-0.04em] leading-[0.9] mb-[clamp(3rem,6vw,6rem)]"
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 800,
-            fontSize: 'clamp(2.6rem, 6.5vw, 7.5rem)',
-          }}
+          aria-label={SECTIONS.testimonials.heading}
+          className="t-h2 text-on-ink-1 max-w-[18ch] mb-[clamp(3rem,6vw,6rem)]"
         >
-          {(['Trusted', 'by'] as const).map((word, i) => (
-            <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
+          {SECTIONS.testimonials.heading.split(' ').map((word, i) => (
+            <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
               <motion.span
                 className="block"
-                initial={{ y: '110%' }}
+                initial={reduced ? false : { y: '110%' }}
                 animate={sectionInView ? { y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.05 + i * 0.1, ease: EASE }}
+                transition={{ duration: 0.7, delay: 0.05 + i * 0.06, ease: EASE }}
               >
                 {word}
               </motion.span>
             </span>
           ))}
-          <span className="inline-block overflow-hidden">
-            <motion.span
-              className="block"
-              style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontWeight: 400,
-                color: 'rgba(255,255,255,0.3)',
-              }}
-              initial={{ y: '110%' }}
-              animate={sectionInView ? { y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.28, ease: EASE }}
-            >
-              clients &amp; peers
-            </motion.span>
-          </span>
         </h2>
 
         {/* Showcase */}
@@ -249,7 +229,7 @@ export function Testimonials() {
               >
                 {String(active + 1).padStart(2, '0')}
               </span>
-              <span className="text-white/20 text-sm tabular-nums" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+              <span className="text-on-ink-3 text-sm tabular-nums" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
                 / {String(TESTIMONIALS.length).padStart(2, '0')}
               </span>
               <Quote size={22} className="text-white/12 ml-auto" />
@@ -301,7 +281,7 @@ export function Testimonials() {
                       {t.name}
                     </p>
                     <p
-                      className="text-white/40 mt-0.5"
+                      className="text-on-ink-3 mt-0.5"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.78rem' }}
                     >
                       {t.role}{t.logo ? ` · ${t.company}` : ''}
@@ -337,7 +317,7 @@ export function Testimonials() {
                     <button
                       key={item.name}
                       onClick={() => go(i, i > active ? 1 : -1)}
-                      className="text-[0.6rem] tracking-[0.16em] uppercase font-medium transition-colors duration-200"
+                      className="text-xs tracking-[0.16em] uppercase font-medium transition-colors duration-200"
                       style={{
                         fontFamily: 'Satoshi, system-ui, sans-serif',
                         color: i === active ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)',
@@ -353,14 +333,14 @@ export function Testimonials() {
                   <button
                     onClick={prev}
                     aria-label="Previous testimonial"
-                    className="w-10 h-10 border border-white/12 flex items-center justify-center text-white/35 hover:text-white hover:border-white/35 transition-colors duration-200"
+                    className="w-10 h-10 border border-white/12 flex items-center justify-center text-on-ink-3 hover:text-white hover:border-white/35 transition-colors duration-200"
                   >
                     <ArrowLeft size={14} />
                   </button>
                   <button
                     onClick={next}
                     aria-label="Next testimonial"
-                    className="w-10 h-10 border border-white/12 flex items-center justify-center text-white/35 hover:text-white hover:border-white/35 transition-colors duration-200"
+                    className="w-10 h-10 border border-white/12 flex items-center justify-center text-on-ink-3 hover:text-white hover:border-white/35 transition-colors duration-200"
                   >
                     <ArrowRight size={14} />
                   </button>
@@ -409,7 +389,7 @@ export function Testimonials() {
             </div>
 
             <p
-              className="mt-4 text-[0.55rem] tracking-[0.2em] uppercase text-white/22 font-medium text-center"
+              className="mt-4 text-xs tracking-[0.2em] uppercase text-on-ink-3 font-medium text-center"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               Unedited · Direct from {t.source === 'Client' ? 'the client' : t.source}

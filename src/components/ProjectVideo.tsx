@@ -66,7 +66,7 @@ export function ProjectVideo({
           background: 'transparent',
           color: compact ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)',
           fontFamily: 'Satoshi, system-ui, sans-serif',
-          fontSize: compact ? '0.55rem' : '0.5rem',
+          fontSize: '0.75rem', // 12px floor (was 0.5/0.55rem)
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
           cursor: 'pointer',

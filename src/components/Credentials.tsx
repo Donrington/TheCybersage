@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowDownRight, ArrowUpRight, GitCommitHorizontal, ExternalLink } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -115,7 +116,7 @@ function MagneticBtn({ href }: { href: string }) {
       )}
       <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       <span
-        className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
+        className="text-xs tracking-[0.22em] uppercase font-medium"
         style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         Download Resume
@@ -174,7 +175,7 @@ function CertRow({
       >
         {/* Number */}
         <motion.span
-          className="text-[0.58rem] tracking-[0.22em] font-semibold tabular-nums shrink-0"
+          className="text-xs tracking-[0.22em] font-semibold tabular-nums shrink-0"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           animate={{ color: isHovered ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.2)' }}
           transition={{ duration: 0.25 }}
@@ -206,7 +207,7 @@ function CertRow({
 
         {/* Issuer */}
         <motion.span
-          className="hidden md:block text-[0.6rem] tracking-[0.18em] uppercase font-medium shrink-0"
+          className="hidden md:block text-xs tracking-[0.18em] uppercase font-medium shrink-0"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           animate={{ color: isHovered ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.28)' }}
           transition={{ duration: 0.25 }}
@@ -216,7 +217,7 @@ function CertRow({
 
         {/* Year */}
         <span
-          className="text-[0.58rem] tracking-[0.18em] uppercase text-white/20 font-medium shrink-0 tabular-nums hidden sm:block"
+          className="text-xs tracking-[0.18em] uppercase text-on-ink-3 font-medium shrink-0 tabular-nums hidden sm:block"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
         >
           {cert.year}
@@ -237,7 +238,7 @@ function CertRow({
           >
             <ArrowUpRight
               size={12}
-              className="text-white/30 group-hover:text-white/80 transition-colors duration-200"
+              className="text-on-ink-3 group-hover:text-white/80 transition-colors duration-200"
             />
           </motion.div>
         </motion.div>
@@ -315,7 +316,7 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
       {/* Sub-label */}
       <div className="flex items-center gap-4 mb-8">
         <motion.span
-          className="text-[0.55rem] tracking-[0.28em] uppercase text-white/20 font-medium shrink-0"
+          className="text-xs tracking-[0.28em] uppercase text-on-ink-3 font-medium shrink-0"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           initial={{ opacity: 0 }}
           animate={sectionInView ? { opacity: 1 } : {}}
@@ -358,7 +359,7 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-white/70" />
             </span>
             <span
-              className="text-[0.58rem] tracking-[0.22em] uppercase text-white/40 font-medium"
+              className="text-xs tracking-[0.22em] uppercase text-on-ink-3 font-medium"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               {loading ? 'Fetching activity…' : unavailable ? 'GitHub · rate limited' : `Active ${data?.lastActive ?? 'recently'}`}
@@ -368,10 +369,10 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
             href="https://github.com/Donrington"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-white/25 hover:text-white/60 transition-colors duration-200"
+            className="flex items-center gap-1.5 text-on-ink-3 hover:text-white/60 transition-colors duration-200"
           >
             <span
-              className="text-[0.55rem] tracking-[0.18em] uppercase"
+              className="text-xs tracking-[0.18em] uppercase"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               @Donrington
@@ -385,13 +386,13 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
           <div className="px-6 pt-5 pb-5 border-b border-white/6">
             <div className="flex items-center justify-between mb-3">
               <p
-                className="text-[0.48rem] tracking-[0.2em] uppercase text-white/18"
+                className="text-xs tracking-[0.2em] uppercase text-on-ink-3"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 Contributions · Past Year
               </p>
               <p
-                className="text-[0.52rem] tracking-[0.14em] uppercase font-semibold text-white/35"
+                className="text-xs tracking-[0.14em] uppercase font-semibold text-on-ink-3"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 {data.totalLastYear.toLocaleString()} total
@@ -417,7 +418,7 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
                   {s.value}
                 </p>
                 <p
-                  className="text-[0.5rem] tracking-[0.2em] uppercase text-white/22 mt-1"
+                  className="text-xs tracking-[0.2em] uppercase text-on-ink-3 mt-1"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {s.label}
@@ -452,22 +453,22 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
               transition={{ duration: 0.4, delay: 0.1 + i * 0.07, ease: EASE }}
             >
               <div className="flex items-center gap-3 min-w-0">
-                <GitCommitHorizontal size={12} className="text-white/20 shrink-0" />
+                <GitCommitHorizontal size={12} className="text-on-ink-3 shrink-0" />
                 <span
-                  className="text-[0.7rem] text-white/35 shrink-0"
+                  className="text-xs text-on-ink-3 shrink-0"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {ev.action}
                 </span>
                 <span
-                  className="text-[0.72rem] font-semibold text-white/70 truncate"
+                  className="text-xs font-semibold text-white/70 truncate"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {ev.repo}
                 </span>
               </div>
               <span
-                className="text-[0.55rem] tracking-[0.14em] uppercase text-white/20 tabular-nums shrink-0 ml-4"
+                className="text-xs tracking-[0.14em] uppercase text-on-ink-3 tabular-nums shrink-0 ml-4"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 {ev.time}
@@ -475,7 +476,7 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
             </motion.div>
           ))}
           {!loading && !data && (
-            <p className="px-6 py-6 text-white/20 text-[0.72rem]" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+            <p className="px-6 py-6 text-on-ink-3 text-xs" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
               Could not load activity.
             </p>
           )}
@@ -484,7 +485,7 @@ function GitHubActivity({ sectionInView }: { sectionInView: boolean }) {
         {/* Footer */}
         <div className="px-6 py-3 border-t border-white/6">
           <p
-            className="text-[0.48rem] tracking-[0.16em] uppercase text-white/12"
+            className="text-xs tracking-[0.16em] uppercase text-white/12"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           >
             Refreshes every hour · Public activity only
@@ -617,13 +618,12 @@ export function Credentials() {
         {/* Section label + divider */}
         <div className="flex items-center gap-4 mb-[clamp(3rem,6vw,7rem)]">
           <motion.span
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-ink-3 shrink-0"
             initial={{ opacity: 0, x: -16 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            06 / Credentials
+            {SECTIONS.credentials.label}
           </motion.span>
           <motion.div
             className="flex-1 h-px bg-white/10"
@@ -635,42 +635,21 @@ export function Credentials() {
 
         {/* Headline */}
         <h2
-          className="font-black text-white tracking-[-0.04em] leading-[0.9] mb-[clamp(3rem,5vw,6rem)]"
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(2.8rem, 7vw, 8rem)',
-          }}
+          aria-label={SECTIONS.credentials.heading}
+          className="t-h2 text-on-ink-1 max-w-[18ch] mb-[clamp(3rem,5vw,6rem)]"
         >
-          {(['Proof', 'of'] as const).map((word, i) => (
-            <span key={word} className="inline-block overflow-hidden mr-[0.22em]">
+          {SECTIONS.credentials.heading.split(' ').map((word, i) => (
+            <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
               <motion.span
                 className="block"
-                initial={{ y: '110%' }}
+                initial={reduced ? false : { y: '110%' }}
                 animate={sectionInView ? { y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.05 + i * 0.1, ease: EASE }}
+                transition={{ duration: 0.7, delay: 0.05 + i * 0.06, ease: EASE }}
               >
                 {word}
               </motion.span>
             </span>
           ))}
-          {' '}
-          <span className="inline-block overflow-hidden">
-            <motion.span
-              className="block"
-              style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontWeight: 400,
-                color: 'rgba(255,255,255,0.28)',
-              }}
-              initial={{ y: '110%' }}
-              animate={sectionInView ? { y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.28, ease: EASE }}
-            >
-              Work
-            </motion.span>
-          </span>
         </h2>
 
         {/* ── Resume card ───────────────────────────────────────────────────── */}
@@ -697,7 +676,7 @@ export function Credentials() {
             {/* Left — identity */}
             <div className="flex flex-col gap-5">
               <motion.span
-                className="text-[0.55rem] tracking-[0.3em] uppercase text-white/22 font-medium"
+                className="text-xs tracking-[0.3em] uppercase text-on-ink-3 font-medium"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 initial={{ opacity: 0 }}
                 animate={resumeInView ? { opacity: 1 } : {}}
@@ -723,10 +702,10 @@ export function Credentials() {
               </div>
 
               <motion.p
-                className="text-white/35"
+                className="text-on-ink-2"
                 style={{
-                  fontFamily: 'var(--font-instrument), Georgia, serif',
-                  fontStyle: 'italic',
+                  fontFamily: 'Satoshi, system-ui, sans-serif',
+                  fontWeight: 500,
                   fontSize: 'clamp(1rem, 1.6vw, 1.25rem)',
                 }}
                 initial={{ opacity: 0, y: 8 }}
@@ -741,7 +720,7 @@ export function Credentials() {
                 {['AWS', 'Docker', 'Go', 'Django', 'PostgreSQL', 'Redis'].map((tag, i) => (
                   <motion.span
                     key={tag}
-                    className="border border-white/12 text-white/28 text-[0.52rem] tracking-[0.16em] uppercase px-2.5 py-1"
+                    className="border border-white/12 text-on-ink-3 text-xs tracking-[0.16em] uppercase px-2.5 py-1"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     initial={{ opacity: 0, y: 6, clipPath: 'inset(100% 0 0 0)' }}
                     animate={resumeInView ? { opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' } : {}}
@@ -784,7 +763,7 @@ export function Credentials() {
           {/* Sub-label */}
           <div className="flex items-center gap-4 mb-8">
             <motion.span
-              className="text-[0.55rem] tracking-[0.28em] uppercase text-white/20 font-medium shrink-0"
+              className="text-xs tracking-[0.28em] uppercase text-on-ink-3 font-medium shrink-0"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               initial={{ opacity: 0 }}
               animate={sectionInView ? { opacity: 1 } : {}}

@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -159,7 +160,7 @@ function BlueprintDesktop({ layers }: { layers: Layer[] }) {
               <span
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',
-                  fontSize: '0.68rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
                   letterSpacing: '-0.01em',
                   color: isActive ? '#0A0A0A' : 'rgba(10,10,10,0.4)',
@@ -176,8 +177,8 @@ function BlueprintDesktop({ layers }: { layers: Layer[] }) {
 
       {/* Hint */}
       <p
-        className="text-black/25"
-        style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1.5rem' }}
+        className="text-on-canvas-3"
+        style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1.5rem' }}
       >
         Select a layer
       </p>
@@ -194,7 +195,7 @@ function BlueprintDesktop({ layers }: { layers: Layer[] }) {
           >
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
               <span
-                style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.3)' }}
+                style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.75rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.58)' }}
               >
                 {String(selected + 1).padStart(2, '0')} / {active.tag}
               </span>
@@ -206,7 +207,7 @@ function BlueprintDesktop({ layers }: { layers: Layer[] }) {
               {active.principle}
             </p>
             <p
-              style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, fontSize: 'clamp(1rem,1.4vw,1.15rem)', color: 'rgba(10,10,10,0.4)' }}
+              className="text-on-canvas-2" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 500, fontSize: 'clamp(1rem,1.4vw,1.15rem)' }}
             >
               {active.proof}
             </p>
@@ -252,7 +253,7 @@ function MobileRow({ layer, isOpen, onToggle }: { layer: Layer; isOpen: boolean;
               {layer.label}
             </span>
             <span
-              style={{ display: 'block', fontFamily: 'ui-monospace, monospace', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.32)', marginTop: '0.3rem' }}
+              style={{ display: 'block', fontFamily: 'ui-monospace, monospace', fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(10,10,10,0.58)', marginTop: '0.3rem' }}
             >
               {layer.tag}
             </span>
@@ -261,7 +262,7 @@ function MobileRow({ layer, isOpen, onToggle }: { layer: Layer; isOpen: boolean;
             aria-hidden
             animate={{ rotate: isOpen ? 45 : 0 }}
             transition={{ duration: 0.3, ease: EASE }}
-            style={{ fontSize: '1.3rem', color: 'rgba(10,10,10,0.3)', flexShrink: 0 }}
+            style={{ fontSize: '1.3rem', color: 'rgba(10,10,10,0.58)', flexShrink: 0 }}
           >
             +
           </motion.span>
@@ -279,7 +280,7 @@ function MobileRow({ layer, isOpen, onToggle }: { layer: Layer; isOpen: boolean;
               <p style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.6, color: 'rgba(10,10,10,0.75)', marginTop: '0.9rem', paddingRight: '1rem' }}>
                 {layer.principle}
               </p>
-              <p style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontSize: '0.9rem', color: 'rgba(10,10,10,0.4)', marginTop: '0.6rem' }}>
+              <p className="text-on-canvas-2" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 500, fontSize: '0.9rem', marginTop: '0.6rem' }}>
                 {layer.proof}
               </p>
             </motion.div>
@@ -317,10 +318,9 @@ export function SystemsBlueprint() {
             initial={{ opacity: 0, x: -12 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-black/30 font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-canvas-3"
           >
-            05 / Systems
+            {SECTIONS.systems.label}
           </motion.span>
           <motion.div
             className="flex-1 h-px bg-black/10"
@@ -336,20 +336,16 @@ export function SystemsBlueprint() {
           initial={{ opacity: 0, y: 32 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, delay: 0.1, ease: EASE }}
-          className="font-black text-black tracking-tighter leading-[0.88] mb-[clamp(1.25rem,2.5vw,2rem)]"
-          style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 900, fontSize: 'clamp(3rem, 7.5vw, 8rem)' }}
+          className="t-h2 text-ink max-w-[18ch] mb-[clamp(1.25rem,2.5vw,2rem)]"
         >
-          Under the{' '}
-          <span style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, color: 'rgba(10,10,10,0.3)' }}>
-            Hood.
-          </span>
+          {SECTIONS.systems.heading}
         </motion.h2>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.25, ease: EASE }}
-          className="text-black/45 leading-relaxed max-w-xl mb-[clamp(3rem,6vw,5.5rem)]"
+          className="text-on-canvas-2 leading-relaxed max-w-xl mb-[clamp(3rem,6vw,5.5rem)]"
           style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(1rem,1.4vw,1.2rem)' }}
         >
           Seven layers of a production system, and the decision made at each one. Click through — every claim here shipped in a real client build.
@@ -378,7 +374,7 @@ export function SystemsBlueprint() {
         >
           <p className="text-black/60" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: 'clamp(0.9rem,1.4vw,1.15rem)' }}>
             Want the full chronological history?{' '}
-            <span style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', color: 'rgba(10,10,10,0.4)' }}>
+            <span className="text-on-canvas-3">
               It&rsquo;s in the résumé.
             </span>
           </p>
@@ -387,7 +383,7 @@ export function SystemsBlueprint() {
             data-cursor="view"
             className="group inline-flex items-center gap-3 border border-black/15 px-7 py-3.5 text-black/70 hover:text-black hover:border-black/40 transition-colors duration-300 shrink-0"
           >
-            <span className="text-[0.62rem] tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+            <span className="text-xs tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
               View Credentials
             </span>
             <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />

@@ -10,6 +10,8 @@ import {
 } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,7 +133,7 @@ function ServiceRow({
         >
           {/* Index */}
           <motion.span
-            className="text-[0.6rem] tracking-[0.2em] uppercase font-medium shrink-0 tabular-nums"
+            className="text-xs tracking-[0.2em] uppercase font-medium shrink-0 tabular-nums"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             animate={{ color: hovered || isOpen ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.22)' }}
             transition={{ duration: 0.25 }}
@@ -159,7 +161,7 @@ function ServiceRow({
 
             {/* Short — fades out when open */}
             <motion.p
-              className="text-white/35 text-sm lg:text-base hidden lg:block shrink-0"
+              className="text-on-ink-3 text-sm lg:text-base hidden lg:block shrink-0"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               animate={{ opacity: isOpen ? 0 : hovered ? 0.6 : 0.35 }}
               transition={{ duration: 0.2 }}
@@ -215,7 +217,7 @@ function ServiceRow({
                     initial={{ opacity: 0, y: 10, clipPath: 'inset(100% 0 0 0)' }}
                     animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' }}
                     transition={{ duration: 0.4, delay: 0.12 + i * 0.07, ease: EASE }}
-                    className="border border-white/15 text-white/35 text-[0.58rem] tracking-[0.14em] uppercase px-2.5 py-1"
+                    className="border border-white/15 text-on-ink-3 text-xs tracking-[0.14em] uppercase px-2.5 py-1"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                   >
                     {kw}
@@ -235,6 +237,7 @@ export function Services() {
   const sectionRef  = useRef<HTMLElement>(null);
   const lineRef     = useRef<HTMLDivElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  const reduced = useReducedMotion();
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -277,13 +280,12 @@ export function Services() {
         {/* Section label + animated divider */}
         <div className="flex items-center gap-4 mb-[clamp(3rem,6vw,7rem)]">
           <motion.span
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-ink-3 shrink-0"
             initial={{ opacity: 0, x: -16 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            03 / Services
+            {SECTIONS.services.label}
           </motion.span>
           <motion.div
             className="flex-1 h-px bg-white/10"
@@ -295,42 +297,21 @@ export function Services() {
 
         {/* Headline — word-by-word clip reveal */}
         <h2
-          className="font-black text-white tracking-[-0.04em] leading-[0.9] mb-[clamp(3rem,5vw,6rem)]"
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 800,
-            fontSize: 'clamp(2.8rem, 7vw, 8rem)',
-          }}
+          aria-label={SECTIONS.services.heading}
+          className="t-h2 text-on-ink-1 max-w-[16ch] mb-[clamp(3rem,5vw,6rem)]"
         >
-          {(['What', 'I'] as const).map((word, i) => (
-            <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
+          {SECTIONS.services.heading.split(' ').map((word, i) => (
+            <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
               <motion.span
                 className="block"
-                initial={{ y: '110%' }}
+                initial={reduced ? false : { y: '110%' }}
                 animate={sectionInView ? { y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.05 + i * 0.1, ease: EASE }}
+                transition={{ duration: 0.7, delay: 0.05 + i * 0.06, ease: EASE }}
               >
                 {word}
               </motion.span>
             </span>
           ))}
-          {' '}
-          <span className="inline-block overflow-hidden">
-            <motion.span
-              className="block"
-              style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontWeight: 400,
-                color: 'rgba(255,255,255,0.3)',
-              }}
-              initial={{ y: '110%' }}
-              animate={sectionInView ? { y: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.28, ease: EASE }}
-            >
-              Build
-            </motion.span>
-          </span>
         </h2>
 
         {/* Service rows */}

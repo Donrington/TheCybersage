@@ -8,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { ProjectVideo } from './ProjectVideo';
+import { SECTIONS } from '@/content/site';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -495,10 +496,10 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
       <p
         style={{
           fontFamily: 'Satoshi, system-ui, sans-serif',
-          fontSize: '0.5rem',
+          fontSize: '0.75rem',
           letterSpacing: '0.28em',
           textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.28)',
+          color: 'rgba(255,255,255,0.56)',
           marginBottom: '0.75rem',
           textAlign: right ? 'right' : 'left',
         }}
@@ -526,9 +527,9 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
       <p
         style={{
           fontFamily: 'Satoshi, system-ui, sans-serif',
-          fontSize: '0.73rem',
+          fontSize: '0.75rem',
           lineHeight: 1.7,
-          color: 'rgba(255,255,255,0.32)',
+          color: 'rgba(255,255,255,0.56)',
           marginBottom: '1rem',
           textAlign: right ? 'right' : 'left',
         }}
@@ -551,9 +552,9 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
             key={t}
             style={{
               border: '1px solid rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.28)',
+              color: 'rgba(255,255,255,0.56)',
               fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.48rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               padding: '0.18rem 0.5rem',
@@ -580,9 +581,9 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
               alignItems: 'center',
               gap: '0.4rem',
               border: '1px solid rgba(255,255,255,0.14)',
-              color: 'rgba(255,255,255,0.45)',
+              color: 'rgba(255,255,255,0.56)',
               fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.5rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               padding: '0.5rem 0.9rem',
@@ -656,7 +657,7 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
             top: '0.8rem',
             left: '0.95rem',
             fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
-            fontSize: '0.55rem',
+            fontSize: '0.75rem',
             letterSpacing: '0.2em',
             color: 'rgba(255,255,255,0.55)',
           }}
@@ -668,7 +669,7 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
           <p
             style={{
               fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.5rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.24em',
               textTransform: 'uppercase',
               color: 'rgba(255,255,255,0.5)',
@@ -699,7 +700,7 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
             fontFamily: 'Satoshi, system-ui, sans-serif',
             fontSize: '0.78rem',
             lineHeight: 1.65,
-            color: 'rgba(255,255,255,0.42)',
+            color: 'rgba(255,255,255,0.56)',
             marginBottom: '0.9rem',
           }}
         >
@@ -712,9 +713,9 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
               key={t}
               style={{
                 border: '1px solid rgba(255,255,255,0.12)',
-                color: 'rgba(255,255,255,0.35)',
+                color: 'rgba(255,255,255,0.56)',
                 fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontSize: '0.5rem',
+                fontSize: '0.75rem',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 padding: '0.2rem 0.5rem',
@@ -747,7 +748,7 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
               borderRadius: '999px',
               color: 'rgba(255,255,255,0.75)',
               fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.55rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               textDecoration: 'none',
@@ -898,19 +899,9 @@ export function Projects() {
 
         {/* Section label — top left */}
         <div className="absolute top-7 left-8 z-20 flex items-center gap-3">
-          <span
-            className="text-[0.52rem] tracking-[0.25em] uppercase font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: 'rgba(255,255,255,0.18)' }}
-          >
-            02 / Work
-          </span>
+          <span className="t-label text-on-ink-3">{SECTIONS.work.label}</span>
           <div style={{ width: '2rem', height: '1px', background: 'rgba(255,255,255,0.1)' }} />
-          <span
-            className="text-[0.52rem] tracking-[0.25em] uppercase font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: 'rgba(255,255,255,0.1)' }}
-          >
-            {PROJECTS.length} Projects
-          </span>
+          <span className="t-label text-on-ink-3">{PROJECTS.length} projects</span>
         </div>
 
         {/* HUD — top right */}
@@ -919,9 +910,9 @@ export function Projects() {
             ref={hudPctRef}
             style={{
               fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
-              fontSize: '0.58rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.18em',
-              color: 'rgba(255,255,255,0.22)',
+              color: 'rgba(255,255,255,0.56)',
             }}
           >
             000%
@@ -951,10 +942,10 @@ export function Projects() {
             ref={hudSceneRef}
             style={{
               fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.45rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.18)',
+              color: 'rgba(255,255,255,0.56)',
               marginTop: '0.3rem',
             }}
           >
@@ -1078,53 +1069,11 @@ export function Projects() {
               style={{ zIndex: 10 }}
             >
               <div style={{ textAlign: 'center', maxWidth: '32rem', padding: '0 1.5rem' }}>
-                <p
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.52rem',
-                    letterSpacing: '0.28em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.2)',
-                    marginBottom: '1.5rem',
-                  }}
-                >
-                  Selected Work&nbsp;·&nbsp;{PROJECTS.length} Projects
+                <p className="t-label text-on-ink-3 mb-6">
+                  {SECTIONS.work.label}&nbsp;·&nbsp;{PROJECTS.length} projects
                 </p>
-                <h2
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontWeight: 900,
-                    fontSize: 'clamp(3.5rem, 9vw, 7.5rem)',
-                    letterSpacing: '-0.05em',
-                    lineHeight: 0.88,
-                    color: 'rgba(255,255,255,0.92)',
-                    marginBottom: '0.15em',
-                  }}
-                >
-                  Selected{' '}
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-instrument), Georgia, serif',
-                      fontStyle: 'italic',
-                      fontWeight: 400,
-                      color: 'rgba(255,255,255,0.18)',
-                    }}
-                  >
-                    Work
-                  </span>
-                </h2>
-                <p
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.65rem',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.15)',
-                    marginTop: '2rem',
-                  }}
-                >
-                  Scroll to explore
-                </p>
+                <h2 className="t-h2 text-on-ink-1">{SECTIONS.work.heading}</h2>
+                <p className="t-label text-on-ink-3 mt-8">Scroll to explore</p>
               </div>
             </motion.div>
           )}
@@ -1202,9 +1151,9 @@ export function Projects() {
           <span
             style={{
               fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
-              fontSize: '0.52rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.18em',
-              color: 'rgba(255,255,255,0.18)',
+              color: 'rgba(255,255,255,0.56)',
             }}
           >
             {String(activeScene).padStart(2, '0')}&nbsp;/&nbsp;{String(PROJECTS.length).padStart(2, '0')}
@@ -1220,10 +1169,10 @@ export function Projects() {
             ref={captionNumRef}
             style={{
               fontFamily: 'ui-monospace, "JetBrains Mono", monospace',
-              fontSize: '0.45rem',
+              fontSize: '0.75rem',
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.2)',
+              color: 'rgba(255,255,255,0.56)',
               marginBottom: '0.2rem',
             }}
           >
@@ -1251,54 +1200,12 @@ export function Projects() {
       <div className="md:hidden px-5 pt-[clamp(4rem,14vw,6rem)] pb-[clamp(4rem,12vw,5rem)]">
         {/* Header */}
         <div className="flex items-center gap-3 mb-7">
-          <span
-            style={{
-              fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.52rem',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.28)',
-            }}
-          >
-            02 / Work
-          </span>
+          <span className="t-label text-on-ink-3">{SECTIONS.work.label}</span>
           <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
-          <span
-            style={{
-              fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.52rem',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.22)',
-            }}
-          >
-            {PROJECTS.length} Projects
-          </span>
+          <span className="t-label text-on-ink-3">{PROJECTS.length} projects</span>
         </div>
 
-        <h2
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 900,
-            fontSize: 'clamp(2.8rem, 13vw, 4.5rem)',
-            letterSpacing: '-0.05em',
-            lineHeight: 0.88,
-            color: 'rgba(255,255,255,0.94)',
-            marginBottom: 'clamp(2rem, 8vw, 3rem)',
-          }}
-        >
-          Selected{' '}
-          <span
-            style={{
-              fontFamily: 'var(--font-instrument), Georgia, serif',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              color: 'rgba(255,255,255,0.3)',
-            }}
-          >
-            Work
-          </span>
-        </h2>
+        <h2 className="t-h2 text-on-ink-1 mb-[clamp(2rem,8vw,3rem)]">{SECTIONS.work.heading}</h2>
 
         <div className="flex flex-col gap-5">
           {PROJECTS.map((p, i) => (

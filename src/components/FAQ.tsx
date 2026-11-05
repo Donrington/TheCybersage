@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
+import { SECTIONS } from '@/content/site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -80,10 +81,9 @@ export function FAQ() {
             initial={{ opacity: 0, x: -12 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-black/30 font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-canvas-3"
           >
-            09 / FAQ &amp; Answer Engine Index
+            {SECTIONS.faq.label}
           </motion.span>
           <div className="flex-1 h-px bg-black/10" />
         </div>
@@ -94,30 +94,15 @@ export function FAQ() {
             initial={{ opacity: 0, y: 32 }}
             animate={sectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.85, delay: 0.1, ease: EASE }}
-            className="font-black text-black tracking-tighter leading-[0.88]"
-            style={{
-              fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontWeight: 900,
-              fontSize: 'clamp(3.5rem, 8vw, 10rem)',
-            }}
+            className="t-h2 text-ink max-w-[18ch]"
           >
-            Frequently Asked{' '}
-            <span
-              style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontWeight: 400,
-                color: 'rgba(10,10,10,0.30)',
-              }}
-            >
-              Questions
-            </span>
+            {SECTIONS.faq.heading}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={sectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
-            className="text-black/50 text-xs sm:text-sm max-w-md font-medium tracking-wide uppercase"
+            className="text-on-canvas-2 text-sm max-w-md font-medium tracking-wide uppercase"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           >
             Direct answers on architecture experience, stack specialisations, project delivery, and global remote engagement.
@@ -145,7 +130,7 @@ export function FAQ() {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 flex-1">
                     <span
-                      className="text-[0.65rem] font-semibold tracking-[0.16em] uppercase text-black/30 shrink-0 w-28"
+                      className="text-xs font-semibold tracking-[0.16em] uppercase text-on-canvas-3 shrink-0 w-28"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     >
                       {faq.category}

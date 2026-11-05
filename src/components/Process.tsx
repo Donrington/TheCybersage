@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { ScrollRevealText, DESC_FONT } from './ScrollRevealText';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -103,7 +104,7 @@ function Step({
             {step.index}
           </span>
           <span
-            className="block mt-2 text-[0.55rem] tracking-[0.2em] uppercase text-white/30 font-medium"
+            className="block mt-2 text-xs tracking-[0.2em] uppercase text-on-ink-3 font-medium"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           >
             {step.duration}
@@ -134,7 +135,7 @@ function Step({
           {step.tags.map((tag) => (
             <span
               key={tag}
-              className="border border-white/12 text-white/35 text-[0.55rem] tracking-[0.14em] uppercase px-2.5 py-1"
+              className="border border-white/12 text-on-ink-3 text-xs tracking-[0.14em] uppercase px-2.5 py-1"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
             >
               {tag}
@@ -248,13 +249,12 @@ export function Process() {
         {/* Section label */}
         <div className="flex items-center gap-4 mb-[clamp(2.5rem,5vw,5rem)]">
           <motion.span
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            className="t-label text-on-ink-3 shrink-0"
             initial={{ opacity: 0, x: -16 }}
             animate={sectionInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            04 / Process
+            {SECTIONS.process.label}
           </motion.span>
           <motion.div
             className="flex-1 h-px bg-white/10"
@@ -266,38 +266,19 @@ export function Process() {
 
         {/* Headline + intro */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 items-end mb-[clamp(3rem,6vw,6rem)]">
-          <h2
-            className="font-black text-white tracking-[-0.04em] leading-[0.9]"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: 'clamp(2.6rem,6.5vw,7.5rem)' }}
-          >
-            {(['How', 'I'] as const).map((word, i) => (
-              <span key={word} className="inline-block overflow-hidden mr-[0.25em]">
+          <h2 aria-label={SECTIONS.process.heading} className="t-h2 text-on-ink-1 max-w-[18ch]">
+            {SECTIONS.process.heading.split(' ').map((word, i) => (
+              <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
                 <motion.span
                   className="block"
-                  initial={{ y: '110%' }}
+                  initial={reduced ? false : { y: '110%' }}
                   animate={sectionInView ? { y: 0 } : {}}
-                  transition={{ duration: 0.7, delay: 0.05 + i * 0.1, ease: EASE }}
+                  transition={{ duration: 0.7, delay: 0.05 + i * 0.06, ease: EASE }}
                 >
                   {word}
                 </motion.span>
               </span>
             ))}
-            <span className="inline-block overflow-hidden">
-              <motion.span
-                className="block"
-                style={{
-                  fontFamily: 'var(--font-instrument), Georgia, serif',
-                  fontStyle: 'italic',
-                  fontWeight: 400,
-                  color: 'rgba(255,255,255,0.3)',
-                }}
-                initial={{ y: '110%' }}
-                animate={sectionInView ? { y: 0 } : {}}
-                transition={{ duration: 0.7, delay: 0.28, ease: EASE }}
-              >
-                Work
-              </motion.span>
-            </span>
           </h2>
 
           <ScrollRevealText
@@ -341,7 +322,7 @@ export function Process() {
               style={{ fontFamily: DESC_FONT, fontWeight: 700, fontSize: 'clamp(0.9rem,1.4vw,1.15rem)' }}
             >
               Currently accepting new projects —{' '}
-              <span style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,0.55)' }}>
+              <span className="text-on-ink-2">
                 limited slots this quarter.
               </span>
             </p>
@@ -365,7 +346,7 @@ export function Process() {
               </>
             )}
             <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
-            <span className="text-[0.62rem] tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}>
+            <span className="text-xs tracking-[0.22em] uppercase font-medium" style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}>
               Start a Project
             </span>
             <ArrowUpRight size={13} style={{ position: 'relative', zIndex: 1 }} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />

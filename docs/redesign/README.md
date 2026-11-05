@@ -39,8 +39,8 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | # | Prompt | Status |
 | --- | --- | --- |
 | 0 | Map, baseline, guardrails | done |
-| 1 | Performance quick wins | |
-| 2 | Tokens, type reset, shared components | |
+| 1 | Performance quick wins | done (cb31456) |
+| 2 | Tokens, type reset, shared components | done |
 | 3 | Hero (WebGL network field + Now chip) | |
 | 4 | Selected Work 26 → 6–8 flagships + `/work` index | |
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | |
@@ -62,6 +62,20 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
    `react-hooks/immutability`, `react-hooks/set-state-in-effect`, `react-hooks/use-memo`. Worth a
    dedicated pass since these touch files Prompt 2+ will rework anyway (CustomCursor, Credentials).
    Run `npx eslint src` for the current list.
+
+## Prompt 2 notes
+
+- Tokens: `--color-on-ink-1/2/3`, `--color-on-canvas-1/2/3`, `--color-live`, `--ease-sig`, `--dur-fast/base/slow`;
+  type classes `.t-display / .t-h2 / .t-h3 / .t-lede / .t-body / .t-label / .t-mono` (12px floor).
+- Shared: `src/lib/motion.ts`, `src/lib/useScrollEngine.ts`, `src/components/ui/{Section,Reveal,SplitHeading}.tsx`,
+  copy in `src/content/site.ts` (positioning, nav, footer index, every section label + one-statement heading).
+- Every section eyebrow is now a plain label (no "NN /" numbering); every heading is one statement in Satoshi.
+  Serif kept only for the hero line, About pull quote and testimonial quotes (8–9), Stack/Credentials decor (7).
+- Nav: 5 links (Work, Services, About, Pricing, Contact). Back-to-top removed; AI launcher is a 44px icon button;
+  custom cursor only when `html.has-custom-cursor` is set (fine pointer, ≥768px, no reduced motion).
+- Codemods: 99 sub-12px sizes raised; 80 low-alpha text colours moved to the tertiary tokens (4.5:1+).
+- QA (prod build, 1440/1024/768/390): overflow 0, one h1, 0 text <12px, no serif headings, reduced motion leaves
+  0 pending reveals. Lint errors 19 → 17 (all pre-existing).
 
 ## Working rules
 

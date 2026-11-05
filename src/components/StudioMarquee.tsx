@@ -6,6 +6,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { SECTIONS } from '@/content/site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -126,44 +127,26 @@ export function StudioMarquee() {
         <div className="flex items-end justify-between gap-6">
           <div>
             <motion.span
-              className="block text-[0.6rem] tracking-[0.22em] uppercase text-white/25 font-medium mb-4"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+              className="block t-label text-on-ink-3 mb-4"
               initial={{ opacity: 0, x: -14 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, ease: EASE }}
             >
-              Selected Frames
+              {SECTIONS.studio.label}
             </motion.span>
-            <h2
-              className="font-black text-white tracking-[-0.04em] leading-[0.9]"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: 'clamp(2.2rem,5.5vw,5.5rem)' }}
-            >
-              <span className="inline-block overflow-hidden mr-[0.22em]">
-                <motion.span
-                  className="block"
-                  initial={{ y: '110%' }}
-                  animate={inView ? { y: 0 } : {}}
-                  transition={{ duration: 0.7, ease: EASE }}
-                >
-                  From the
-                </motion.span>
-              </span>
-              <span className="inline-block overflow-hidden">
-                <motion.span
-                  className="block"
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
-                    fontWeight: 400,
-                    color: 'rgba(255,255,255,0.3)',
-                  }}
-                  initial={{ y: '110%' }}
-                  animate={inView ? { y: 0 } : {}}
-                  transition={{ duration: 0.7, delay: 0.12, ease: EASE }}
-                >
-                  Studio
-                </motion.span>
-              </span>
+            <h2 aria-label={SECTIONS.studio.heading} className="t-h2 text-on-ink-1 max-w-[18ch]">
+              {SECTIONS.studio.heading.split(' ').map((word, i) => (
+                <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
+                  <motion.span
+                    className="block"
+                    initial={reduced ? false : { y: '110%' }}
+                    animate={inView ? { y: 0 } : {}}
+                    transition={{ duration: 0.7, delay: i * 0.06, ease: EASE }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
             </h2>
           </div>
 
@@ -191,7 +174,7 @@ export function StudioMarquee() {
             )}
             <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
             <span
-              className="text-[0.6rem] tracking-[0.2em] uppercase font-medium"
+              className="text-xs tracking-[0.2em] uppercase font-medium"
               style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
             >
               More Work

@@ -5,20 +5,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronDown, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { NAV_LINKS as SITE_NAV } from '@/content/site';
 
 type PanelKey = 'services' | 'work';
 
-const NAV_LINKS: { label: string; href: string; panel?: PanelKey }[] = [
-  { label: 'Work',        href: '#work',                          panel: 'work' },
-  { label: 'Services',    href: '#services',                      panel: 'services' },
-  { label: 'Process',     href: '#process' },
-  { label: 'About',       href: '#about' },
-  { label: 'Systems',     href: '#systems' },
-  { label: 'Credentials', href: '#credentials' },
-  { label: 'Reviews',     href: '#testimonials' },
-  { label: 'FAQ',         href: '#faq-section' },
-  { label: 'Pricing',     href: 'https://cybersage.dev/pricing' },
-];
+// Five links plus the Hire me button (src/content/site.ts → NAV_LINKS). Process,
+// Systems, Credentials, Reviews and FAQ moved to the footer (FOOTER_LINKS).
+const NAV_PANELS: Partial<Record<string, PanelKey>> = { Work: 'work', Services: 'services' };
+const NAV_LINKS: { label: string; href: string; panel?: PanelKey }[] = SITE_NAV.map((l) => ({
+  label: l.label,
+  href: l.href,
+  panel: NAV_PANELS[l.label],
+}));
 
 /* Curated 3-of-5 spread across the technical range (architecture → infra →
    delivery) — the full 5-item list already lives in the on-page Services
@@ -64,7 +62,7 @@ function NavLink({
     <a
       href={href}
       onMouseEnter={() => onEnter(panel ?? null)}
-      className="flex items-center gap-1 px-2.5 py-2 rounded-full text-[0.62rem] font-medium tracking-wide uppercase hover:bg-white/8 transition-all duration-200 whitespace-nowrap"
+      className="flex items-center gap-1 px-2.5 py-2 rounded-full text-xs font-medium tracking-wide uppercase hover:bg-white/8 transition-all duration-200 whitespace-nowrap"
       style={{ fontFamily: 'Satoshi, system-ui, sans-serif', color: '#D9D9D9', mixBlendMode: 'difference' }}
     >
       {label}
@@ -109,7 +107,7 @@ function HireBtn() {
       <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 'inherit' }} />
 
       <span
-        className="pl-4 pr-1.5 py-1.75 text-black text-[0.61rem] font-medium tracking-[0.14em] uppercase whitespace-nowrap"
+        className="pl-4 pr-1.5 py-1.75 text-black text-xs font-medium tracking-[0.14em] uppercase whitespace-nowrap"
         style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         Hire Me
@@ -142,20 +140,20 @@ function ServicesPanelContent() {
           onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.045)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; }}
           onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
         >
-          <span style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.62rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em' }}>
+          <span style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace', fontSize: '0.75rem', color: 'rgba(255,255,255,0.56)', letterSpacing: '0.08em' }}>
             {s.index}
           </span>
           <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: '0.85rem', color: '#FFFFFF', letterSpacing: '-0.01em', lineHeight: 1.25 }}>
             {s.title}
           </span>
-          <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)' }}>
+          <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', color: 'rgba(255,255,255,0.56)' }}>
             {s.short}
           </span>
           <span
             className="flex items-center gap-1 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300"
             style={{ marginTop: '0.1rem' }}
           >
-            <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>
+            <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>
               Explore
             </span>
             <ArrowUpRight size={10} style={{ color: 'rgba(255,255,255,0.55)' }} />
@@ -188,8 +186,8 @@ function ServicesPanelContent() {
         <span
           style={{
             position: 'relative', zIndex: 1,
-            fontFamily: 'var(--font-instrument), Georgia, serif',
-            fontStyle: 'italic',
+            fontFamily: 'Satoshi, system-ui, sans-serif',
+            fontWeight: 700,
             fontSize: '0.95rem',
             color: '#FFFFFF',
             lineHeight: 1.3,
@@ -199,7 +197,7 @@ function ServicesPanelContent() {
         </span>
         <span
           className="flex items-center gap-1.5"
-          style={{ position: 'relative', zIndex: 1, fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.62rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)' }}
+          style={{ position: 'relative', zIndex: 1, fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)' }}
         >
           Start a project
           <ArrowUpRight size={11} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
@@ -234,7 +232,7 @@ function WorkPanelContent() {
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '0.5rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: 0 }}>
-                <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.56)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {p.category}
                 </span>
                 <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 700, fontSize: '0.78rem', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
@@ -262,7 +260,7 @@ function WorkPanelContent() {
         onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.045)'; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
       >
-        <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.65rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)' }}>
+        <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)' }}>
           View all work
         </span>
         <ArrowUpRight size={11} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" style={{ color: 'rgba(255,255,255,0.6)' }} />
@@ -353,7 +351,7 @@ function MobileNavRow({
         >
           {link.label}
         </span>
-        <ArrowRight size={18} className="text-white/20" />
+        <ArrowRight size={18} className="text-on-ink-3" />
       </motion.a>
     );
   }
@@ -377,7 +375,7 @@ function MobileNavRow({
           transition={{ duration: 0.3, ease: EASE }}
           style={{ display: 'inline-flex' }}
         >
-          <ChevronDown size={18} className="text-white/30" />
+          <ChevronDown size={18} className="text-on-ink-3" />
         </motion.span>
       </button>
 
@@ -399,7 +397,7 @@ function MobileNavRow({
                       onClick={onNavigate}
                       style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.7rem 0.85rem', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}
                     >
-                      <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)' }}>{s.index}</span>
+                      <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '0.75rem', color: 'rgba(255,255,255,0.56)' }}>{s.index}</span>
                       <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 700, fontSize: '0.85rem', color: '#FFFFFF' }}>{s.title}</span>
                     </a>
                   ))
@@ -415,7 +413,7 @@ function MobileNavRow({
                         <Image src={p.image} alt={p.name} fill sizes="44px" className="object-cover" />
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', minWidth: 0 }}>
-                        <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.55rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)' }}>{p.category}</span>
+                        <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.56)' }}>{p.category}</span>
                         <span style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 700, fontSize: '0.78rem', color: '#FFFFFF' }}>{p.name}</span>
                       </div>
                     </a>
@@ -423,7 +421,7 @@ function MobileNavRow({
               <a
                 href={link.href}
                 onClick={onNavigate}
-                style={{ textAlign: 'center', padding: '0.6rem', fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.6rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}
+                style={{ textAlign: 'center', padding: '0.6rem', fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.56)' }}
               >
                 View all {link.label.toLowerCase()} →
               </a>
@@ -656,7 +654,7 @@ export function Navbar() {
                   onClick={() => { setMobileOpen(false); window.dispatchEvent(new CustomEvent('open-contact-modal')); }}
                   className="flex items-center justify-center gap-2 bg-white text-black rounded-full py-4 w-full"
                 >
-                  <span className="text-[0.68rem] font-medium tracking-[0.18em] uppercase" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
+                  <span className="text-xs font-medium tracking-[0.18em] uppercase" style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}>
                     Hire Me
                   </span>
                   <span className="w-6 h-6 rounded-full bg-black/10 flex items-center justify-center">

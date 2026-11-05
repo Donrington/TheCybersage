@@ -10,6 +10,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
+import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 
 // three + @react-three/fiber in their own chunk, fetched only once Contact is
 // reached (it is the bottom-most section) and never under reduced motion.
@@ -100,7 +101,7 @@ function MagneticCTA({
         <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       )}
       <span
-        className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
+        className="text-xs tracking-[0.22em] uppercase font-medium"
         style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         {label}
@@ -167,7 +168,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
     `w-full bg-transparent border ${hasError ? 'border-red-400/50 focus:border-red-400/70' : 'border-white/12 focus:border-white/40'} text-white placeholder:text-white/18 px-5 py-3.5 text-sm focus:outline-none transition-colors duration-200`;
 
   const errorClass =
-    'text-[0.58rem] tracking-[0.04em] text-red-400/70 mt-1.5 block';
+    'text-xs tracking-[0.04em] text-red-400/70 mt-1.5 block';
 
   return (
     <motion.div
@@ -217,7 +218,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
           <div className="flex items-start justify-between mb-8">
             <div>
               <span
-                className="text-[0.55rem] tracking-[0.28em] uppercase text-white/25 font-medium block mb-2"
+                className="text-xs tracking-[0.28em] uppercase text-on-ink-3 font-medium block mb-2"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 {intent === 'call' ? 'Book a Call' : 'Get in Touch'}
@@ -230,22 +231,12 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
                 }}
               >
-                {intent === 'call' ? 'Let’s' : 'Start a'}{' '}
-                <span
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
-                    fontWeight: 400,
-                    color: 'rgba(255,255,255,0.32)',
-                  }}
-                >
-                  {intent === 'call' ? 'talk' : 'conversation'}
-                </span>
+                {intent === 'call' ? 'Let’s book a call.' : 'Start a conversation.'}
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="w-9 h-9 border border-white/12 flex items-center justify-center text-white/30 hover:text-white hover:border-white/35 transition-colors duration-200 shrink-0 mt-1"
+              className="w-9 h-9 border border-white/12 flex items-center justify-center text-on-ink-3 hover:text-white hover:border-white/35 transition-colors duration-200 shrink-0 mt-1"
             >
               <X size={14} />
             </button>
@@ -261,24 +252,24 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
               >
                 <div className="w-12 h-px bg-white/20 mx-auto mb-8" />
                 <p
-                  className="text-white/55 leading-relaxed mb-2"
+                  className="text-on-ink-1 leading-relaxed mb-2"
                   style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
+                    fontFamily: 'Satoshi, system-ui, sans-serif',
+                    fontWeight: 800,
                     fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)',
                   }}
                 >
                   Message received.
                 </p>
                 <p
-                  className="text-white/30 text-sm"
+                  className="text-on-ink-3 text-sm"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   I&apos;ll be in touch within 24 hours.
                 </p>
                 <button
                   onClick={onClose}
-                  className="mt-8 text-[0.6rem] tracking-[0.2em] uppercase text-white/25 hover:text-white/60 transition-colors"
+                  className="mt-8 text-xs tracking-[0.2em] uppercase text-on-ink-3 hover:text-white/60 transition-colors"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   Close
@@ -295,7 +286,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label
-                      className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                      className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     >
                       Name
@@ -316,7 +307,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   </div>
                   <div>
                     <label
-                      className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                      className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     >
                       Email
@@ -339,7 +330,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 <div>
                   <label
-                    className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                    className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                   >
                     Message
@@ -361,7 +352,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 {status === 'error' && (
                   <p
-                    className="text-[0.6rem] tracking-[0.12em] text-red-400/70 font-medium"
+                    className="text-xs tracking-[0.12em] text-red-400/70 font-medium"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                   >
                     Something went wrong — please try again or email directly.
@@ -378,7 +369,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
                   onMouseLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
-                  className="relative w-full bg-white text-black py-4 text-[0.62rem] tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+                  className="relative w-full bg-white text-black py-4 text-xs tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {!reduced && canSubmit && (
@@ -406,10 +397,10 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
    nav and the bottom bar so they read as one consistent system. Scoped to
    @media(hover:hover) so touch devices just show the dim resting state
    rather than risking a hover state that never properly clears on tap. */
-const DIM_HOVER = 'opacity-30 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
+const DIM_HOVER = 'opacity-60 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
 
 function FooterNavRow() {
-  const linkClass = `${DIM_HOVER} text-[0.62rem] tracking-[0.2em] uppercase font-medium whitespace-nowrap`;
+  const linkClass = `${DIM_HOVER} text-[0.75rem] tracking-[0.16em] uppercase font-medium whitespace-nowrap`;
   return (
     <nav
       className="relative flex items-center justify-between text-white"
@@ -505,6 +496,24 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
   );
 }
 
+/** Every section, including the ones that left the main nav (Process, Systems,
+ *  Credentials, Reviews, FAQ). Source: src/content/site.ts → FOOTER_LINKS. */
+function FooterIndex() {
+  return (
+    <nav aria-label="Site index" className="pb-8">
+      <ul className="flex flex-wrap justify-center sm:justify-start gap-x-7 gap-y-3">
+        {FOOTER_LINKS.map((l) => (
+          <li key={l.label}>
+            <a href={l.href} className="t-label text-on-ink-3 hover:text-on-ink-1 transition-colors duration-200">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 function FooterBottomBar() {
   return (
     <div
@@ -515,7 +524,7 @@ function FooterBottomBar() {
         href="https://websitelaunches.com/site/cybersage.dev"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${DIM_HOVER} text-[0.55rem] tracking-[0.16em] uppercase font-medium text-center sm:text-left`}
+        className={`${DIM_HOVER} text-[0.75rem] tracking-[0.12em] uppercase font-medium text-center sm:text-left`}
       >
         © 2026 Abakwe Carrington · Cybersage — Established Online ↗
       </a>
@@ -535,7 +544,7 @@ function FooterBottomBar() {
         ))}
       </div>
 
-      <p className={`${DIM_HOVER} text-[0.55rem] tracking-[0.14em] uppercase text-center sm:text-right`}>
+      <p className={`${DIM_HOVER} text-[0.75rem] tracking-[0.12em] uppercase text-center sm:text-right`}>
         Designed &amp; Developed by Carrington
       </p>
     </div>
@@ -598,13 +607,12 @@ export function Contact() {
           {/* Section label */}
           <div className="flex items-center gap-4 mb-[clamp(3rem,6vw,8rem)]">
             <motion.span
-              className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+              className="t-label text-on-ink-3 shrink-0"
               initial={{ opacity: 0, x: -16 }}
               animate={sectionInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, ease: EASE }}
             >
-              08 / Contact
+              {SECTIONS.contact.label}
             </motion.span>
             <motion.div
               className="flex-1 h-px bg-white/10"
@@ -616,21 +624,23 @@ export function Contact() {
 
           {/* Giant email CTA */}
           <div className="mb-[clamp(3rem,6vw,8rem)]">
-            <motion.p
-              className="text-white/30 mb-5"
+            <motion.h2
+              className="text-on-ink-2 mb-5"
               style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontSize: 'clamp(1rem, 2vw, 1.6rem)',
+                fontFamily: 'Satoshi, system-ui, sans-serif',
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                fontSize: 'clamp(1.25rem, 2.4vw, 2rem)',
               }}
               initial={{ opacity: 0, y: 12 }}
               animate={sectionInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
             >
-              Have a project in mind?
-            </motion.p>
+              {SECTIONS.contact.heading}
+            </motion.h2>
 
-            <div className="overflow-hidden mb-8">
+            {/* pb keeps y/g descenders inside the clip mask at leading 0.88 */}
+            <div className="overflow-hidden mb-6 pb-[0.14em]" style={{ fontSize: 'clamp(1.8rem, 5.5vw, 7rem)' }}>
               <a
                 ref={emailRef}
                 href="mailto:hello@cybersage.dev"
@@ -656,7 +666,7 @@ export function Contact() {
               <MagneticCTA label="Send a Message" onClick={() => setModal('message')} />
               <a
                 href="mailto:hello@cybersage.dev"
-                className="text-[0.62rem] tracking-[0.18em] uppercase text-white/28 hover:text-white/60 transition-colors duration-200 font-medium"
+                className="text-xs tracking-[0.18em] uppercase text-on-ink-3 hover:text-white/60 transition-colors duration-200 font-medium"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 or email directly →
@@ -681,7 +691,7 @@ export function Contact() {
                 className={`py-8 pr-8 ${i > 0 ? 'sm:border-l sm:border-white/8 sm:pl-8 sm:pr-0' : ''}`}
               >
                 <p
-                  className="text-[0.55rem] tracking-[0.22em] uppercase text-white/22 font-medium mb-2"
+                  className="text-xs tracking-[0.22em] uppercase text-on-ink-3 font-medium mb-2"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {item.label}
@@ -733,6 +743,7 @@ export function Contact() {
               animate={sectionInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.6, ease: EASE }}
             >
+              <FooterIndex />
               <FooterBottomBar />
             </motion.div>
           </div>
