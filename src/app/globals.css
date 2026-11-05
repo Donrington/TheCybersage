@@ -272,3 +272,48 @@ body {
     height: var(--scene-vh);
   }
 }
+
+/* ── Hero v2 (Prompt 3) ─────────────────────────────────────────────────────
+   The name is in the HTML and paints on the first frame; each line rises out
+   of a mask with pure CSS (no JS, so hydration can't delay it). Reduced motion
+   gets the final state. */
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+.hero-line > span {
+  display: block;
+  animation: hero-rise var(--dur-slow) var(--ease-sig) both;
+}
+.hero-line + .hero-line > span { animation-delay: 80ms; }
+.hero-fade { animation: hero-fade var(--dur-slow) var(--ease-sig) 240ms both; }
+/* Slide only, never hidden: the positioning line is an LCP candidate. */
+.hero-slide { animation: hero-slide var(--dur-slow) var(--ease-sig) 120ms both; }
+@keyframes hero-slide { from { transform: translateY(14px); } to { transform: none; } }
+@keyframes hero-rise { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes hero-fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* Static field: the whole background without WebGL (reduced motion, Save-Data,
+   low-end GPU) and the first paint for everyone else. 0 bytes of media. */
+.hero-poster {
+  background:
+    radial-gradient(ellipse 70% 60% at 72% 38%, rgba(245, 245, 243, 0.07), transparent 70%),
+    #0a0a0a;
+}
+.hero-poster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(245, 245, 243, 0.28) 1px, transparent 1.6px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 72% 40%, #000 10%, transparent 72%);
+  mask-image: radial-gradient(ellipse 60% 70% at 72% 40%, #000 10%, transparent 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line > span,
+  .hero-slide,
+  .hero-fade { animation: none; }
+}

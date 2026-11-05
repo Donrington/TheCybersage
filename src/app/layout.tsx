@@ -620,6 +620,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className={instrumentSerif.variable} suppressHydrationWarning>
       <head>
+        {/* Hero h1 face: fetched with the HTML, not after the CSS (LCP). */}
+        <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Machine Readable Profile" />
         <script
           type="application/ld+json"

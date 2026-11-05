@@ -1,22 +1,37 @@
 # Performance budget
 
 Measured with Lighthouse 12, mobile preset, against a local production build (`next build && next start`).
-Baseline: `docs/perf/baseline.json`. After Prompt 1: `docs/perf/after-1.json`.
+Baseline: `docs/perf/baseline.json`. After Prompt 1: `docs/perf/after-1.json`. After Prompt 3: `docs/perf/after-3.json`.
 
-| Metric | Budget | Baseline (2026-11-05) | After Prompt 1 |
-| --- | --- | --- | --- |
-| First-view transfer | 1.5 MB or less | 3.82 MB (2.84 MB hero video) | **1.22 MB** ✓ |
-| Initial JS (gzipped) | 200 KB or less | 644 KB (largest chunk 364 KB) | not yet re-measured (dynamic imports added; full split is Prompt 2+) |
-| Mobile LCP | 2.5 s or less | 5.8 s | 6.1 s (still the hero `<video>` — fixed in Prompt 3) |
-| CLS | 0.05 or less | 0.022 | 0.017 |
-| Total Blocking Time | 300 ms or less | 16,360 ms | 4,030 ms |
-| TTFB (live, from Lagos) | 300 ms or less | 1.2–4.1 s | unchanged — see "Open decision" below |
-| Page height (desktop) | 18,000 px or less | ~41,000 px | unchanged (Prompt 4/7) |
-| WebGL code added per scene | 120 KB gzipped or less | n/a | n/a (Prompt 3+) |
+| Metric | Budget | Baseline (2026-11-05) | After Prompt 1 | After Prompt 3 |
+| --- | --- | --- | --- | --- |
+| First-view transfer | 1.5 MB or less | 3.82 MB (2.84 MB hero video) | **1.22 MB** ✓ | **641 KB** ✓ (video gone) |
+| Initial JS (gzipped) | 200 KB or less | 644 KB (largest chunk 364 KB) | not yet re-measured (dynamic imports added; full split is Prompt 2+) | not re-measured (hero no longer imports gsap, animejs or framer-motion) |
+| Mobile LCP | 2.5 s or less | 5.8 s | 6.1 s (still the hero `<video>` — fixed in Prompt 3) | 6.1–6.4 s ✗ (see "Prompt 3" below) |
+| CLS | 0.05 or less | 0.022 | 0.017 | 0 |
+| Total Blocking Time | 300 ms or less | 16,360 ms | 4,030 ms | 1,800–2,010 ms (Prompt 2 build, same session: 3,520–4,610 ms) |
+| TTFB (live, from Lagos) | 300 ms or less | 1.2–4.1 s | unchanged — see "Open decision" below | unchanged |
+| Page height (desktop) | 18,000 px or less | ~41,000 px | unchanged (Prompt 4/7) | unchanged |
+| WebGL code added per scene | 120 KB gzipped or less | n/a | n/a (Prompt 3+) | **3.4 KB** ✓ (hero field) |
 
 Lighthouse category scores: baseline Performance 32 / A11y 96 / BP 96 / SEO 100 → after Prompt 1
 Performance 37 / A11y 96 / BP 96 / SEO 100. The video/image/JS fixes landed cleanly; LCP/TBT/TTFB
 stay budget-over until the hero is rebuilt in WebGL (Prompt 3) and `/` can render statically.
+
+## Prompt 3: why LCP is still over budget
+
+The hero is no longer the bottleneck. Observed (unthrottled) FCP and LCP are the same frame: the name and the
+positioning line paint together. But that first frame only comes after the browser has parsed and laid out the
+whole page: `/` ships **538 KB of HTML** (RSC payload inlined) and **~3,070 DOM elements**, and a
+long-animation-frame trace (4x CPU) shows a **1.3 s first frame with no script in it** (parse + style/layout)
+before anything paints. Most of that is the 26 pinned project scenes and the sections Prompts 4 and 7 cut, so
+re-measure after Prompt 4. Lighthouse on this machine swings ±2 s on LCP/TBT, so the Prompt 2 and Prompt 3 builds
+were measured interleaved, twice each.
+
+WebGL: 60 fps on the dev laptop (Iris Xe, D3D11), median and p95 frame 16.7 ms, on both the desktop path
+(3,000 points + lines) and the phone path (1,200 points, no lines, dpr 1.5). Software renderers (SwiftShader,
+llvmpipe), Save-Data, reduced motion and devices with ≤2 cores or ≤2 GB get the static CSS poster (0 bytes).
+Not yet measured on a real mid-range Android.
 
 ## Open decision: static `/` vs the current CSP nonce
 

@@ -259,6 +259,7 @@ export function CurrentlyBuilding() {
   return (
     <section
       ref={ref}
+      id="now"
       data-theme="dark"
       className="w-full bg-[#0A0A0A] border-t border-white/6 relative overflow-hidden"
     >

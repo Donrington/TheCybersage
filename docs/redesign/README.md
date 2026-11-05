@@ -41,7 +41,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 0 | Map, baseline, guardrails | done |
 | 1 | Performance quick wins | done (cb31456) |
 | 2 | Tokens, type reset, shared components | done |
-| 3 | Hero (WebGL network field + Now chip) | |
+| 3 | Hero (WebGL network field + Now chip) | done (LCP still over budget, see docs/perf/budget.md) |
 | 4 | Selected Work 26 → 6–8 flagships + `/work` index | |
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | |
 | 6 | Currently Building → Now chip + Lab row | |
@@ -76,6 +76,20 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 - Codemods: 99 sub-12px sizes raised; 80 low-alpha text colours moved to the tertiary tokens (4.5:1+).
 - QA (prod build, 1440/1024/768/390): overflow 0, one h1, 0 text <12px, no serif headings, reduced motion leaves
   0 pending reveals. Lint errors 19 → 17 (all pre-existing).
+
+
+## Prompt 3 notes
+
+- `HeroV2` replaces the video hero. Old `Hero.tsx`, `hero-loop.mp4` and the full-screen `PageLoader` are deleted (the
+  loader hid the name for ~2-3 s, which made "readable instantly" impossible). `hero-poster.jpg` stays only because the
+  footer CTA still uses it; Prompt 10 replaces that.
+- Field: `src/lib/webgl/networkField.ts`, raw WebGL2, 3.4 KB gzipped (no three.js / R3F / detect-gpu). Monochrome:
+  off-white points on ink, ~2% brighter pulsing "signal" points (no lime, no bone). Scroll fades toward ink.
+- Mount: `src/components/hero/HeroField.tsx` imports the renderer in requestIdleCallback, pauses off-screen and on
+  hidden tabs, disposes on unmount, dpr ≤ 1.5. Static CSS poster for reduced motion, Save-Data, software or low-end GPUs.
+- Name: real h1 text, CSS line-mask rise (no JS, no scramble). Positioning line from `src/content/site.ts`.
+  Now chip from `src/data/now.json` (`since: 2026-06` = when Orion first appeared on the site; owner to confirm).
+- Satoshi woff2 is preloaded in the layout head.
 
 ## Working rules
 

@@ -1,11 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { SmoothScroll } from '@/lib/SmoothScroll';
-import { PageLoader } from '@/components/PageLoader';
 import { Navbar } from '@/components/Navbar';
-import { Hero } from '@/components/Hero';
+import { HeroV2 } from '@/components/HeroV2';
 import { TechTicker } from '@/components/TechTicker';
 import { About } from '@/components/About';
 import { Projects } from '@/components/Projects';
@@ -29,12 +27,9 @@ const AIAssistant = dynamic(() => import('@/components/AIAssistant').then((m) =>
 const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) => m.CustomCursor), { ssr: false });
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
-
   return (
     <>
       <CustomCursor />
-      {!loaded && <PageLoader onDone={() => setLoaded(true)} />}
       <SmoothScroll>
         <Navbar />
         <main>
@@ -49,7 +44,7 @@ export default function Home() {
             <p>AWS Cloud Infrastructure, Docker Containerisation, Kubernetes, Terraform Infrastructure as Code, Go (Golang), Python Django, PostgreSQL, Redis, Microservices System Design, Next.js, and TypeScript.</p>
           </article>
 
-          <Hero />
+          <HeroV2 />
           <TechTicker />
           <About />
           <Projects />
