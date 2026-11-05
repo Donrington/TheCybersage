@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { ProjectVideo } from './ProjectVideo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -258,9 +259,24 @@ const PROJECTS = [
     year: '2026',
     link: 'https://thetuffapp.com',
   },
+  {
+    id: 'winsko',
+    name: 'Winsko Serves',
+    category: 'Logistics & EPC Platform',
+    tagline: 'Website for a Port Harcourt logistics and oil & gas EPC company. Nine service pages, a scroll-driven Mapbox globe of the Nigerian base, an animated services mega-menu, a server-validated contact form with Turnstile, and a gallery built from the client’s own site photographs.',
+    stack: ['Next.js', 'GSAP', 'Mapbox', 'Tailwind'],
+    image: '/projects/winsko.webp',
+    video: '/videos/winsko-reel.mp4',
+    videoPoster: '/projects/winsko-reel-poster.webp',
+    year: '2026',
+    link: 'https://winskoserves.com.ng',
+  },
 ] as const;
 
 type Project = (typeof PROJECTS)[number];
+
+// Optional media fields that only some projects carry.
+const extra = (p: Project) => p as { video?: string; videoPoster?: string };
 
 // ─── Cube geometry ─────────────────────────────────────────────────────────────
 // Scene 0 = intro, scenes 1–16 = projects
@@ -549,8 +565,12 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
       </div>
 
       {/* CTA */}
-      {'link' in project && project.link && (
-        <div style={{ display: 'flex', justifyContent: right ? 'flex-end' : 'flex-start' }}>
+      {('link' in project && project.link) || extra(project).video ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: right ? 'flex-end' : 'flex-start' }}>
+          {extra(project).video && (
+            <ProjectVideo src={extra(project).video!} poster={extra(project).videoPoster} title={project.name} />
+          )}
+          {'link' in project && project.link && (
           <a
             href={project.link}
             target="_blank"
@@ -585,8 +605,9 @@ function ProjectCard({ project, align }: { project: Project; align: 'left' | 'ri
             View Project
             <ArrowUpRight size={9} />
           </a>
+          )}
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
@@ -705,6 +726,11 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
           ))}
         </div>
 
+        {('link' in project && project.link) || extra(project).video ? (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+        {extra(project).video && (
+          <ProjectVideo src={extra(project).video!} poster={extra(project).videoPoster} title={project.name} compact />
+        )}
         {'link' in project && project.link && (
           <a
             href={project.link}
@@ -731,6 +757,8 @@ function MobileProjectCard({ project, index }: { project: Project; index: number
             <ArrowUpRight size={11} />
           </a>
         )}
+        </div>
+        ) : null}
       </div>
     </motion.article>
   );
