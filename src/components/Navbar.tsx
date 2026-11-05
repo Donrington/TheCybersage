@@ -296,6 +296,9 @@ export function Navbar() {
   const [activePanel, setActivePanel] = useState<PanelKey | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<PanelKey | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [hidden, setHidden] = useState(false);
+  const hiddenRef = useRef(false);
+  const lockRef = useRef(false); // keep the bar visible while a panel or the mobile menu is open
   const reduced = useReducedMotion();
   const spy = useScrollSpy();
 
@@ -310,10 +313,23 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 60);
+    // Scrolling down hides the bar, scrolling up (or being near the top) brings it back.
+    let lastY = window.scrollY, raf = 0;
+    const apply = (h: boolean) => { if (hiddenRef.current !== h) { hiddenRef.current = h; setHidden(h); } };
+    const fn = () => {
+      raf = 0;
+      const y = window.scrollY;
+      setScrolled(y > 60);
+      const dy = y - lastY;
+      if (y < 90 || lockRef.current) apply(false);
+      else if (dy > 8) apply(true);
+      else if (dy < -8) apply(false);
+      if (Math.abs(dy) > 8) lastY = y;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(fn); };
     fn();
-    window.addEventListener('scroll', fn, { passive: true });
-    return () => window.removeEventListener('scroll', fn);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
   }, []);
 
   useEffect(() => {
@@ -333,6 +349,8 @@ export function Navbar() {
     return () => { document.body.style.overflow = ''; delete document.body.dataset.navOpen; };
   }, [mobileOpen]);
 
+  useEffect(() => { lockRef.current = mobileOpen || activePanel !== null; if (lockRef.current) { hiddenRef.current = false; setHidden(false); } }, [mobileOpen, activePanel]);
+
   const openPanel = (panel: PanelKey | null) => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
     setActivePanel(panel);
@@ -351,7 +369,7 @@ export function Navbar() {
   return (
     <>
       {/* ══ DESKTOP ══ */}
-      <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 hidden md:block" style={{ ['--grain' as string]: 'none' }}>
+      <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 hidden md:block" style={{ transform: hidden ? 'translateY(-150px)' : 'none', transition: reduced ? 'none' : 'transform 450ms cubic-bezier(0.2,0.7,0.2,1)' }} onFocusCapture={() => { hiddenRef.current = false; setHidden(false); }}>
         <div className="absolute inset-x-0 top-[22px] flex flex-col items-center" onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
           <motion.nav
             aria-label="Primary"
@@ -384,7 +402,7 @@ export function Navbar() {
       </div>
 
       {/* ══ MOBILE ══ */}
-      <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 md:hidden">
+      <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 md:hidden" style={{ transform: hidden ? 'translateY(-90px)' : 'none', transition: reduced ? 'none' : 'transform 450ms cubic-bezier(0.2,0.7,0.2,1)' }}>
         <div className="pointer-events-auto absolute top-[14px] right-[14px] left-[14px] z-20 flex h-14 items-stretch border border-white/15 bg-[#0A0A0A]/90 backdrop-blur-md">
           <a href="#" className="flex items-center border-r border-white/10 px-3.5" aria-label="Cybersage home">
             <Image src="/sage/sage_horiz1_white.png" alt="Cybersage" width={200} height={88} loading="eager" className="block object-contain" style={{ height: 34, width: 'auto' }} />
