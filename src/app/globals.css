@@ -317,3 +317,14 @@ body {
   .hero-slide,
   .hero-fade { animation: none; }
 }
+
+/* ── Work v2 (Prompt 4) ─────────────────────────────────────────────────────
+   Desktop: each scene sticks for one viewport; the next one rises and settles
+   over it. --enter comes from useScrollEngine (1 under reduced motion). */
+@media (min-width: 768px) {
+  .work-scene-card {
+    transform-origin: 50% 0;
+    transform: translateY(calc((1 - var(--enter, 1)) * 4vh)) scale(calc(0.96 + 0.04 * var(--enter, 1)));
+    box-shadow: 0 -40px 80px rgba(0, 0, 0, calc(0.6 * var(--enter, 1)));
+  }
+}

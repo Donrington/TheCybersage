@@ -6,7 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { HeroV2 } from '@/components/HeroV2';
 import { TechTicker } from '@/components/TechTicker';
 import { About } from '@/components/About';
-import { Projects } from '@/components/Projects';
+import { WorkV2 } from '@/components/WorkV2';
 import { Services } from '@/components/Services';
 import { SystemsBlueprint } from '@/components/SystemsBlueprint';
 import { Credentials } from '@/components/Credentials';
@@ -18,7 +18,6 @@ import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
 import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
-import { StudioMarquee } from '@/components/StudioMarquee';
 
 // Both are fixed-position chrome with no layout footprint of their own, so a
 // client-only chunk (no SSR, no server-rendered placeholder) costs nothing
@@ -47,7 +46,7 @@ export default function Home() {
           <HeroV2 />
           <TechTicker />
           <About />
-          <Projects />
+          <WorkV2 />
           <Marquee />
           <CurrentlyBuilding />
           <Stack />
@@ -58,7 +57,6 @@ export default function Home() {
           <Testimonials />
           <FAQ />
           <PricingPromo />
-          <StudioMarquee />
           <Contact />
         </main>        <AIAssistant />
       </SmoothScroll>

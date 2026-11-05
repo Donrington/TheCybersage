@@ -27,6 +27,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ],
     },
     {
+      url: `${BASE_URL}/work`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/llms.txt`,
       lastModified: currentDate,
       changeFrequency: 'monthly',

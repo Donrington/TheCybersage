@@ -45,7 +45,6 @@ export const SECTIONS = {
   testimonials: { label: 'Testimonials', heading: 'What clients and teammates say.' },
   faq: { label: 'FAQ', heading: 'Questions people ask before hiring me.' },
   pricing: { label: 'Pricing', heading: 'Prices, published up front.' },
-  studio: { label: 'From the studio', heading: 'Screens from recent builds.' },
   contact: { label: 'Contact', heading: "Have a project in mind? Let's talk." },
 } as const;
 

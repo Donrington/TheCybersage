@@ -42,7 +42,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 1 | Performance quick wins | done (cb31456) |
 | 2 | Tokens, type reset, shared components | done |
 | 3 | Hero (WebGL network field + Now chip) | done (LCP still over budget, see docs/perf/budget.md) |
-| 4 | Selected Work 26 → 6–8 flagships + `/work` index | |
+| 4 | Selected Work 26 → 6–8 flagships + `/work` index | done |
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | |
 | 6 | Currently Building → Now chip + Lab row | |
 | 7 | Delete, merge, condense, reorder | |
@@ -90,6 +90,21 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 - Name: real h1 text, CSS line-mask rise (no JS, no scramble). Positioning line from `src/content/site.ts`.
   Now chip from `src/data/now.json` (`since: 2026-06` = when Orion first appeared on the site; owner to confirm).
 - Satoshi woff2 is preloaded in the layout head.
+
+## Prompt 4 notes
+
+- `WorkV2` replaces `Projects` (26 pinned cube scenes, GSAP, background canvas). Eight scenes, in order: Anoc.ng,
+  RecoverDerm, Circles of Life, NextGen Robotics, Autoboy Express, Wytnest, Winsko Serves, The Black-E. Templates
+  rotate (pair, metric, device) so no two neighbours match.
+- Desktop: each scene is `position: sticky` for one viewport and the next rises over it (CSS + one `--enter` var from
+  useScrollEngine; static under reduced motion). Mobile: plain vertical cards. Images mount within one viewport.
+- All project data now lives in `src/content/projects.ts` (`PROJECTS`, `FEATURED`, `VERTICAL_OF`). Roles and
+  one-sentence outcomes are condensed from the existing project copy; metrics are only numbers already on the site
+  (Anoc zero breaches, RecoverDerm 60%, Circles of Life 4 AI features, NextGen 45%, Autoboy 30%, Winsko 9 pages).
+  **Owner to review the role lines.**
+- `/work`: all 26 projects, filters by vertical (aria-pressed buttons), linked from the section and the nav's Work
+  panel. Replaces the "From the studio" mosaic, which is deleted. Added to the sitemap.
+- `public/projects/techhub.png` was 29.9 MB (7592×3188); resized to 1920 wide, 517 KB.
 
 ## Working rules
 

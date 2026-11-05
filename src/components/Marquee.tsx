@@ -33,7 +33,7 @@ const MID = Math.ceil(CLIENTS.length / 2);
 const ROW_A = CLIENTS.slice(0, MID);
 const ROW_B = CLIENTS.slice(MID);
 
-/* Same GSAP infinite-tween technique as StudioMarquee.tsx's Row — proven in
+/* Same GSAP infinite-tween technique the old studio mosaic used — proven in
    this codebase already, and functionally equivalent to a hand-rolled rAF
    loop (GSAP's own ticker is rAF-driven and frame-rate independent), so
    there's no need for a second, different animation technique living

@@ -250,7 +250,7 @@ function WorkPanelContent() {
       </div>
 
       <a
-        href="#work"
+        href="/work"
         className="group"
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
@@ -419,7 +419,7 @@ function MobileNavRow({
                     </a>
                   ))}
               <a
-                href={link.href}
+                href={link.label === 'Work' ? '/work' : link.href}
                 onClick={onNavigate}
                 style={{ textAlign: 'center', padding: '0.6rem', fontFamily: 'Satoshi, system-ui, sans-serif', fontSize: '0.75rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.56)' }}
               >
