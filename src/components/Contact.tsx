@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 
 // three + @react-three/fiber in their own chunk, fetched only once Contact is
 // reached (it is the bottom-most section) and never under reduced motion.
@@ -624,20 +625,7 @@ export function Contact() {
 
           {/* Giant email CTA */}
           <div className="mb-[clamp(3rem,6vw,8rem)]">
-            <motion.h2
-              className="text-on-ink-2 mb-5"
-              style={{
-                fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                fontSize: 'clamp(1.25rem, 2.4vw, 2rem)',
-              }}
-              initial={{ opacity: 0, y: 12 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-            >
-              {SECTIONS.contact.heading}
-            </motion.h2>
+            <SplitHeading className="mb-5 text-on-ink-1" style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(1.5rem, 3.2vw, 2.75rem)' }} text={SECTIONS.contact.heading} />
 
             {/* pb keeps y/g descenders inside the clip mask at leading 0.88 */}
             <div className="overflow-hidden mb-6 pb-[0.14em]" style={{ fontSize: 'clamp(1.8rem, 5.5vw, 7rem)' }}>

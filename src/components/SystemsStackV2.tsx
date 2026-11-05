@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 import { LAYERS, splitProof } from '@/content/systems';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { lenisInstance } from '@/lib/SmoothScroll';
@@ -193,9 +194,7 @@ export function SystemsStackV2() {
           <span className="t-label text-on-ink-2">{SECTIONS.systems.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
         </div>
-        <h2 id="systems-heading" className="t-h2 max-w-[18ch] text-white">
-          {SECTIONS.systems.heading}
-        </h2>
+        <SplitHeading id="systems-heading" className="t-h2 max-w-[18ch] text-white" text={SECTIONS.systems.heading} />
         <p className="t-body mt-5 max-w-[56ch] text-on-ink-2">
           One real decision per layer, and the client build where it shipped.
         </p>

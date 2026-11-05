@@ -30,20 +30,21 @@ export const FOOTER_LINKS = [
 
 /**
  * Section labels (small, above the heading) and headings.
+ * Headings: wrap a word in *asterisks* to set it in the italic serif (see SplitHeading).
  * Labels replace the old numbered "01 / ABOUT" eyebrows, which were also
  * out of order (07 twice) and won't survive the section reorder.
  */
 export const SECTIONS = {
-  about: { label: 'About', heading: 'I build the system behind the screen.' },
-  work: { label: 'Selected work', heading: 'Shipped for real clients, still running.' },
-  services: { label: 'Services', heading: 'Five things I get hired to build.' },
-  process: { label: 'Process', heading: 'From first call to launch, in four steps.' },
-  lab: { label: 'Lab', heading: 'Also in the works.' },
-  systems: { label: 'Under the hood', heading: 'Seven layers of a production system.' },
-  testimonials: { label: 'Testimonials', heading: 'What clients and teammates say.' },
-  faq: { label: 'FAQ', heading: 'Questions people ask before hiring me.' },
-  pricing: { label: 'Pricing', heading: 'Prices, published up front.' },
-  contact: { label: 'Contact', heading: "Have a project in mind? Let's talk." },
+  about: { label: 'About', heading: 'I build the *system* behind the screen.' },
+  work: { label: 'Selected work', heading: 'Shipped for real *clients*, still running.' },
+  services: { label: 'Services', heading: 'Five things I get *hired* to build.' },
+  process: { label: 'Process', heading: 'From first call to *launch*, in four steps.' },
+  lab: { label: 'Lab', heading: 'Also in the *works*.' },
+  systems: { label: 'Under the hood', heading: 'Seven *layers* of a production system.' },
+  testimonials: { label: 'Testimonials', heading: 'What *clients* and teammates say.' },
+  faq: { label: 'FAQ', heading: 'Questions people ask *before* hiring me.' },
+  pricing: { label: 'Pricing', heading: 'Prices, *published* up front.' },
+  contact: { label: 'Contact', heading: "Have a *project* in mind? Let's talk." },
 } as const;
 
 export type SectionKey = keyof typeof SECTIONS;

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { TESTIMONIALS } from '@/content/testimonials';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 
 const N = TESTIMONIALS.length;
 
@@ -25,9 +26,7 @@ export function Testimonials() {
           <span className="t-label text-on-ink-2">{SECTIONS.testimonials.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
         </div>
-        <h2 id="testimonials-heading" className="t-h2 max-w-[20ch] text-white">
-          {SECTIONS.testimonials.heading}
-        </h2>
+        <SplitHeading id="testimonials-heading" className="t-h2 max-w-[20ch] text-white" text={SECTIONS.testimonials.heading} />
 
         <div className="mt-12 grid items-start gap-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-16" aria-roledescription="carousel" aria-label="Testimonials">
           <figure key={t.image} className="testimonial-in relative mx-auto h-[min(70svh,640px)] w-full max-w-[640px] overflow-hidden rounded-[10px] border border-on-ink-line bg-[#141414]">

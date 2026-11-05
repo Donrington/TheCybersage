@@ -470,3 +470,49 @@ body {
 .faq-item[open] .faq-icon { transform: rotate(45deg); }
 
 .testimonial-in { animation: hero-fade var(--dur-base) var(--ease-sig) both; }
+
+/* Hero card: shrinks and dims as it scrolls away (--hs 0 → 1 set from HeroV2). */
+.hero-card {
+  transform-origin: 50% 40%;
+  transform: scale(calc(1 - var(--hs, 0) * 0.08)) translateY(calc(var(--hs, 0) * -2.5rem));
+  opacity: calc(1 - var(--hs, 0) * 0.6);
+  will-change: transform, opacity;
+}
+
+/* ── Two-voice titles: bold Satoshi + italic Instrument Serif ────────────── */
+.serif-i {
+  font-family: var(--font-instrument), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  padding-right: 0.04em;
+}
+.wd { display: inline-block; overflow: hidden; vertical-align: bottom; padding: 0.08em 0.04em 0.16em; margin: -0.08em -0.04em -0.16em; }
+.wd > span { display: inline-block; }
+[data-split='pending'] .wd > span { transform: translateY(110%); }
+[data-split='in'] .wd > span {
+  transform: none;
+  transition: transform var(--dur-slow) var(--ease-sig);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-split='pending'] .wd > span { transform: none; }
+}
+
+/* ── Artistic layer (kept cheap: compositor-only motion, static textures) ── */
+.type-band { animation: type-band 38s linear infinite; will-change: transform; }
+@keyframes type-band { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .type-band { animation: none; } }
+
+/* Film grain on dark sections: one tiny SVG, painted once. */
+[data-theme='dark'] { position: relative; }
+[data-theme='dark']::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.06; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Work: screenshots wipe open as their scene settles (uses --enter from useScrollEngine). */
+@media (min-width: 768px) {
+  .work-shot { clip-path: inset(calc((1 - var(--enter, 1)) * 16%) 0 0 0 round 10px); }
+  .work-shot img { transform: scale(calc(1.12 - 0.12 * var(--enter, 1))); }
+}

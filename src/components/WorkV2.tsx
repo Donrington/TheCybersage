@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 import { FEATURED, PROJECTS, projectById, type FeaturedScene, type Project } from '@/content/projects';
 import { useScrollEngine } from '@/lib/useScrollEngine';
 import { ProjectVideo } from '@/components/ProjectVideo';
@@ -36,7 +37,7 @@ function useNear<T extends HTMLElement>() {
 /** A screenshot in a fixed 16:9 browser frame: no layout shift whether or not the image has mounted. */
 function Shot({ src, alt, near, sizes, className = '' }: { src: string; alt: string; near: boolean; sizes: string; className?: string }) {
   return (
-    <div className={`overflow-hidden rounded-[10px] border border-on-ink-line bg-[#141414] ${className}`}>
+    <div className={`work-shot overflow-hidden rounded-[10px] border border-on-ink-line bg-[#141414] ${className}`}>
       <div aria-hidden className="flex h-6 items-center gap-1.5 border-b border-on-ink-line px-3">
         <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
         <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
@@ -192,9 +193,7 @@ export function WorkV2() {
             {pad(total)} of {PROJECTS.length}
           </span>
         </div>
-        <h2 id="work-heading" className="t-h2 max-w-[18ch] text-white">
-          {SECTIONS.work.heading}
-        </h2>
+        <SplitHeading id="work-heading" className="t-h2 max-w-[18ch] text-white" text={SECTIONS.work.heading} />
       </div>
 
       <ol className="relative">

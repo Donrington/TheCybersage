@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 
 // Mirrors the categories and starting prices on cybersage.dev/pricing. Do not change numbers here
 // without changing that page (pricing-data.ts there).
@@ -21,9 +22,7 @@ export function PricingPromo() {
           <span className="t-label text-on-canvas-3">{SECTIONS.pricing.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />
         </div>
-        <h2 id="pricing-heading" className="t-h2 max-w-[16ch] text-ink">
-          {SECTIONS.pricing.heading}
-        </h2>
+        <SplitHeading id="pricing-heading" className="t-h2 max-w-[16ch] text-ink" text={SECTIONS.pricing.heading} />
         <p className="t-lede mt-5 max-w-[56ch] text-on-canvas-2">
           Starting prices by type of project. Find the row that matches what you are building; anything bigger is quoted after a call.
         </p>

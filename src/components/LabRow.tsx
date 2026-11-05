@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import now from '@/data/now.json';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 import { sinceLabel } from '@/components/NowChip';
 
 const STATUS: Record<string, { label: string; dot: string }> = {
@@ -19,9 +20,7 @@ export function LabRow() {
           <span className="t-label text-on-ink-2">{SECTIONS.lab.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
         </div>
-        <h2 id="lab-heading" className="t-h2 max-w-[22ch] text-white">
-          {SECTIONS.lab.heading}
-        </h2>
+        <SplitHeading id="lab-heading" className="t-h2 max-w-[22ch] text-white" text={SECTIONS.lab.heading} />
         <ul className="mt-10 grid gap-4 md:grid-cols-3">
           {now.entries.slice(0, 3).map((e) => {
             const st = STATUS[e.status] ?? STATUS.live;

@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react';
 import { FAQS } from '@/content/faq';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 
 /** Six questions as native <details> (exclusive via name="faq"). Server component, works without JS. */
 export function FAQ() {
@@ -11,9 +12,7 @@ export function FAQ() {
           <span className="t-label text-on-canvas-3">{SECTIONS.faq.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />
         </div>
-        <h2 id="faq-heading" className="t-h2 max-w-[18ch] text-ink">
-          {SECTIONS.faq.heading}
-        </h2>
+        <SplitHeading id="faq-heading" className="t-h2 max-w-[18ch] text-ink" text={SECTIONS.faq.heading} />
         <div className="mt-12 border-t border-black/10">
           {FAQS.map((faq, i) => (
             <details key={faq.id} name="faq" open={i === 0} className="faq-item border-b border-black/10">

@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import { ScrollRevealText } from './ScrollRevealText';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 import { ResumeStrip } from '@/components/ResumeStrip';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -149,14 +150,7 @@ export function About() {
         </div>
 
         {/* Headline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 32 }}
-          animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.85, delay: 0.1, ease: EASE }}
-          className="t-h2 text-ink max-w-[18ch] mb-[clamp(3rem,6vw,7rem)]"
-        >
-          {SECTIONS.about.heading}
-        </motion.h2>
+        <SplitHeading className="t-h2 text-ink max-w-[18ch] mb-[clamp(3rem,6vw,7rem)]" text={SECTIONS.about.heading} />
 
         {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(3rem,6vw,8rem)]">

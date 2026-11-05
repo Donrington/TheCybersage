@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { PageLoader } from '@/components/PageLoader';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Navbar } from '@/components/Navbar';
 import { HeroV2 } from '@/components/HeroV2';
@@ -9,6 +11,7 @@ import { WorkV2 } from '@/components/WorkV2';
 import { Services } from '@/components/Services';
 import { SystemsStackV2 } from '@/components/SystemsStackV2';
 import { Marquee } from '@/components/Marquee';
+import { TypeBand } from '@/components/TypeBand';
 import { LabRow } from '@/components/LabRow';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
@@ -23,9 +26,17 @@ const AIAssistant = dynamic(() => import('@/components/AIAssistant').then((m) =>
 const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) => m.CustomCursor), { ssr: false });
 
 export default function Home() {
+  const [loaded, setLoaded] = useState(false);
+  const finish = () => {
+    (window as unknown as { __loaderDone?: boolean }).__loaderDone = true;
+    window.dispatchEvent(new Event('loader-done'));
+    setLoaded(true);
+  };
+
   return (
     <>
       <CustomCursor />
+      {!loaded && <PageLoader onDone={finish} />}
       <SmoothScroll>
         <Navbar />
         <main>
@@ -43,6 +54,7 @@ export default function Home() {
           <HeroV2 />
           <WorkV2 />
           <Marquee />
+          <TypeBand />
           <SystemsStackV2 />
           <About />
           <Services />

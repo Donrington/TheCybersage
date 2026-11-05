@@ -130,6 +130,13 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 - Page height 24,246 px at 1440 (22,397 at 390), over the 18,000 target. Biggest blocks: Work 7,722 px and the Under the Hood sticky stage (~5,000 px of scroll). Trim candidates for Prompt 11: shorten the stage scroll per layer, one scene per project instead of a full viewport.
 - Hero name: the original glyph-scramble reveal and hover replay are back on both lines (animejs). The name stays real text in the server HTML, reduced motion skips it, and the h1 has a fixed aria-label.
 
+## Motion and type, restored after review
+
+- Owner feedback: the redesign had become too plain. Restored: full-screen page loader (hero scramble now starts when it exits), hero rotating light ring, button shine, hero scroll shrink/dim (CSS var, no GSAP).
+- Two-voice titles are back: every section title is bold Satoshi with italic Instrument Serif words (mark with *asterisks* in content/site.ts). One SplitHeading component renders them with a word-by-word mask reveal (CSS only).
+- New artistic layer, all cheap: oversized sans+italic type band, film grain on dark sections, work screenshots wipe open on scroll.
+- This overrides the audit's "serif once" rule by the owner's choice; the budget still applies (measure in Prompt 11).
+
 ## Working rules
 
 1. Build each redesigned section as a new component next to the old one (`HeroV2`, `WorkV2`, ...); swap the
