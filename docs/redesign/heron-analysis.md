@@ -44,3 +44,4 @@ one full-viewport canvas (hero interaction), a CSS `mask-image` pixel mask (`pix
 
 - Hero: blueprint loader, sheet frame, crosshair + coordinates, mono spec block.
 - Navbar (desktop + mobile): bordered cells with index, rolling mono labels, wipe fills and corner ticks; Work/Services mega-panel drawn as a sheet that wipes open and fills its tiles in sequence (FIG. labels, greyscale to colour thumbnails); scroll-spy marker; Escape closes; opens on keyboard focus; mobile full-screen sheet with numbered rows, accordion, mono info block, and the AI launcher hidden while open.
+- Work: stats strip of hairline cells, every screenshot is a numbered PLATE with corner ticks and its host in mono (replaces fake browser dots), a caption panel per plate ("PLATE 05 / 08, Next: Wytnest, [SCROLL TO CONTINUE]"), and a right-edge progress ruler that lights the current plate. Content scales to fit short laptop screens (measured at 1440x900, 1366x768, 1280x720, 1024x768).

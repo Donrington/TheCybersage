@@ -635,3 +635,4 @@ body {
 
 /* Hide the AI launcher while the mobile menu sheet is open (it sat over the Hire button). */
 body[data-nav-open] button[aria-label^='Ask the AI'] { display: none; }
+

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronDown, ArrowRight, ArrowUpRight, X } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { Corners } from '@/components/ui/Corners';
 import { NAV_LINKS as SITE_NAV } from '@/content/site';
 
 /**
@@ -68,17 +69,6 @@ function Roll({ children }: { children: string }) {
     <span className="nav-roll" data-text={children}>
       <span>{children}</span>
     </span>
-  );
-}
-
-function Corners() {
-  return (
-    <>
-      <i aria-hidden className="nav-corner nav-corner-tl" />
-      <i aria-hidden className="nav-corner nav-corner-tr" />
-      <i aria-hidden className="nav-corner nav-corner-bl" />
-      <i aria-hidden className="nav-corner nav-corner-br" />
-    </>
   );
 }
 

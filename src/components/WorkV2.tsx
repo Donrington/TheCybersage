@@ -9,6 +9,7 @@ import { SplitHeading } from '@/components/ui/SplitHeading';
 import { FEATURED, PROJECTS, projectById, type FeaturedScene, type Project } from '@/content/projects';
 import { useScrollEngine } from '@/lib/useScrollEngine';
 import { ProjectVideo } from '@/components/ProjectVideo';
+import { Corners } from '@/components/ui/Corners';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -35,17 +36,17 @@ function useNear<T extends HTMLElement>() {
 }
 
 /** A screenshot in a fixed 16:9 browser frame: no layout shift whether or not the image has mounted. */
-function Shot({ src, alt, near, sizes, className = '' }: { src: string; alt: string; near: boolean; sizes: string; className?: string }) {
+function Shot({ src, alt, near, sizes, plate, className = '' }: { src: string; alt: string; near: boolean; sizes: string; plate?: string; className?: string }) {
   return (
-    <div className={`work-shot overflow-hidden rounded-[10px] border border-on-ink-line bg-[#141414] ${className}`}>
-      <div aria-hidden className="flex h-6 items-center gap-1.5 border-b border-on-ink-line px-3">
-        <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-        <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
-        <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
+    <div className={`work-shot relative border border-on-ink-line bg-[#141414] ${className}`}>
+      <div aria-hidden className="t-mono flex h-7 items-center justify-between border-b border-on-ink-line px-3 text-on-ink-3">
+        <span>{plate ?? 'PLATE'}</span>
+        <span>+</span>
       </div>
-      <div className="relative aspect-[16/9]">
+      <div className="relative aspect-[16/9] overflow-hidden">
         {near && <Image src={src} alt={alt} fill sizes={sizes} quality={70} className="object-cover object-top" />}
       </div>
+      <Corners />
     </div>
   );
 }
@@ -98,7 +99,7 @@ function SceneText({ scene, project, index, total }: { scene: FeaturedScene; pro
 function Metric({ metric, compact = false }: { metric: NonNullable<FeaturedScene['metric']>; compact?: boolean }) {
   return (
     <p className="flex flex-col">
-      <span className="font-black leading-[0.85] tracking-tighter text-white" style={{ fontSize: compact ? 'clamp(3rem, 5vw, 4.5rem)' : 'clamp(4.5rem, 10vw, 10rem)' }}>
+      <span className="font-black leading-[0.85] tracking-tighter text-white" style={{ fontSize: compact ? 'clamp(3rem, 5vw, 4.5rem)' : 'clamp(3.5rem, min(8vw, 13svh), 7.5rem)' }}>
         {metric.value}
       </span>
       <span className="t-label mt-3 text-on-ink-2">{metric.label}</span>
@@ -106,13 +107,39 @@ function Metric({ metric, compact = false }: { metric: NonNullable<FeaturedScene
   );
 }
 
-function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; total: number }) {
+function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index: number; total: number; onActive: (i: number) => void }) {
   const project = projectById(scene.id);
   const [ref, near] = useNear<HTMLLIElement>();
+  const innerRef = useRef<HTMLDivElement>(null);
+  // On short screens shrink the plate's content so it always fits between the nav and the bottom edge.
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.zoom = '1';
+      if (window.innerWidth < 768) return;
+      const room = window.innerHeight - 150;
+      const h = el.getBoundingClientRect().height;
+      if (h > room) el.style.zoom = String(Math.max(0.75, room / h));
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
   useScrollEngine(ref, { prop: '--enter', range: 'enter' });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) onActive(index); }, { rootMargin: '-50% 0px -50% 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [index, onActive, ref]);
   if (!project) return null;
+  const nextProject = FEATURED[index + 1] ? projectById(FEATURED[index + 1].id) : null;
 
   const alt = `${project.name}: ${project.category}`;
+  const host = project.link ? new URL(project.link).host.replace(/^www\./, '').toUpperCase() : 'PRIVATE BUILD';
+  const plate = `PLATE ${pad(index + 1)} · ${host}`;
   const text = <SceneText scene={scene} project={project} index={index} total={total} />;
 
   let body: React.ReactNode;
@@ -124,7 +151,7 @@ function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; t
           {scene.metric && <Metric metric={scene.metric} compact />}
           {text}
         </div>
-        <Shot className="order-1 md:order-2" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 58vw, 100vw" />
+        <Shot plate={plate} className="order-1 md:order-2" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 58vw, 100vw" />
       </div>
     );
   } else if (scene.template === 'metric') {
@@ -135,7 +162,7 @@ function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; t
           {scene.metric && <Metric metric={scene.metric} />}
           {text}
         </div>
-        <Shot src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 48vw, 100vw" />
+        <Shot plate={plate} src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 48vw, 100vw" />
       </div>
     );
   } else {
@@ -147,7 +174,7 @@ function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; t
           {text}
         </div>
         <div className="relative order-1 pb-[24%] md:order-2">
-          <Shot className="w-[84%]" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 49vw, 84vw" />
+          <Shot plate={plate} className="w-[84%]" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 49vw, 84vw" />
           <Shot
             className="absolute right-0 bottom-0 w-[56%] shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
             src={scene.shots[1] ?? scene.shots[0]}
@@ -167,9 +194,15 @@ function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; t
       className="work-scene md:sticky md:top-0 md:h-[100svh]"
     >
       {/* Full-height, opaque: it must completely cover the scene it stacks over. */}
-      <article className="work-scene-card w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-20">
-        <div className="mx-auto w-full max-w-[1440px] px-[clamp(1rem,4vw,5rem)]">
+      <article className="work-scene-card relative w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-16">
+        <div ref={innerRef} className="mx-auto w-full max-w-[1440px] px-[clamp(1rem,4vw,5rem)]">
           {body}
+        </div>
+        {/* Caption panel (md+): where we are, and what comes next. */}
+        <div aria-hidden className="absolute bottom-7 left-24 hidden w-[17rem] border border-on-ink-line bg-[#0A0A0A] md:block">
+          <p className="t-mono bg-white px-3 py-1.5 text-[#0A0A0A]">PLATE {pad(index + 1)} / {pad(total)}</p>
+          <p className="t-body px-3 pt-2 text-sm text-on-ink-2">{nextProject ? <>Next: <span className="text-white">{nextProject.name}</span></> : 'That is the last plate.'}</p>
+          <p className="t-mono px-3 pt-1 pb-2 text-on-ink-3">{nextProject ? '[SCROLL TO CONTINUE]' : '[SEE ALL WORK BELOW]'}</p>
         </div>
       </article>
     </li>
@@ -183,6 +216,8 @@ function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; t
  */
 export function WorkV2() {
   const total = FEATURED.length;
+  const [active, setActive] = useState(0);
+  const stats: [string, string][] = [[String(PROJECTS.length), 'PROJECTS SHIPPED'], [pad(total), 'FEATURED BELOW'], ['06', 'INDUSTRIES'], ['08', 'COUNTRIES SERVED']];
   return (
     <section id="work" aria-labelledby="work-heading" data-theme="dark" className="relative bg-[#0A0A0A] text-white">
       <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] pt-[clamp(5rem,10vw,9rem)] pb-[clamp(2rem,5vw,4rem)]">
@@ -194,13 +229,32 @@ export function WorkV2() {
           </span>
         </div>
         <SplitHeading id="work-heading" className="t-h2 max-w-[18ch] text-white" text={SECTIONS.work.heading} />
+        <dl className="mt-10 grid grid-cols-2 border-t border-l border-on-ink-line md:grid-cols-4">
+          {stats.map(([n, l]) => (
+            <div key={l} className="relative border-r border-b border-on-ink-line px-4 py-4">
+              <dt className="t-mono text-on-ink-3">{l}</dt>
+              <dd className="mt-1 text-3xl font-extrabold tracking-tighter tabular-nums text-white">{n}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
-      <ol className="relative">
-        {FEATURED.map((scene, i) => (
-          <Scene key={scene.id} scene={scene} index={i} total={total} />
-        ))}
-      </ol>
+      <div className="relative">
+        {/* Progress ruler: a tick per plate, the current one lit (md+). */}
+        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-[clamp(0.5rem,1.6vw,1.5rem)] z-20 hidden w-6 md:block">
+          <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center gap-3">
+            {FEATURED.map((f, i) => (
+              <span key={f.id} className={`block h-px transition-all duration-500 ${i === active ? 'w-6 bg-white' : 'w-3 bg-white/30'}`} />
+            ))}
+            <span className="t-mono mt-2 text-on-ink-3">{pad(active + 1)}</span>
+          </div>
+        </div>
+        <ol className="relative">
+          {FEATURED.map((scene, i) => (
+            <Scene key={scene.id} scene={scene} index={i} total={total} onActive={setActive} />
+          ))}
+        </ol>
+      </div>
 
       <div className="relative z-10 mx-auto flex max-w-[1440px] items-center justify-between gap-6 border-t border-on-ink-line bg-[#0A0A0A] px-[clamp(1rem,4vw,5rem)] py-12">
         <p className="t-body text-on-ink-2">Fintech, e-commerce, healthcare, SaaS and oil &amp; gas builds, all in one index.</p>

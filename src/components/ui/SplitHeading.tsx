@@ -16,7 +16,11 @@ export function parseTitle(text: string) {
   const words: { w: string; em: boolean }[] = [];
   text.split(/(\*[^*]+\*)/).forEach((part) => {
     const em = part.startsWith('*') && part.endsWith('*') && part.length > 2;
-    (em ? part.slice(1, -1) : part).split(/\s+/).filter(Boolean).forEach((w) => words.push({ w, em }));
+    const raw = em ? part.slice(1, -1) : part;
+    const toks = raw.split(/\s+/).filter(Boolean);
+    // Punctuation glued to the previous word ("*clients*, still") stays attached to it.
+    if (!em && toks.length && words.length && !/^\s/.test(raw)) words[words.length - 1].w += toks.shift() as string;
+    toks.forEach((w) => words.push({ w, em }));
   });
   return words;
 }
