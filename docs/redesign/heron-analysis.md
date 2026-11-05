@@ -39,3 +39,8 @@ one full-viewport canvas (hero interaction), a CSS `mask-image` pixel mask (`pix
 | Scroll sequence | Under the Hood already is one; Work gets the same captioned-panel pattern next. |
 | Section reveal recipe | One shared offset recipe in `useScrollEngine` / `SplitHeading` (already close). |
 | Barba, Webflow, their art and accent colour | Not adopted. |
+
+## Built so far from this study
+
+- Hero: blueprint loader, sheet frame, crosshair + coordinates, mono spec block.
+- Navbar (desktop + mobile): bordered cells with index, rolling mono labels, wipe fills and corner ticks; Work/Services mega-panel drawn as a sheet that wipes open and fills its tiles in sequence (FIG. labels, greyscale to colour thumbnails); scroll-spy marker; Escape closes; opens on keyboard focus; mobile full-screen sheet with numbered rows, accordion, mono info block, and the AI launcher hidden while open.

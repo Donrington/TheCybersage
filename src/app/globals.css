@@ -540,3 +540,98 @@ body {
 .hero-xhair-h { left: 0; right: 0; height: 1px; top: var(--cy, 50%); }
 .hero-xhair-label { position: absolute; left: calc(var(--cx, 0px) + 10px); top: calc(var(--cy, 0px) + 10px); padding: 2px 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); white-space: pre; }
 @media (prefers-reduced-motion: reduce) { .hero-xhair { display: none; } }
+
+/* ── Navbar as a drawing sheet ───────────────────────────────────────────── */
+.nav-bar {
+  position: relative; display: flex; align-items: stretch; height: 52px;
+  background: rgba(10, 10, 10, 0.92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: background-color var(--dur-base) var(--ease-sig), border-color var(--dur-base) var(--ease-sig);
+}
+.nav-bar[data-scrolled] { background: rgba(10, 10, 10, 0.78); border-color: rgba(255, 255, 255, 0.22); }
+.nav-logo { display: flex; align-items: center; padding: 0 14px; border-right: 1px solid rgba(255, 255, 255, 0.12); }
+
+/* Corner ticks: small L-shapes in the four corners of a cell, panel or bar. */
+.nav-corner { position: absolute; width: 7px; height: 7px; border: 0 solid #fff; pointer-events: none; opacity: 0.45; transition: opacity var(--dur-fast), transform var(--dur-base) var(--ease-sig); }
+.nav-corner-tl { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+.nav-corner-tr { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+.nav-corner-bl { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+.nav-corner-br { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+.nav-cell .nav-corner { opacity: 0; }
+.nav-cell:hover .nav-corner, .nav-cell:focus-visible .nav-corner, .nav-cell[data-open] .nav-corner { opacity: 1; }
+
+/* Link cell: index + rolling mono label, wipe fill from the bottom, current-section marker. */
+.nav-cell {
+  position: relative; isolation: isolate; display: flex; align-items: center; gap: 8px; padding: 0 16px;
+  font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+  color: rgba(255, 255, 255, 0.86); border-left: 1px solid rgba(255, 255, 255, 0.08);
+  transition: color var(--dur-fast) var(--ease-sig);
+}
+.nav-cell:last-child { border-right: 1px solid rgba(255, 255, 255, 0.08); }
+.nav-cell::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; background: #fff;
+  transform: scaleY(0); transform-origin: bottom; transition: transform var(--dur-base) var(--ease-sig);
+}
+.nav-cell:hover, .nav-cell:focus-visible, .nav-cell[data-open] { color: #0a0a0a; outline: none; }
+.nav-cell:hover::before, .nav-cell:focus-visible::before, .nav-cell[data-open]::before { transform: scaleY(1); }
+.nav-cell:hover .nav-corner, .nav-cell[data-open] .nav-corner { border-color: #0a0a0a; }
+.nav-idx { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); transition: color var(--dur-fast); }
+.nav-cell:hover .nav-idx, .nav-cell[data-open] .nav-idx { color: rgba(10, 10, 10, 0.55); }
+.nav-here { position: absolute; left: 50%; bottom: 5px; width: 4px; height: 4px; margin-left: -2px; background: #fff; }
+.nav-cell:hover .nav-here, .nav-cell[data-open] .nav-here { background: #0a0a0a; }
+
+/* Rolling label: the text leaves upward as a copy arrives from below. */
+.nav-roll { position: relative; display: inline-block; overflow: hidden; height: 1.2em; line-height: 1.2em; vertical-align: middle; }
+.nav-roll > span { display: block; transition: transform var(--dur-base) var(--ease-sig); }
+.nav-roll::after { content: attr(data-text); position: absolute; left: 0; top: 100%; transition: transform var(--dur-base) var(--ease-sig); }
+.nav-cell:hover .nav-roll > span, .nav-cell:focus-visible .nav-roll > span, .nav-cell[data-open] .nav-roll > span,
+.nav-hire:hover .nav-roll > span, .nav-hire:focus-visible .nav-roll > span { transform: translateY(-100%); }
+.nav-cell:hover .nav-roll::after, .nav-cell:focus-visible .nav-roll::after, .nav-cell[data-open] .nav-roll::after,
+.nav-hire:hover .nav-roll::after, .nav-hire:focus-visible .nav-roll::after { transform: translateY(-100%); }
+
+/* Hire me: white cell, ink wipe from the left, arrow slides through. */
+.nav-hire {
+  position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: center; gap: 12px; padding: 0 18px;
+  background: #fff; color: #0a0a0a; font: 600 0.75rem/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-sig);
+}
+.nav-hire::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; background: #0a0a0a;
+  transform: scaleX(0); transform-origin: left; transition: transform var(--dur-base) var(--ease-sig);
+}
+.nav-hire:hover, .nav-hire:focus-visible { color: #fff; outline: none; }
+.nav-hire:hover::before, .nav-hire:focus-visible::before { transform: scaleX(1); }
+.nav-hire-arrow { position: relative; display: block; width: 12px; height: 12px; overflow: hidden; }
+.nav-hire-arrow svg { position: absolute; top: 0; left: 0; transition: transform var(--dur-base) var(--ease-sig); }
+.nav-hire-arrow svg:last-child { transform: translateX(-160%); }
+.nav-hire:hover .nav-hire-arrow svg:first-child { transform: translateX(160%); }
+.nav-hire:hover .nav-hire-arrow svg:last-child { transform: none; }
+
+/* Mega-panel sheet and its tiles. */
+.nav-sheet { position: relative; background: rgba(10, 10, 10, 0.97); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5); }
+.nav-tile {
+  position: relative; isolation: isolate; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px;
+  background: #0a0a0a; transition: color var(--dur-fast) var(--ease-sig);
+}
+.nav-tile::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; background: #fff;
+  transform: scaleX(0); transform-origin: left; transition: transform var(--dur-base) var(--ease-sig);
+}
+.nav-tile:hover::before, .nav-tile:focus-visible::before { transform: scaleX(1); }
+.nav-tile:hover, .nav-tile:focus-visible { outline: none; }
+.nav-tile:hover *, .nav-tile:focus-visible * { color: #0a0a0a !important; }
+.nav-tile-go { display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; color: rgba(255, 255, 255, 0.6); opacity: 0; transform: translateX(-6px); transition: opacity var(--dur-base) var(--ease-sig), transform var(--dur-base) var(--ease-sig); }
+.nav-tile:hover .nav-tile-go, .nav-tile:focus-visible .nav-tile-go { opacity: 1; transform: none; }
+.nav-tile-cta { border: 0; cursor: pointer; background: #141414; }
+.nav-fig-img { filter: grayscale(1) contrast(1.05); transform: scale(1.02); transition: filter var(--dur-slow) var(--ease-sig), transform var(--dur-slow) var(--ease-sig); }
+.nav-fig:hover .nav-fig-img, .nav-fig:focus-visible .nav-fig-img { filter: none; transform: scale(1.08); }
+.nav-tile-arrow { color: rgba(255, 255, 255, 0.5); transition: transform var(--dur-base) var(--ease-sig); }
+.nav-fig:hover .nav-tile-arrow { transform: translate(2px, -2px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-cell::before, .nav-hire::before, .nav-tile::before { transition-duration: 0.01ms; }
+  .nav-roll > span, .nav-roll::after { transition: none; }
+}
+
+/* Hide the AI launcher while the mobile menu sheet is open (it sat over the Hire button). */
+body[data-nav-open] button[aria-label^='Ask the AI'] { display: none; }
