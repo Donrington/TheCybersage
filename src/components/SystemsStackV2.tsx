@@ -6,6 +6,7 @@ import { SplitHeading } from '@/components/ui/SplitHeading';
 import { LAYERS, splitProof } from '@/content/systems';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { lenisInstance } from '@/lib/SmoothScroll';
+import { Corners } from '@/components/ui/Corners';
 
 const N = LAYERS.length;
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -16,31 +17,31 @@ function LayerDetail({ index, headingLevel = 'h3' }: { index: number; headingLev
   const { metric, shippedIn } = splitProof(layer.proof);
   const Title = headingLevel;
   return (
-    <>
-      <p className="t-label text-on-ink-3">
-        <span className="t-mono text-on-ink-2">
-          {pad(index + 1)} / {pad(N)}
-        </span>
-        <span aria-hidden> · </span>
-        {layer.tag}
+    <div className="relative border border-on-ink-line bg-[#0A0A0A]">
+      <p className="t-mono flex items-center justify-between bg-white px-4 py-2 text-[#0A0A0A]">
+        <span>LAYER {pad(index + 1)} / {pad(N)}</span>
+        <span>{layer.tag.toUpperCase()}</span>
       </p>
-      <Title className="mt-3 font-extrabold tracking-tight text-white" style={{ fontSize: 'clamp(1.75rem, 2.6vw, 2.5rem)', lineHeight: 1.05 }}>
-        {layer.label}
-      </Title>
-      <p className="t-body mt-4 text-on-ink-1">{layer.principle}</p>
-      <dl className="mt-6 grid gap-4 border-t border-on-ink-line pt-5">
-        <div>
-          <dt className="t-label text-on-ink-3">Result</dt>
-          <dd className="mt-1 text-lg font-semibold text-white">{metric}</dd>
+      <div className="px-4 pt-5 pb-5">
+        <Title className="font-extrabold tracking-tight text-white" style={{ fontSize: 'clamp(1.75rem, 2.6vw, 2.5rem)', lineHeight: 1.05 }}>
+          {layer.label}
+        </Title>
+        <p className="t-body mt-3 text-on-ink-1">{layer.principle}</p>
+      </div>
+      <dl className="grid border-t border-on-ink-line sm:grid-cols-2">
+        <div className="px-4 py-3 sm:border-r sm:border-on-ink-line">
+          <dt className="t-mono text-on-ink-3">RESULT</dt>
+          <dd className="mt-1 text-base font-semibold text-white">{metric}</dd>
         </div>
         {shippedIn && (
-          <div>
-            <dt className="t-label text-on-ink-3">Shipped in</dt>
-            <dd className="mt-1 text-on-ink-2">{shippedIn}</dd>
+          <div className="border-t border-on-ink-line px-4 py-3 sm:border-t-0">
+            <dt className="t-mono text-on-ink-3">SHIPPED IN</dt>
+            <dd className="mt-1 text-base text-on-ink-2">{shippedIn}</dd>
           </div>
         )}
       </dl>
-    </>
+      <Corners />
+    </div>
   );
 }
 
@@ -62,8 +63,8 @@ function StackList({ animate }: { animate: boolean }) {
       {animate && <span aria-hidden className="stack-list-packet" />}
       {LAYERS.map((layer, i) => (
         <li key={layer.id} className="relative pb-10 last:pb-0">
-          <span aria-hidden className="absolute top-1.5 -left-10 flex h-[23px] w-[23px] items-center justify-center rounded-full border border-white/25 bg-[#0A0A0A]">
-            <span className="h-1.5 w-1.5 rounded-full bg-white/70" />
+          <span aria-hidden className="t-mono absolute top-1 -left-10 flex h-[23px] w-[23px] items-center justify-center border border-white/30 bg-[#0A0A0A] text-on-ink-2">
+            {pad(i + 1).slice(1)}
           </span>
           <LayerDetail index={i} />
         </li>
@@ -132,7 +133,10 @@ function StackStage() {
       <div className="sticky top-0 flex h-[100svh] items-center">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-10 px-[clamp(1rem,4vw,5rem)] pt-16">
           {/* Stage: decoration. Every word in it is repeated in the panel and the list. */}
-          <div ref={stageRef} aria-hidden className="stack-stage relative" style={{ ['--pk' as string]: 0 }}>
+          <div className="relative border border-on-ink-line px-5 py-6" aria-hidden>
+          <Corners />
+          <p className="t-mono absolute top-2 left-3 text-on-ink-3">FIG. A · SYSTEM STACK</p>
+          <div ref={stageRef} className="stack-stage relative mt-4" style={{ ['--pk' as string]: 0 }}>
             {LAYERS.map((layer, i) => (
               <div key={layer.id} className="stack-row" data-active={i === active} style={{ ['--i' as string]: i, zIndex: N - i }}>
                 <span className="stack-label">
@@ -145,14 +149,20 @@ function StackStage() {
             <span className="stack-trail" />
             <span className="stack-packet" />
           </div>
+          <dl className="t-mono absolute right-3 bottom-2 grid grid-cols-[auto_auto] gap-x-3 text-right text-on-ink-3">
+            <dt>SHEET</dt><dd className="text-on-ink-2">03</dd>
+            <dt>LAYER</dt><dd className="text-on-ink-2">{pad(active + 1)}/{pad(N)}</dd>
+            <dt>SCALE</dt><dd className="text-on-ink-2">N.T.S.</dd>
+          </dl>
+        </div>
 
           {/* Panel + the real navigation. */}
           <div className="flex flex-col gap-8">
-            <div key={active} className="stack-panel-in min-h-[16rem]" aria-live="polite">
+            <div key={active} className="stack-panel-in min-h-[17rem]" aria-live="polite">
               <LayerDetail index={active} />
             </div>
             <nav aria-label="Layers">
-              <ol className="grid grid-cols-7 gap-1.5">
+              <ol className="grid grid-cols-7 border-t border-l border-on-ink-line">
                 {LAYERS.map((layer, i) => (
                   <li key={layer.id}>
                     <button
@@ -161,11 +171,12 @@ function StackStage() {
                       aria-current={i === active ? 'step' : undefined}
                       aria-label={`${pad(i + 1)} ${layer.label}`}
                       title={layer.label}
-                      className={`t-mono flex h-11 w-full items-center justify-center border transition-colors duration-200 ${
-                        i === active ? 'border-white bg-white text-[#0A0A0A]' : 'border-on-ink-line text-on-ink-2 hover:border-white/40 hover:text-white'
+                      className={`t-mono relative flex h-12 w-full flex-col items-center justify-center border-r border-b border-on-ink-line leading-tight transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-white ${
+                        i === active ? 'bg-white text-[#0A0A0A]' : 'text-on-ink-2 hover:bg-white/10 hover:text-white'
                       }`}
                     >
-                      {pad(i + 1)}
+                      <span>{pad(i + 1)}</span>
+                      <span className="text-[0.75rem] opacity-70">{layer.label.slice(0, 3).toUpperCase()}</span>
                     </button>
                   </li>
                 ))}
