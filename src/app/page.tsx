@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { PageLoader } from '@/components/PageLoader';
+import { BlueprintLoader } from '@/components/BlueprintLoader';
+import { SheetFrame } from '@/components/SheetFrame';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Navbar } from '@/components/Navbar';
 import { HeroV2 } from '@/components/HeroV2';
@@ -36,7 +37,8 @@ export default function Home() {
   return (
     <>
       <CustomCursor />
-      {!loaded && <PageLoader onDone={finish} />}
+      {!loaded && <BlueprintLoader onDone={finish} />}
+      <SheetFrame />
       <SmoothScroll>
         <Navbar />
         <main>

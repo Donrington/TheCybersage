@@ -516,3 +516,27 @@ body {
   .work-shot { clip-path: inset(calc((1 - var(--enter, 1)) * 16%) 0 0 0 round 10px); }
   .work-shot img { transform: scale(calc(1.12 - 0.12 * var(--enter, 1))); }
 }
+
+/* ── Sheet frame (technical-drawing viewport border) ─────────────────────── */
+.sheet-frame {
+  position: fixed; inset: 7px; z-index: 45; pointer-events: none;
+  border: 1px solid #fff; mix-blend-mode: difference; opacity: 0.22;
+}
+.sheet-frame::before, .sheet-frame::after {
+  content: ''; position: absolute; left: 22px; right: 22px; height: 5px;
+  background: repeating-linear-gradient(90deg, #fff 0 1px, transparent 1px 10px);
+}
+.sheet-frame::before { top: 6px; } .sheet-frame::after { bottom: 6px; }
+.sheet-cross { position: absolute; font: 400 14px/1 var(--font-mono); color: #fff; }
+.sheet-cross-tl { top: 4px; left: 6px; } .sheet-cross-tr { top: 4px; right: 6px; }
+.sheet-cross-bl { bottom: 4px; left: 6px; } .sheet-cross-br { bottom: 4px; right: 6px; }
+@media (max-width: 767px) { .sheet-frame { inset: 4px; } .sheet-frame::before, .sheet-frame::after, .sheet-cross { display: none; } }
+
+/* Hero crosshair */
+.hero-xhair { opacity: 0; transition: opacity var(--dur-fast) var(--ease-sig); }
+.hero-card[data-xhair='on'] .hero-xhair { opacity: 1; }
+.hero-xhair-v, .hero-xhair-h { position: absolute; background: rgba(255, 255, 255, 0.14); }
+.hero-xhair-v { top: 0; bottom: 0; width: 1px; left: var(--cx, 50%); }
+.hero-xhair-h { left: 0; right: 0; height: 1px; top: var(--cy, 50%); }
+.hero-xhair-label { position: absolute; left: calc(var(--cx, 0px) + 10px); top: calc(var(--cy, 0px) + 10px); padding: 2px 6px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); white-space: pre; }
+@media (prefers-reduced-motion: reduce) { .hero-xhair { display: none; } }

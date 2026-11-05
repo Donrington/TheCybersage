@@ -21,6 +21,30 @@ export function HeroV2() {
   const line2 = useRef<HTMLSpanElement>(null);
   const card = useRef<HTMLDivElement>(null);
 
+  // Crosshair with live coordinates (fine pointers only). Idea from the heronaiapp.com study.
+  useEffect(() => {
+    const el = card.current;
+    if (!el || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    let raf = 0, x = 0, y = 0;
+    const paint = () => {
+      raf = 0;
+      el.style.setProperty('--cx', x + 'px');
+      el.style.setProperty('--cy', y + 'px');
+      const lab = el.querySelector<HTMLElement>('[data-xy]');
+      if (lab) lab.textContent = 'X ' + String(Math.round(x)).padStart(4, '0') + '  Y ' + String(Math.round(y)).padStart(4, '0');
+    };
+    const move = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      x = e.clientX - r.left; y = e.clientY - r.top;
+      el.dataset.xhair = 'on';
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+    const leave = () => { el.dataset.xhair = 'off'; };
+    el.addEventListener('pointermove', move, { passive: true });
+    el.addEventListener('pointerleave', leave);
+    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); cancelAnimationFrame(raf); };
+  }, []);
+
   // Scroll shrink + dim of the whole card as the hero leaves (CSS var, no re-renders).
   useEffect(() => {
     const el = card.current;
@@ -76,10 +100,23 @@ export function HeroV2() {
       <div
         ref={card}
         className="hero-card relative flex flex-1 flex-col overflow-hidden bg-[#0A0A0A]"
-        style={{ borderRadius: 'clamp(16px, 2vw, 28px)' }}
+        style={{ borderRadius: 0 }}
       >
         {/* Rotating light ring around the card, as before. */}
         <span aria-hidden className="beam-ring pointer-events-none absolute inset-0 z-20 motion-reduce:hidden" style={{ padding: 2, animationDuration: '9s', borderRadius: 'inherit' }} />
+        {/* Crosshair + live coordinates. */}
+        <div aria-hidden className="hero-xhair pointer-events-none absolute inset-0 z-[15] hidden [@media(hover:hover)]:block">
+          <span className="hero-xhair-v" />
+          <span className="hero-xhair-h" />
+          <span data-xy className="hero-xhair-label t-mono" />
+        </div>
+        {/* Mono spec block (real facts only). */}
+        <dl aria-label="At a glance" className="t-mono absolute top-24 right-[clamp(1rem,4vw,5rem)] z-10 hidden grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-on-ink-2 lg:grid">
+          <dt className="text-on-ink-3">ROLE</dt><dd>INFRASTRUCTURE &amp; SYSTEMS ARCHITECT</dd>
+          <dt className="text-on-ink-3">BASE</dt><dd>LAGOS, NIGERIA · UTC+1</dd>
+          <dt className="text-on-ink-3">STACK</dt><dd>AWS · GO · DJANGO · POSTGRESQL</dd>
+          <dt className="text-on-ink-3">STATUS</dt><dd className="flex items-center gap-2"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-live" />AVAILABLE FOR WORK</dd>
+        </dl>
         {/* Background: static poster (always), WebGL field fades in over it. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
           <div className="hero-poster absolute inset-0" />
@@ -95,7 +132,7 @@ export function HeroV2() {
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col justify-end px-[clamp(1rem,4vw,5rem)] pt-28 pb-24 sm:pb-[clamp(2.5rem,6vw,6rem)]">
-          <p className="t-label text-on-ink-2 mb-[clamp(1.25rem,2.5vw,2.5rem)] flex flex-wrap gap-x-2 gap-y-1">
+          <p className="t-label text-on-ink-2 mb-[clamp(1.25rem,2.5vw,2.5rem)] flex flex-wrap gap-x-2 gap-y-1 lg:hidden">
             <span>Infrastructure &amp; Systems Architect</span>
             <span aria-hidden className="text-on-ink-3">·</span>
             <span>Lagos, Nigeria</span>
