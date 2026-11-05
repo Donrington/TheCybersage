@@ -12,6 +12,7 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
+import { Corners } from '@/components/ui/Corners';
 
 // three + @react-three/fiber in their own chunk, fetched only once Contact is
 // reached (it is the bottom-most section) and never under reduced motion.
@@ -400,41 +401,6 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
    rather than risking a hover state that never properly clears on tap. */
 const DIM_HOVER = 'opacity-60 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
 
-function FooterNavRow() {
-  const linkClass = `${DIM_HOVER} text-[0.75rem] tracking-[0.16em] uppercase font-medium whitespace-nowrap`;
-  return (
-    <nav
-      className="relative flex items-center justify-between text-white"
-      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-      aria-label="Footer"
-    >
-      <div className="flex items-center gap-6 sm:gap-8">
-        <a href="#work" className={linkClass}>Work.</a>
-        <a href="#services" className={linkClass}>Services.</a>
-      </div>
-
-      <a
-        href="#"
-        aria-label="Cybersage — back to top"
-        className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${DIM_HOVER}`}
-      >
-        <Image
-          src="/sage/sage_prim_white.png"
-          alt=""
-          width={130}
-          height={32}
-          className="block object-contain"
-          style={{ height: 34, width: 'auto' }}
-        />
-      </a>
-
-      <div className="flex items-center gap-6 sm:gap-8">
-        <a href="#about" className={linkClass}>About.</a>
-        <a href="#contact" className={linkClass}>Contact.</a>
-      </div>
-    </nav>
-  );
-}
 
 /* Per-character 3D flip-up reveal on both lines of a heading at once — see
    useSplitReveal. The ref'd span (containing both visual lines as block
@@ -456,7 +422,7 @@ function FlipHeading({
       style={{
         fontFamily: 'Satoshi, system-ui, sans-serif',
         fontWeight: 900,
-        fontSize: 'clamp(2.5rem, 7vw, 6rem)',
+        fontSize: 'clamp(2.5rem, 4.6vw, 5rem)',
         letterSpacing: '-0.03em',
         lineHeight: 0.88,
         textTransform: 'uppercase',
@@ -464,8 +430,8 @@ function FlipHeading({
       }}
     >
       <span ref={ref} aria-hidden="true" className={align === 'right' ? 'lg:text-right' : 'lg:text-left'} style={{ display: 'inline-block' }}>
-        <span className="block">{lines[0]}</span>
-        <span className="block">{lines[1]}</span>
+        <span className="block whitespace-nowrap">{lines[0]}</span>
+        <span className="block whitespace-nowrap">{lines[1]}</span>
       </span>
       <span className="sr-only">{plainText}</span>
     </h2>
@@ -474,23 +440,26 @@ function FlipHeading({
 
 function FooterCtaBlock({ onContact }: { onContact: () => void }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 items-center gap-10 lg:gap-6">
-      <div className="order-1 lg:col-span-1">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] items-center gap-10 lg:gap-8">
+      <div className="order-1">
         <FlipHeading lines={['You Bring', 'The Brief.']} plainText="You Bring The Brief." align="left" />
       </div>
 
-      <div className="order-3 lg:order-2 lg:col-span-2 flex flex-col items-center gap-5">
+      <div className="order-3 lg:order-2 flex flex-col items-center gap-5">
         <div
-          className="relative w-full max-w-md overflow-hidden aspect-[4/5] lg:aspect-[3/2]"
-          style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+          className="relative w-full max-w-md border border-white/15"
         >
-          <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover" />
-          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.2)' }} />
+          <p className="t-mono flex items-center justify-between border-b border-white/15 px-3 py-1.5 text-on-ink-3"><span>FIG. 99 · FINAL SHEET</span><span>+</span></p>
+          <div className="relative aspect-[4/5] overflow-hidden lg:aspect-[3/2]">
+            <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover grayscale" />
+            <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
+          </div>
+          <Corners />
         </div>
         <MagneticCTA label="Contact Us." variant="solid" onClick={onContact} />
       </div>
 
-      <div className="order-2 lg:order-3 lg:col-span-1">
+      <div className="order-2 lg:order-3">
         <FlipHeading lines={['It Gets', 'Shipped.']} plainText="It Gets Shipped." align="right" />
       </div>
     </div>
@@ -502,11 +471,13 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
 function FooterIndex() {
   return (
     <nav aria-label="Site index" className="pb-8">
-      <ul className="flex flex-wrap justify-center sm:justify-start gap-x-7 gap-y-3">
-        {FOOTER_LINKS.map((l) => (
-          <li key={l.label}>
-            <a href={l.href} className="t-label text-on-ink-3 hover:text-on-ink-1 transition-colors duration-200">
-              {l.label}
+      <p className="t-mono mb-3 text-on-ink-3">INDEX / ALL SHEETS</p>
+      <ul className="grid grid-cols-2 border-t border-l border-white/15 sm:grid-cols-5">
+        {FOOTER_LINKS.map((l, i) => (
+          <li key={l.label} className="border-r border-b border-white/15">
+            <a href={l.href} className="nav-tile h-full min-h-[4.25rem] justify-between">
+              <span className="t-mono text-on-ink-3">{String(i + 1).padStart(2, '0')}</span>
+              <span className="text-sm font-extrabold tracking-tight text-white uppercase">{l.label}</span>
             </a>
           </li>
         ))}
@@ -621,6 +592,7 @@ export function Contact() {
               animate={sectionInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1.4, delay: 0.15, ease: EASE }}
             />
+            <span className="t-mono hidden shrink-0 text-on-ink-3 sm:inline">SHEET 07 / CONTACT</span>
           </div>
 
           {/* Giant email CTA */}
@@ -664,7 +636,7 @@ export function Contact() {
 
           {/* Info strip */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-0 border-t border-white/8 mb-0"
+            className="relative grid grid-cols-1 sm:grid-cols-3 gap-0 border border-white/15 mb-0"
             initial={{ opacity: 0 }}
             animate={sectionInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.55, ease: EASE }}
@@ -676,18 +648,17 @@ export function Contact() {
             ].map((item, i) => (
               <div
                 key={item.label}
-                className={`py-8 pr-8 ${i > 0 ? 'sm:border-l sm:border-white/8 sm:pl-8 sm:pr-0' : ''}`}
+                className={`relative px-6 py-6 ${i > 0 ? 'border-t border-white/15 sm:border-t-0 sm:border-l' : ''}`}
               >
                 <p
-                  className="text-xs tracking-[0.22em] uppercase text-on-ink-3 font-medium mb-2"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                  className="t-mono text-on-ink-3 mb-2 uppercase"
                 >
                   {item.label}
                 </p>
                 <div className="flex items-center gap-2">
-                  {item.pulse && <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse shrink-0" />}
+                  {item.pulse && <span className="w-1.5 h-1.5 rounded-full bg-live animate-pulse shrink-0" />}
                   <p
-                    className="text-white/55 font-medium"
+                    className="text-on-ink-1 font-medium"
                     style={{
                       fontFamily: 'Satoshi, system-ui, sans-serif',
                       fontSize: 'clamp(0.85rem, 1.3vw, 1rem)',
@@ -698,6 +669,7 @@ export function Contact() {
                 </div>
               </div>
             ))}
+          <Corners />
           </motion.div>
         </div>
 
@@ -716,15 +688,7 @@ export function Contact() {
             className="max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] flex flex-col"
             style={{ paddingTop: 'clamp(2rem,4vw,3rem)', paddingBottom: 'clamp(2rem,4vw,3rem)', gap: 'clamp(3.5rem,8vw,7rem)' }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
-            >
-              <FooterNavRow />
-            </motion.div>
-
-            <FooterCtaBlock onContact={() => setModal('message')} />
+                        <FooterCtaBlock onContact={() => setModal('message')} />
 
             <motion.div
               initial={{ opacity: 0 }}
