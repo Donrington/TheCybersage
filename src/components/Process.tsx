@@ -1,7 +1,6 @@
 import { STEPS } from '@/content/process';
 import { SECTIONS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
-import { SplitHeading } from '@/components/ui/SplitHeading';
 
 /**
  * Process, condensed: four steps on one horizontal timeline (a vertical list on phones).
@@ -15,9 +14,7 @@ export function Process() {
           <span className="t-label text-on-ink-2">{SECTIONS.process.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
         </div>
-        <h2 id="process-heading" className="t-h2 max-w-[20ch] text-white">
-          {SECTIONS.process.heading}
-        </h2>
+        <SplitHeading id="process-heading" className="t-h2 max-w-[20ch] text-white" text={SECTIONS.process.heading} />
         <ol className="relative mt-12 grid gap-10 md:grid-cols-4 md:gap-6">
           <span aria-hidden className="absolute top-[7px] right-0 left-0 hidden h-px bg-on-ink-line md:block" />
           {STEPS.map((s) => (

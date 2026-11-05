@@ -6,7 +6,6 @@ import { SERVICES } from '@/content/services';
 import { projectById } from '@/content/projects';
 import { SECTIONS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
-import { SplitHeading } from '@/components/ui/SplitHeading';
 
 /**
  * Services: a sticky list on the left, the selected service on the right with one real result and a link
@@ -22,9 +21,7 @@ export function Services() {
           <span className="t-label text-on-canvas-3">{SECTIONS.services.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />
         </div>
-        <h2 id="services-heading" className="t-h2 max-w-[18ch] text-ink">
-          {SECTIONS.services.heading}
-        </h2>
+        <SplitHeading id="services-heading" className="t-h2 max-w-[18ch] text-ink" text={SECTIONS.services.heading} />
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <nav aria-label="Services" className="hidden lg:block">
