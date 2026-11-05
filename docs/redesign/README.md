@@ -44,7 +44,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 3 | Hero (WebGL network field + Now chip) | done (LCP still over budget, see docs/perf/budget.md) |
 | 4 | Selected Work 26 → 6–8 flagships + `/work` index | done |
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | done |
-| 6 | Currently Building → Now chip + Lab row | |
+| 6 | Currently Building → Now chip + Lab row | done (dates in now.json are first-appearance on the site; owner to confirm) |
 | 7 | Delete, merge, condense, reorder | |
 | 8 | About, Services, Process | |
 | 9 | Testimonials, Pricing, FAQ | |

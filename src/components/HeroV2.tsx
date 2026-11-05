@@ -2,14 +2,8 @@
 
 import { ArrowDownRight } from 'lucide-react';
 import { POSITIONING } from '@/content/site';
-import now from '@/data/now.json';
+import { NowChip } from '@/components/NowChip';
 import { HeroField } from '@/components/hero/HeroField';
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-function sinceLabel(since: string | null | undefined) {
-  const m = since?.match(/^(\d{4})-(\d{2})$/);
-  return m ? `since ${MONTHS[Number(m[2]) - 1]} ${m[1]}` : null;
-}
 
 /**
  * Hero, v2. The name is real text, painted on the first frame (no scramble, no
@@ -17,8 +11,6 @@ function sinceLabel(since: string | null | undefined) {
  * first paint. Without WebGL the static poster below IS the background.
  */
 export function HeroV2() {
-  const since = sinceLabel(now.since);
-
   return (
     <section
       id="top"
@@ -96,22 +88,7 @@ export function HeroV2() {
               </button>
             </div>
 
-            {/* Now chip: fed from src/data/now.json */}
-            <a
-              href={now.href}
-              className="group inline-flex min-h-11 items-center gap-3 self-start border border-white/15 bg-[#0A0A0A]/60 px-4 backdrop-blur-sm transition-colors duration-200 hover:border-white/35 sm:self-auto"
-            >
-              <span className="relative flex h-1.5 w-1.5" aria-hidden>
-                <span className="absolute inset-0 animate-ping rounded-full bg-live/60 motion-reduce:animate-none" />
-                <span className="h-1.5 w-1.5 rounded-full bg-live" />
-              </span>
-              <span className="t-label text-on-ink-3">Now building</span>
-              <span className="text-sm font-semibold text-white">{now.project}</span>
-              <span className="t-label hidden text-on-ink-3 md:inline">
-                {now.client}
-                {since ? ` · ${since}` : ''}
-              </span>
-            </a>
+            <NowChip />
           </div>
         </div>
       </div>

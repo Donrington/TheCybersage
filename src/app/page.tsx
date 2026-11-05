@@ -11,7 +11,7 @@ import { Services } from '@/components/Services';
 import { SystemsStackV2 } from '@/components/SystemsStackV2';
 import { Credentials } from '@/components/Credentials';
 import { Marquee } from '@/components/Marquee';
-import { CurrentlyBuilding } from '@/components/CurrentlyBuilding';
+import { LabRow } from '@/components/LabRow';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
 import { FAQ } from '@/components/FAQ';
@@ -48,7 +48,6 @@ export default function Home() {
           <About />
           <WorkV2 />
           <Marquee />
-          <CurrentlyBuilding />
           <Stack />
           <Services />
           <Process />
@@ -57,6 +56,7 @@ export default function Home() {
           <Testimonials />
           <FAQ />
           <PricingPromo />
+          <LabRow />
           <Contact />
         </main>        <AIAssistant />
       </SmoothScroll>

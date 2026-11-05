@@ -1,7 +1,37 @@
 {
-  "project": "Orion",
-  "client": "NextGen Robotics",
-  "status": "In development",
-  "since": "2026-06",
-  "href": "#now"
+  "entries": [
+    {
+      "id": "orion",
+      "project": "Orion",
+      "client": "NextGen Robotics",
+      "status": "building",
+      "since": "2026-06",
+      "summary": "Distributed AI surveillance, embedded edge to browser.",
+      "tags": ["YOLOv8-nano", "Thermal sensing", "Protobuf"],
+      "href": "https://app.nextgenerationrobotics.org/",
+      "logo": "/logo/NEXTGEN PL (Landscape) WHITE.png"
+    },
+    {
+      "id": "wytnest",
+      "project": "Wytnest",
+      "client": "Testimonial SaaS",
+      "status": "live",
+      "since": "2026-06",
+      "summary": "Testimonial SaaS: campaigns, video collection, embeddable widgets.",
+      "tags": ["Supabase", "Cloudflare Stream", "Paystack + Stripe"],
+      "href": "https://wytnest.vercel.app",
+      "logo": null
+    },
+    {
+      "id": "ver",
+      "project": "VER",
+      "client": "Community platform",
+      "status": "live",
+      "since": "2026-08",
+      "summary": "Share more, waste less: connects givers with receivers.",
+      "tags": ["Supabase", "Cloudinary", "TanStack Query"],
+      "href": "https://ver-share-circle.vercel.app",
+      "logo": null
+    }
+  ]
 }

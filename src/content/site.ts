@@ -40,6 +40,7 @@ export const SECTIONS = {
   stack: { label: 'Technologies', heading: 'The stack behind every build.' },
   services: { label: 'Services', heading: 'Five things I get hired to build.' },
   process: { label: 'Process', heading: 'From first call to launch, in four steps.' },
+  lab: { label: 'Lab', heading: 'Also in the works.' },
   systems: { label: 'Under the hood', heading: 'Seven layers of a production system.' },
   credentials: { label: 'Credentials', heading: 'The résumé, certificates and public activity.' },
   testimonials: { label: 'Testimonials', heading: 'What clients and teammates say.' },
