@@ -103,6 +103,7 @@ He automated Brix level quality monitoring, cutting manual inspection cycles by 
 
 CERTIFICATIONS
 
+Software Development (6-month programme) from TS Academy, certified October 2026.
 Full Stack Software Engineering from IBT Learning Solutions, completed 2025.
 Web Development from Moat Academy for Developers, completed 2023.
 Web Development Internship certification from Zidio Development, completed February 2024.

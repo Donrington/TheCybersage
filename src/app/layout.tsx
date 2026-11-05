@@ -340,8 +340,15 @@ const personSchema = {
       address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
     },
     { '@type': 'EducationalOrganization', name: 'IBT Learning' },
+    { '@type': 'EducationalOrganization', name: 'TS Academy' },
   ],
   hasCredential: [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Software Development',
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'EducationalOrganization', name: 'TS Academy' },
+    },
     {
       '@type': 'EducationalOccupationalCredential',
       name: 'Web Application Development',

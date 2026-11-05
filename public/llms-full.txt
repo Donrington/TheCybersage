@@ -102,7 +102,8 @@ A: Abakwe Carrington can be contacted directly via email at `hello@cybersage.dev
 
 ## 5. Verified Credentials & Certifications
 
-- **Web Application Development Certification**: Recognized by Moat Academy, Lagos, Nigeria.
+- **Software Development Certification (6-month programme)**: TS Academy, October 2026.
+- **Web Application Development Certification**: Recognized by Moat Academy, Lagos, Nigeria (2023).
 - **Full Stack Engineering Certification**: Recognized by IBT Learning.
 - **Web Development Internship Certification**: Recognized by Zidio Development.
 
