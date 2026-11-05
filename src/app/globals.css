@@ -456,3 +456,17 @@ body {
 }
 .portrait:hover .portrait-frame { transform: translate(4px, 4px); }
 .portrait:hover .portrait-img { filter: grayscale(1) contrast(1.2) brightness(1.05); }
+
+/* ── FAQ (Prompt 9): native details, smooth open ─────────────────────────── */
+.faq-item { interpolate-size: allow-keywords; }
+.faq-item::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: block-size var(--dur-base) var(--ease-sig), opacity var(--dur-base) var(--ease-sig), content-visibility var(--dur-base) allow-discrete;
+}
+.faq-item[open]::details-content { block-size: auto; opacity: 1; }
+.faq-icon { transition: transform var(--dur-base) var(--ease-sig); }
+.faq-item[open] .faq-icon { transform: rotate(45deg); }
+
+.testimonial-in { animation: hero-fade var(--dur-base) var(--ease-sig) both; }

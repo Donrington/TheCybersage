@@ -1,203 +1,67 @@
-'use client';
-
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import { useReducedMotion } from '@/lib/useReducedMotion';
+import Link from 'next/link';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { SECTIONS } from '@/content/site';
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-// Mirrors the 5 real categories on cybersage.dev/pricing — starting price is
-// the cheapest tier within each. Labels are shortened slightly for this
-// compact list (e.g. "E-Commerce" not "E-Commerce Solutions") but map 1:1
-// to the categories there; keep these in sync if pricing-data.ts changes.
+// Mirrors the categories and starting prices on cybersage.dev/pricing. Do not change numbers here
+// without changing that page (pricing-data.ts there).
 const TIERS = [
   { label: 'Static & Landing', note: 'Landing pages & portfolios', price: 'From $300' },
-  { label: 'Corporate & CMS',  note: 'Corporate sites & blogs',    price: 'From $1,100' },
-  { label: 'E-Commerce',       note: 'Full commerce platforms',    price: 'From $1,600' },
-  { label: 'Web Applications', note: 'Dashboards & SaaS builds',   price: 'From $1,500' },
-  { label: 'Maintenance',      note: 'Monthly care & support',     price: 'From $125/mo' },
+  { label: 'Corporate & CMS', note: 'Corporate sites & blogs', price: 'From $1,100' },
+  { label: 'E-Commerce', note: 'Full commerce platforms', price: 'From $1,600' },
+  { label: 'Web Applications', note: 'Dashboards & SaaS builds', price: 'From $1,500' },
+  { label: 'Maintenance', note: 'Monthly care & support', price: 'From $125/mo' },
 ];
 
+/** Pricing: clean rows on the off-white surface. Server component. */
 export function PricingPromo() {
-  const ref     = useRef<HTMLElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const inView  = useInView(ref, { once: true, margin: '-10%' });
-  const reduced = useReducedMotion();
-
   return (
-    <section
-      ref={ref}
-      id="pricing"
-      className="w-full bg-white border-t border-black/[0.08]"
-    >
-      <div className="max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(4rem,8vw,9rem)]">
-
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,4rem)]">
-          <motion.span
-            className="t-label text-on-canvas-3 shrink-0"
-            initial={{ opacity: 0, x: -12 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE }}
-          >
-            {SECTIONS.pricing.label}
-          </motion.span>
-          <motion.div
-            ref={lineRef}
-            className="flex-1 h-px bg-black/10"
-            style={{ transformOrigin: 'left' }}
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.4, delay: 0.1, ease: EASE }}
-          />
+    <section id="pricing" aria-labelledby="pricing-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-[#F5F5F3] text-ink">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+        <div className="mb-8 flex items-center gap-4">
+          <span className="t-label text-on-canvas-3">{SECTIONS.pricing.label}</span>
+          <span aria-hidden className="h-px flex-1 bg-black/10" />
         </div>
+        <h2 id="pricing-heading" className="t-h2 max-w-[16ch] text-ink">
+          {SECTIONS.pricing.heading}
+        </h2>
+        <p className="t-lede mt-5 max-w-[56ch] text-on-canvas-2">
+          Starting prices by type of project. Find the row that matches what you are building; anything bigger is quoted after a call.
+        </p>
 
-        {/* Two-column layout — headline left, copy + CTA right.
-            1.3fr/1fr (not an even split — matches Process.tsx's headline row):
-            "Transparent" is one unbroken word, so it can't wrap to fit a
-            narrower column the way multi-word headlines elsewhere can. The
-            font-size clamp below is sized against this column's actual
-            worst-case width (~430px at the 1024px lg breakpoint, capped at
-            ~608px once the 1440px container max-width takes over), not the
-            full viewport — the previous 9vw/11rem formula was sized for a
-            full-width single-column headline and overflowed at every
-            desktop width once this became a 2-column layout.
-
-            items-start (not items-end): the right column (paragraph + 5
-            tier rows + CTA) is naturally taller than the 2-line headline,
-            so the grid row's height already tracks the right column. With
-            items-start both columns begin at the same top edge, which is
-            what the lg:sticky headline below needs — it pins at top-22
-            (clearing the fixed navbar pill) and releases on its own once
-            the right column's bottom (=row bottom) scrolls into range. No
-            manual scroll-distance math needed; this is CSS-native and
-            resizes/reflows correctly for free. Desktop-only via lg:. */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-[clamp(3rem,6vw,8rem)] items-start">
-
-          {/* Left — display headline, pinned on desktop while the right
-              column scrolls past it */}
-          <div className="lg:sticky lg:top-22 lg:self-start">
-            <h2 aria-label={SECTIONS.pricing.heading} className="t-h2 text-ink max-w-[14ch]">
-              {SECTIONS.pricing.heading.split(' ').map((word, i) => (
-                <span key={i} aria-hidden className="inline-block overflow-hidden mr-[0.25em] pb-[0.08em] -mb-[0.08em]">
-                  <motion.span
-                    className="block"
-                    initial={reduced ? false : { y: '110%' }}
-                    animate={inView ? { y: 0 } : {}}
-                    transition={{ duration: 0.75, delay: 0.05 + i * 0.06, ease: EASE }}
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-            </h2>
-          </div>
-
-          {/* Right — descriptor + tiers + CTA */}
-          <motion.div
-            className="flex flex-col gap-8"
-            initial={{ opacity: 0, y: 24 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
-          >
-            <p
-              className="text-black/55 leading-relaxed"
-              style={{
-                fontFamily: 'Satoshi, system-ui, sans-serif',
-                fontWeight: 400,
-                fontSize:   'clamp(1.05rem, 1.5vw, 1.3rem)',
-              }}
+        <ul className="mt-12 border-t border-black/10">
+          <li className="border-b border-black/10">
+            <Link
+              href="#contact"
+              className="group flex min-h-20 flex-wrap items-center justify-between gap-x-6 gap-y-1 py-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
             >
-              Every service tier, clearly priced — no discovery calls required to
-              understand what you&apos;re paying for. Scope your engagement, pick
-              the tier that fits, and get started the same week.
-            </p>
-
-            {/* Category rows — label+price share a line (with a wrap fallback
-                in case a future longer label ever gets tight), note sits
-                below on its own line rather than squeezing three strings
-                onto one row. */}
-            <div className="flex flex-col gap-3">
-              {TIERS.map((tier, i) => (
-                <motion.div
-                  key={tier.label}
-                  className="flex flex-col gap-1 border-b border-black/8 pb-3"
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.35 + i * 0.08, ease: EASE }}
-                >
-                  <div className="flex items-baseline justify-between gap-3 flex-wrap">
-                    <span
-                      className="font-black text-black tracking-tight"
-                      style={{
-                        fontFamily: 'Satoshi, system-ui, sans-serif',
-                        fontWeight: 800,
-                        fontSize:   'clamp(1.1rem, 1.6vw, 1.35rem)',
-                      }}
-                    >
-                      {tier.label}
-                    </span>
-                    <span
-                      className="text-black/55"
-                      style={{
-                        fontFamily: 'Satoshi, system-ui, sans-serif',
-                        fontWeight: 700,
-                        fontSize:   '0.85rem',
-                        letterSpacing: '0.01em',
-                      }}
-                    >
-                      {tier.price}
-                    </span>
-                  </div>
-                  <span
-                    className="text-on-canvas-3"
-                    style={{
-                      fontFamily: 'Satoshi, system-ui, sans-serif',
-                      fontWeight: 400,
-                      fontSize:   '0.75rem',
-                      letterSpacing: '0.04em',
-                    }}
-                  >
-                    {tier.note}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <motion.div
-              className="flex items-center gap-4"
-              initial={{ opacity: 0, y: 8 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6, ease: EASE }}
-            >
-              <a
-                href="https://cybersage.dev/pricing"
-                data-cursor="view"
-                className="group flex items-center gap-2 bg-black text-white px-7 py-3.5 text-xs font-medium tracking-[0.18em] uppercase hover:bg-black/80 transition-colors duration-200"
-                style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-              >
-                View All Tiers
-                <ArrowUpRight
-                  size={12}
-                  className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
-                />
-              </a>
-              <span
-                className="text-on-canvas-3"
-                style={{
-                  fontFamily:    'Satoshi, system-ui, sans-serif',
-                  fontSize:      '0.75rem',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                cybersage.dev/pricing
+              <span>
+                <span className="block text-xl font-extrabold tracking-tight text-ink sm:text-2xl">Custom architecture engagements</span>
+                <span className="t-label mt-1 block text-on-canvas-3">Systems, infrastructure and backends · quoted per engagement</span>
               </span>
-            </motion.div>
-          </motion.div>
-        </div>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-ink">
+                Talk to me
+                <ArrowRight size={16} aria-hidden className="transition-transform group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </li>
+          {TIERS.map((t) => (
+            <li key={t.label} className="flex min-h-20 flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-black/10 py-5">
+              <span>
+                <span className="block text-xl font-extrabold tracking-tight text-ink sm:text-2xl">{t.label}</span>
+                <span className="t-label mt-1 block text-on-canvas-3">For {t.note.charAt(0).toLowerCase() + t.note.slice(1)}</span>
+              </span>
+              <span className="text-xl font-extrabold tabular-nums tracking-tight text-ink sm:text-2xl">{t.price}</span>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href="https://cybersage.dev/pricing"
+          className="group mt-8 inline-flex min-h-11 items-center gap-2 border-b border-black/30 text-sm font-semibold text-ink transition-colors hover:border-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+        >
+          See full pricing
+          <ArrowUpRight size={14} aria-hidden className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </a>
       </div>
     </section>
   );
