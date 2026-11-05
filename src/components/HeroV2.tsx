@@ -1,16 +1,47 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { ArrowDownRight } from 'lucide-react';
+import { animate, scrambleText } from 'animejs';
 import { POSITIONING } from '@/content/site';
 import { NowChip } from '@/components/NowChip';
 import { HeroField } from '@/components/hero/HeroField';
 
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@_!∆';
+
 /**
- * Hero, v2. The name is real text, painted on the first frame (no scramble, no
- * loader in front of it); the network field is WebGL behind it, loaded after
- * first paint. Without WebGL the static poster below IS the background.
+ * Hero, v2. The name is real text in the server HTML (readable, indexable, and
+ * what no-JS and reduced-motion visitors see); after mount each line runs the
+ * original glyph-scramble reveal, and replays on hover. The network field is
+ * WebGL behind it, loaded after first paint; without WebGL the static poster
+ * below IS the background.
  */
 export function HeroV2() {
+  const line1 = useRef<HTMLSpanElement>(null);
+  const line2 = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const els = [line1.current, line2.current];
+    if (els.some((e) => !e)) return;
+    const cleanups: (() => void)[] = [];
+
+    const run = (el: HTMLElement, delay = 0, duration = 820) =>
+        animate(el, {
+          innerHTML: scrambleText({ chars: SCRAMBLE_CHARS, duration, delay, perturbation: 0.22, cursor: '█▓▒░', settleDuration: 260 }),
+        });
+    run(els[0]!, 120);
+    run(els[1]!, 260);
+    for (const el of els as HTMLElement[]) {
+      const onEnter = () => run(el, 0, 700);
+      el.addEventListener('pointerenter', onEnter);
+      cleanups.push(() => el.removeEventListener('pointerenter', onEnter));
+    }
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  }, []);
+
   return (
     <section
       id="top"
@@ -48,11 +79,12 @@ export function HeroV2() {
 
           <h1
             id="hero-name"
+            aria-label="Abakwe Carrington"
             className="font-black leading-[0.88] tracking-tighter text-white"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: 'clamp(3.6rem, 11.5vw, 14rem)' }}
           >
-            <span className="hero-line"><span>Abakwe</span></span>
-            <span className="hero-line"><span>Carrington</span></span>
+            <span className="hero-line"><span ref={line1} className="cursor-default select-none">Abakwe</span></span>
+            <span className="hero-line"><span ref={line2} className="cursor-default select-none">Carrington</span></span>
           </h1>
 
           <p

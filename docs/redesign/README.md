@@ -45,7 +45,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 4 | Selected Work 26 → 6–8 flagships + `/work` index | done |
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | done |
 | 6 | Currently Building → Now chip + Lab row | done (dates in now.json are first-appearance on the site; owner to confirm) |
-| 7 | Delete, merge, condense, reorder | |
+| 7 | Delete, merge, condense, reorder | done (page 24,246 px at 1440, over the 18,000 target; see notes) |
 | 8 | About, Services, Process | |
 | 9 | Testimonials, Pricing, FAQ | |
 | 10 | Contact and footer | |
@@ -121,6 +121,14 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
   on an `@property` timeline, paused off-screen by IntersectionObserver. The switch is in CSS, so it is right before
   hydration too.
 - Measured (GPU headless Chrome, Iris Xe): frame time median 16.7 ms while scrolling the stage at 1440 and 1024.
+
+## Prompt 7 notes
+
+- Deleted: TechTicker, Built to Scale (Stack), Credentials (incl. the GitHub activity grid; /api/github is now unused), From the Studio (Prompt 4). Credentials content lives in About as `ResumeStrip` (resume card + three certificates).
+- Process is a server component: four steps on one horizontal timeline, 705-752 px at 1024-1440 (target ~700). Copy in `src/content/process.ts`.
+- Order: Hero, Work, client-logo Marquee, Under the Hood, About, Services, Process, Testimonials, Lab, Pricing, FAQ, Contact. The Marquee ("Trusted by real teams", 50+ products shipped) was not on the delete list, so it stays; say if it should go.
+- Page height 24,246 px at 1440 (22,397 at 390), over the 18,000 target. Biggest blocks: Work 7,722 px and the Under the Hood sticky stage (~5,000 px of scroll). Trim candidates for Prompt 11: shorten the stage scroll per layer, one scene per project instead of a full viewport.
+- Hero name: the original glyph-scramble reveal and hover replay are back on both lines (animejs). The name stays real text in the server HTML, reduced motion skips it, and the h1 has a fixed aria-label.
 
 ## Working rules
 

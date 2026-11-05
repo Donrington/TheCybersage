@@ -4,19 +4,16 @@ import dynamic from 'next/dynamic';
 import { SmoothScroll } from '@/lib/SmoothScroll';
 import { Navbar } from '@/components/Navbar';
 import { HeroV2 } from '@/components/HeroV2';
-import { TechTicker } from '@/components/TechTicker';
 import { About } from '@/components/About';
 import { WorkV2 } from '@/components/WorkV2';
 import { Services } from '@/components/Services';
 import { SystemsStackV2 } from '@/components/SystemsStackV2';
-import { Credentials } from '@/components/Credentials';
 import { Marquee } from '@/components/Marquee';
 import { LabRow } from '@/components/LabRow';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
 import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
-import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
 
 // Both are fixed-position chrome with no layout footprint of their own, so a
@@ -44,19 +41,16 @@ export default function Home() {
           </article>
 
           <HeroV2 />
-          <TechTicker />
-          <About />
           <WorkV2 />
           <Marquee />
-          <Stack />
+          <SystemsStackV2 />
+          <About />
           <Services />
           <Process />
-          <SystemsStackV2 />
-          <Credentials />
           <Testimonials />
-          <FAQ />
-          <PricingPromo />
           <LabRow />
+          <PricingPromo />
+          <FAQ />
           <Contact />
         </main>        <AIAssistant />
       </SmoothScroll>

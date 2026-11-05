@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import { ScrollRevealText } from './ScrollRevealText';
 import { SECTIONS } from '@/content/site';
+import { ResumeStrip } from '@/components/ResumeStrip';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -313,6 +314,7 @@ export function About() {
               <div className="absolute inset-0 mix-blend-multiply bg-white/10" />
             </div>
           </div>
+        <ResumeStrip />
         </div>
       </div>
     </section>
