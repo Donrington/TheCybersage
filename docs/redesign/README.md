@@ -43,7 +43,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 2 | Tokens, type reset, shared components | done |
 | 3 | Hero (WebGL network field + Now chip) | done (LCP still over budget, see docs/perf/budget.md) |
 | 4 | Selected Work 26 → 6–8 flagships + `/work` index | done |
-| 5 | Under the Hood, remade as a scroll-driven 3D stack | |
+| 5 | Under the Hood, remade as a scroll-driven 3D stack | done |
 | 6 | Currently Building → Now chip + Lab row | |
 | 7 | Delete, merge, condense, reorder | |
 | 8 | About, Services, Process | |
@@ -105,6 +105,22 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 - `/work`: all 26 projects, filters by vertical (aria-pressed buttons), linked from the section and the nav's Work
   panel. Replaces the "From the studio" mosaic, which is deleted. Added to the sitemap.
 - `public/projects/techhub.png` was 29.9 MB (7592×3188); resized to 1920 wide, 517 KB.
+
+## Prompt 5 notes
+
+- `SystemsStackV2` replaces `SystemsBlueprint` (white block, horizontal stepper, "full chronological history" card:
+  all deleted). Layer copy moved verbatim to `src/content/systems.ts`; every proof names its client build.
+- **CSS 3D, not R3F/WebGL.** Seven planes are `rotateX(60deg) rotateZ(45deg)` squares with grid fill and edge lines;
+  the packet and its short trail move on `transform` from one damped `--pk` value. 0 KB of added JS for the scene
+  (budget 80 KB), no second WebGL canvas, crisp at any dpr, and the label leader lines line up exactly because each
+  plane's screen geometry is known in CSS.
+- Desktop (≥1024px): sticky 100svh stage on ink; scroll moves the packet layer to layer; the active plane brightens;
+  the side panel shows layer, decision, result and "Shipped in". The seven numbered buttons are the real navigation
+  (`aria-current="step"`, keyboard reachable); clicking scrolls the packet to that layer. The stage is aria-hidden.
+- Below 1024px and with reduced motion: a vertical list with all seven layers and proofs; a packet runs down the line
+  on an `@property` timeline, paused off-screen by IntersectionObserver. The switch is in CSS, so it is right before
+  hydration too.
+- Measured (GPU headless Chrome, Iris Xe): frame time median 16.7 ms while scrolling the stage at 1440 and 1024.
 
 ## Working rules
 

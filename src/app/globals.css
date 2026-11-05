@@ -328,3 +328,115 @@ body {
     box-shadow: 0 -40px 80px rgba(0, 0, 0, calc(0.6 * var(--enter, 1)));
   }
 }
+
+/* ── Under the hood v2 (Prompt 5) ───────────────────────────────────────────
+   Seven isometric planes in CSS 3D. A square of side s turned 45° and tilted
+   60° reads as a diamond 1.414s wide and 0.707s tall, centred on its box, so
+   every plane's corner and centre are known and the DOM labels can point at
+   them exactly. --pk (0-1, damped in JS) moves the packet down the stack. */
+.stack-stage {
+  --plane: clamp(190px, 19vw, 290px);
+  --labelw: 13rem;
+  --gap: min(62px, calc((100svh - 0.707 * var(--plane) - 220px) / 6));
+  height: calc(6 * var(--gap) + 0.707 * var(--plane));
+}
+.stack-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--i) * var(--gap));
+  height: calc(0.707 * var(--plane));
+}
+.stack-plane {
+  position: absolute;
+  left: calc(var(--labelw) + 16px + 0.207 * var(--plane));
+  top: 50%;
+  width: var(--plane);
+  height: var(--plane);
+  margin-top: calc(var(--plane) / -2);
+  transform: rotateX(60deg) rotateZ(45deg);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 24px),
+    rgba(245, 245, 243, 0.035);
+  opacity: 0.55;
+  transition: opacity var(--dur-base) var(--ease-sig), border-color var(--dur-base) var(--ease-sig),
+    background-color var(--dur-base) var(--ease-sig), box-shadow var(--dur-base) var(--ease-sig);
+}
+.stack-row[data-active='true'] .stack-plane {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 60px rgba(255, 255, 255, 0.14);
+}
+.stack-label {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(var(--labelw) + 16px);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-on-ink-3);
+  transition: color var(--dur-base) var(--ease-sig);
+}
+.stack-row[data-active='true'] .stack-label { color: #fff; }
+.stack-leader { flex: 1; height: 1px; background: currentColor; opacity: 0.45; }
+.stack-packet,
+.stack-trail {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+}
+.stack-packet {
+  left: calc(var(--labelw) + 16px + 0.707 * var(--plane) - 5px);
+  top: calc(0.354 * var(--plane) - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15), 0 0 24px 6px rgba(255, 255, 255, 0.5);
+  transform: translateY(calc(var(--pk) * 6 * var(--gap)));
+}
+.stack-trail {
+  left: calc(var(--labelw) + 16px + 0.707 * var(--plane) - 1px);
+  top: calc(0.354 * var(--plane) - 72px);
+  width: 2px;
+  height: 72px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75));
+  transform: translateY(calc(var(--pk) * 6 * var(--gap)));
+  opacity: min(1, calc(var(--pk) * 12));
+}
+.stack-panel-in { animation: hero-fade 400ms var(--ease-sig) both; }
+
+/* List version (below 1024px): a packet runs down the line on an @property
+   timeline, only while the list is on screen (IntersectionObserver sets data-run). */
+@property --packet {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+.stack-list-packet {
+  position: absolute;
+  left: 8px;
+  top: var(--packet);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 14px 3px rgba(255, 255, 255, 0.5);
+  animation: stack-run 7s linear infinite paused;
+}
+.stack-list[data-run='true'] .stack-list-packet { animation-play-state: running; }
+@keyframes stack-run { from { --packet: 0%; } to { --packet: 100%; } }
+@media (prefers-reduced-motion: reduce) {
+  .stack-stage-wrap { display: none !important; }
+  .stack-list-wrap { display: block !important; }
+  .stack-list-packet { display: none; }
+}

@@ -8,7 +8,7 @@ import { TechTicker } from '@/components/TechTicker';
 import { About } from '@/components/About';
 import { WorkV2 } from '@/components/WorkV2';
 import { Services } from '@/components/Services';
-import { SystemsBlueprint } from '@/components/SystemsBlueprint';
+import { SystemsStackV2 } from '@/components/SystemsStackV2';
 import { Credentials } from '@/components/Credentials';
 import { Marquee } from '@/components/Marquee';
 import { CurrentlyBuilding } from '@/components/CurrentlyBuilding';
@@ -52,7 +52,7 @@ export default function Home() {
           <Stack />
           <Services />
           <Process />
-          <SystemsBlueprint />
+          <SystemsStackV2 />
           <Credentials />
           <Testimonials />
           <FAQ />
