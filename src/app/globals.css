@@ -440,3 +440,19 @@ body {
   .stack-list-wrap { display: block !important; }
   .stack-list-packet { display: none; }
 }
+
+/* ── About portrait (Prompt 8): ink-to-paper duotone, thin offset frame ─────
+   CSS only. The frame sits 10px outside the image and eases to 4px on hover. */
+.portrait { position: relative; isolation: isolate; }
+.portrait-img { filter: grayscale(1) contrast(1.12) brightness(1.02); transition: filter var(--dur-slow) var(--ease-sig); }
+.portrait::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(135deg, #0a0a0a, #f5f5f3); mix-blend-mode: soft-light; opacity: 0.55;
+}
+.portrait-frame {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  border: 1px solid #0a0a0a; transform: translate(10px, 10px);
+  transition: transform var(--dur-base) var(--ease-sig);
+}
+.portrait:hover .portrait-frame { transform: translate(4px, 4px); }
+.portrait:hover .portrait-img { filter: grayscale(1) contrast(1.2) brightness(1.05); }

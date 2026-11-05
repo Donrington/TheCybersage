@@ -1,5 +1,7 @@
 import { STEPS } from '@/content/process';
 import { SECTIONS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
+import { SplitHeading } from '@/components/ui/SplitHeading';
 
 /**
  * Process, condensed: four steps on one horizontal timeline (a vertical list on phones).

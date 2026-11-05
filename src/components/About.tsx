@@ -18,11 +18,6 @@ const STATS = [
   { label: 'Countries Served',    target: 8,   suffix: ''  },
 ];
 
-const COUNTRIES = [
-  'Nigeria', 'United States', 'Canada', 'United Kingdom',
-  'Australia', 'India', 'Ghana', 'Kenya',
-];
-
 const QUOTE_WORDS = [
   'I', 'architect', 'systems', 'that', "don’t", 'just', 'work', '—',
   'they', 'scale,', 'survive', 'failure,', 'and', 'stay', 'clean', 'under', 'pressure.',
@@ -136,7 +131,7 @@ export function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="w-full bg-white border-t border-black/[0.08]"
+      className="w-full bg-[#F5F5F3] border-t border-black/[0.08]"
     >
       <div className="max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(5rem,10vw,11rem)]">
 
@@ -213,33 +208,7 @@ export function About() {
             ))}
           </div>
 
-          {/* Countries served */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={statsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
-          >
-            <p
-              className="text-xs font-semibold tracking-[0.18em] uppercase text-on-canvas-3 mb-4"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-            >
-              Shipped across
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {COUNTRIES.map((country, i) => (
-                <motion.span
-                  key={country}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.6 + i * 0.05, ease: EASE }}
-                  className="border border-black/12 px-3 py-1.5 text-xs font-medium tracking-[0.06em] text-black/50"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                >
-                  {country}
-                </motion.span>
-              ))}
-            </div>
-          </motion.div>
+          
           </div>
 
           {/* Right: quote + body + image */}
@@ -302,16 +271,16 @@ export function About() {
             {/* Headshot — GSAP clip reveal */}
             <div
               ref={imageRef}
-              className="relative aspect-4/3 w-full overflow-hidden bg-black/4"
+              className="portrait relative aspect-4/3 w-full bg-black/4"
             >
               <Image
                 src="/me.png"
                 alt="Abakwe Carrington — software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
                 fill
-                className="object-cover object-top grayscale"
+                className="portrait-img object-cover object-top"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 mix-blend-multiply bg-white/10" />
+              <span aria-hidden className="portrait-frame" />
             </div>
           </div>
         <ResumeStrip />

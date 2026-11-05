@@ -46,7 +46,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 5 | Under the Hood, remade as a scroll-driven 3D stack | done |
 | 6 | Currently Building → Now chip + Lab row | done (dates in now.json are first-appearance on the site; owner to confirm) |
 | 7 | Delete, merge, condense, reorder | done (page 24,246 px at 1440, over the 18,000 target; see notes) |
-| 8 | About, Services, Process | |
+| 8 | About, Services, Process | done |
 | 9 | Testimonials, Pricing, FAQ | |
 | 10 | Contact and footer | |
 | 11 | Final pass (Lighthouse, four widths, a11y, metadata) | |
