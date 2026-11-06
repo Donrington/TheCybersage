@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 /**
  * Page loader that draws the site's subject: the seven-layer system stack from "Under the hood", as a technical
@@ -83,6 +84,16 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
           return <text key={l} x={560} y={y} fontSize={9} fill="rgba(255,255,255,0.6)" fontFamily="var(--font-mono)" letterSpacing="1.4" style={{ opacity: on ? 1 : 0, transition: 'opacity 300ms' }}>{`${String(i + 1).padStart(2, '0')} ${l}`}</text>;
         })}
       </svg>
+
+      {/* Brand mark: top-left, fades and sharpens in as the drawing builds. */}
+      <div
+        aria-hidden
+        className="absolute top-[clamp(1.25rem,3vw,2.5rem)] left-[clamp(1rem,4vw,3rem)] w-[clamp(96px,9vw,150px)]"
+        style={{ opacity: Math.min(1, p * 3), filter: `blur(${Math.max(0, 1 - p * 3) * 6}px)`, transform: `translateY(${Math.max(0, 1 - p * 3) * 10}px)` }}
+      >
+        <Image src="/sage/sage_prim_white.png" alt="" width={888} height={910} priority quality={95} sizes="320px" className="block h-auto w-full" style={{ filter: 'brightness(1.5) contrast(1.2) drop-shadow(0 0 0.5px rgba(255,255,255,0.9))' }} />
+      </div>
+      <p className="t-mono absolute top-[clamp(1.5rem,3.4vw,2.9rem)] left-[calc(clamp(1rem,4vw,3rem)+clamp(96px,9vw,150px)+0.9rem)] hidden text-white/50 sm:block" aria-hidden>CYBERSAGE / SHEET 00</p>
 
       {/* progress hairline + % */}
       <div className="absolute inset-x-0 top-1/2 h-px bg-white/10" style={{ transform: 'translateY(210px)' }}>
