@@ -272,8 +272,9 @@ export function AIAssistant() {
         style={{
           background: '#0a0a0a',
           border: '1px solid rgba(255,255,255,0.18)',
-          width: 44,
-          height: 44,
+          height: 48,
+          paddingLeft: 14,
+          paddingRight: 18,
         }}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -281,7 +282,6 @@ export function AIAssistant() {
         whileHover={{ borderColor: 'rgba(255,255,255,0.28)' }}
         whileTap={{ scale: 0.96 }}
         aria-label="Ask the AI assistant about my work"
-        title="Ask AI"
       >
         {/* Liquid-metal edge + cursor-following sheen — decorative, inert to
             pointer/AT. Skipped under reduced-motion; the static 1px border
@@ -294,28 +294,14 @@ export function AIAssistant() {
         )}
         <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
 
-        <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Pulse dot */}
-          <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 6, height: 6 }}>
-            {!reduced && (
-              <motion.span
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.25)',
-                }}
-                animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0, 0.6] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-              />
-            )}
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', display: 'block' }} />
+        <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* The same animated orb as the chat header, small, in place of the old icon. */}
+          <span aria-hidden style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <ThinkingOrb state="solving" size={20} />
           </span>
-
-          {/* Icon only: the launcher used to be a labelled pill and one of the
-              page's 7 fixed elements. Its name lives in aria-label. */}
-          <Sparkles size={16} aria-hidden style={{ color: 'rgba(255,255,255,0.85)' }} />
+          <span className="t-mono" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '0.14em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 600 }}>
+            Ask AI
+          </span>
         </span>
       </motion.button>
 

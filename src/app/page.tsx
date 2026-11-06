@@ -14,6 +14,7 @@ import { SystemsStackV2 } from '@/components/SystemsStackV2';
 import { Marquee } from '@/components/Marquee';
 import { TypeBand } from '@/components/TypeBand';
 import { LabRow } from '@/components/LabRow';
+import { BackToTop } from '@/components/BackToTop';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
 import { FAQ } from '@/components/FAQ';
@@ -73,6 +74,7 @@ export default function Home() {
           <FAQ />
           <Contact />
         </main>        <AIAssistant />
+        <BackToTop />
       </SmoothScroll>
     </>
   );
