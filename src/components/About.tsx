@@ -1,334 +1,202 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useMotionValue, animate } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ScrollRevealText } from './ScrollRevealText';
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { SECTIONS } from '@/content/site';
+import { CERTIFICATIONS } from '@/content/certifications';
+import { SplitHeading } from '@/components/ui/SplitHeading';
+import { Reveal } from '@/components/ui/Reveal';
+import { Corners } from '@/components/ui/Corners';
 
 const STATS = [
-  { label: 'Years of Experience', target: 5,   suffix: '+' },
-  { label: 'Projects Shipped',    target: 50,  suffix: '+' },
-  { label: 'Global Clients',      target: 40, suffix: '+' },
-  { label: 'Countries Served',    target: 8,   suffix: ''  },
+  { label: 'Years of experience', target: 5, suffix: '+' },
+  { label: 'Projects shipped', target: 50, suffix: '+' },
+  { label: 'Global clients', target: 40, suffix: '+' },
+  { label: 'Countries served', target: 8, suffix: '' },
 ];
 
-const COUNTRIES = [
-  'Nigeria', 'United States', 'Canada', 'United Kingdom',
-  'Australia', 'India', 'Ghana', 'Kenya',
-];
-
-const QUOTE_WORDS = [
-  'I', 'architect', 'systems', 'that', "don’t", 'just', 'work', '—',
-  'they', 'scale,', 'survive', 'failure,', 'and', 'stay', 'clean', 'under', 'pressure.',
-];
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-/* Smooth count-up, fires once on scroll into view */
-function CountUp({
-  target,
-  suffix,
-  inView,
-  delay = 0,
-}: {
-  target: number;
-  suffix: string;
-  inView: boolean;
-  delay?: number;
-}) {
-  const [display, setDisplay] = useState(0);
-  const count   = useMotionValue(0);
-  const started = useRef(false);
-
+/** Counts up once when scrolled into view; shows the final number without JS or with reduced motion. */
+function CountUp({ target, suffix }: { target: number; suffix: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    if (!inView || started.current) return;
-    started.current = true;
-    const ctrl = animate(count, target, {
-      duration: 2.2,
-      delay,
-      ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => setDisplay(Math.round(v)),
-    });
-    return () => ctrl.stop();
-  }, [inView, target, count, delay]);
-
-  return <>{display}{suffix}</>;
-}
-
-/* Word-by-word animated pull quote */
-function AnimatedQuote({ inView }: { inView: boolean }) {
+    const el = ref.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.9) return;
+    el.textContent = '0' + suffix;
+    let raf = 0;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const tick = (now: number) => {
+          const p = Math.min(1, (now - t0) / 1600);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
+          if (p < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [target, suffix]);
   return (
-    <p
-      style={{
-        fontFamily:    'var(--font-instrument), Georgia, serif',
-        fontStyle:     'italic',
-        fontSize:      'clamp(1.8rem, 3.5vw, 3.5rem)',
-        letterSpacing: '-0.01em',
-        lineHeight:    1.2,
-        color:         '#0A0A0A',
-      }}
-    >
-      &ldquo;
-      {QUOTE_WORDS.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-          animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-          transition={{ duration: 0.55, delay: 0.05 + i * 0.045, ease: EASE }}
-          style={{ display: 'inline-block', marginRight: '0.28em' }}
-        >
-          {word}
-        </motion.span>
-      ))}
-      &rdquo;
-    </p>
+    <span ref={ref}>
+      {target}
+      {suffix}
+    </span>
   );
 }
 
+/**
+ * About, rebuilt as a drawing sheet. Left: the quote, the story, links and the numbers. Right: a dossier card with
+ * the portrait beside the résumé and certifications (newest first), so the proof sits next to the person.
+ */
 export function About() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const statsRef   = useRef<HTMLDivElement>(null);
-  const imageRef   = useRef<HTMLDivElement>(null);
-  const lineRef    = useRef<HTMLDivElement>(null);
-
-  const sectionInView = useInView(sectionRef, { once: true, margin: '-10%' });
-  const statsInView   = useInView(statsRef,   { once: true, margin: '-5%'  });
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const ctx = gsap.context(() => {
-
-      /* Horizontal rule draw-in */
-      if (lineRef.current) {
-        gsap.fromTo(lineRef.current,
-          { scaleX: 0, transformOrigin: 'left center' },
-          {
-            scaleX: 1,
-            duration: 1.4,
-            ease: 'power4.inOut',
-            scrollTrigger: { trigger: lineRef.current, start: 'top 85%' },
-          }
-        );
-      }
-
-      /* Image clip-path reveal */
-      gsap.fromTo(imageRef.current,
-        { clipPath: 'inset(0 100% 0 0)' },
-        {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 1.4,
-          ease: 'power4.inOut',
-          scrollTrigger: { trigger: imageRef.current, start: 'top 78%' },
-        }
-      );
-
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      ref={sectionRef}
-      id="about"
-      className="w-full bg-white border-t border-black/[0.08]"
-    >
-      <div className="max-w-[1440px] mx-auto px-[clamp(1.25rem,5vw,5rem)] py-[clamp(5rem,10vw,11rem)]">
-
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,4rem)]">
-          <motion.span
-            initial={{ opacity: 0, x: -12 }}
-            animate={sectionInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, ease: EASE }}
-            className="text-[0.6rem] tracking-[0.22em] uppercase text-black/30 font-medium"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-          >
-            01 / About
-          </motion.span>
-          <div ref={lineRef} className="flex-1 h-px bg-black/10" />
+    <section id="about" aria-labelledby="about-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-[#F5F5F3] text-ink">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
+        <div className="mb-8 flex items-center gap-4">
+          <span className="t-label text-on-canvas-3">{SECTIONS.about.label}</span>
+          <span aria-hidden className="h-px flex-1 bg-black/10" />
+          <span className="t-mono hidden text-on-canvas-3 sm:inline">SHEET 04 / PROFILE</span>
         </div>
+        <SplitHeading id="about-heading" className="t-h2 max-w-[18ch] text-ink" text={SECTIONS.about.heading} />
 
-        {/* Headline */}
-        <motion.h2
-          initial={{ opacity: 0, y: 32 }}
-          animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.85, delay: 0.1, ease: EASE }}
-          className="font-black text-black tracking-tighter leading-[0.88] mb-[clamp(3rem,6vw,7rem)]"
-          style={{
-            fontFamily: 'Satoshi, system-ui, sans-serif',
-            fontWeight: 900,
-            fontSize:   'clamp(4rem, 10vw, 13rem)',
-          }}
-        >
-          About{' '}
-          <span
-            style={{
-              fontFamily: 'var(--font-instrument), Georgia, serif',
-              fontStyle:  'italic',
-              fontWeight: 400,
-              color:      'rgba(10,10,10,0.30)',
-            }}
-          >
-            Me
-          </span>
-        </motion.h2>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[clamp(3rem,6vw,8rem)]">
-
-          {/* Left: stats + countries */}
-          <div className="flex flex-col gap-[clamp(2.5rem,4vw,3.5rem)]">
-          <div ref={statsRef} className="grid grid-cols-2 gap-x-8 gap-y-12 content-start">
-            {STATS.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 28, clipPath: 'inset(100% 0 0 0)' }}
-                animate={statsInView ? { opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)' } : {}}
-                transition={{ duration: 0.7, delay: i * 0.1, ease: EASE }}
+        <div className="mt-[clamp(2.5rem,5vw,4.5rem)] grid items-start gap-[clamp(2.5rem,5vw,5rem)] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          {/* Left: story */}
+          <div className="flex flex-col gap-10">
+            <Reveal>
+              <blockquote
+                className="relative pt-6 text-ink"
+                style={{ fontFamily: 'var(--font-instrument), Georgia, serif', fontStyle: 'italic', fontSize: 'clamp(1.7rem, 2.8vw, 2.7rem)', lineHeight: 1.15, letterSpacing: '-0.01em' }}
               >
-                <p
-                  className="font-black text-black leading-none tracking-tighter tabular-nums"
-                  style={{
-                    fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontWeight: 900,
-                    fontSize:   'clamp(3.5rem, 7vw, 9rem)',
-                  }}
-                >
-                  <CountUp
-                    target={stat.target}
-                    suffix={stat.suffix}
-                    inView={statsInView}
-                    delay={i * 0.12}
-                  />
-                </p>
+                <span aria-hidden className="absolute top-0 -left-1 text-[4rem] leading-none text-black/15">
+                  &ldquo;
+                </span>
+                I architect systems that don&rsquo;t just work &mdash; they scale, survive failure, and stay clean under pressure.
+              </blockquote>
+            </Reveal>
 
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={statsInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 0.5, delay: 0.4 + i * 0.1, ease: EASE }}
-                  className="mt-2 text-[0.75rem] font-semibold tracking-[0.14em] uppercase text-black/40"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                >
-                  {stat.label}
-                </motion.p>
+            <Reveal className="space-y-4">
+              <p className="t-lede text-on-canvas-1">
+                A software engineer based in Lagos, Nigeria &mdash; 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery.
+              </p>
+              <p className="t-body text-on-canvas-2">
+                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system &mdash; not just the feature.
+              </p>
+            </Reveal>
 
-                {/* Underline draws in after the number settles */}
-                <motion.div
-                  className="mt-4 h-px bg-black/10"
-                  initial={{ scaleX: 0, transformOrigin: 'left' }}
-                  animate={statsInView ? { scaleX: 1 } : {}}
-                  transition={{ duration: 0.8, delay: 0.6 + i * 0.1, ease: EASE }}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Countries served */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={statsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
-          >
-            <p
-              className="text-[0.7rem] font-semibold tracking-[0.18em] uppercase text-black/35 mb-4"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-            >
-              Shipped across
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {COUNTRIES.map((country, i) => (
-                <motion.span
-                  key={country}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: 0.6 + i * 0.05, ease: EASE }}
-                  className="border border-black/12 px-3 py-1.5 text-[0.68rem] font-medium tracking-[0.06em] text-black/50"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+            <div className="flex gap-3">
+              {[
+                ['GitHub', 'https://github.com/Donrington'],
+                ['LinkedIn', 'https://www.linkedin.com/in/carrington-abakwe-b0b0a0217'],
+              ].map(([l, href]) => (
+                <a
+                  key={l}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group t-mono inline-flex min-h-11 items-center gap-2 border border-black/20 px-4 text-ink uppercase transition-colors hover:bg-ink hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                 >
-                  {country}
-                </motion.span>
+                  {l}
+                  <ArrowUpRight size={13} aria-hidden className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
               ))}
             </div>
-          </motion.div>
           </div>
 
-          {/* Right: quote + body + image */}
-          <div className="flex flex-col justify-between gap-10">
+          {/* Right: the dossier */}
+          <Reveal className="lg:sticky lg:top-24">
+            <article aria-label="Profile" className="relative border border-black/20 bg-white">
+              <Corners />
+              <header className="t-mono flex items-center justify-between bg-[#0A0A0A] px-4 py-2 text-white">
+                <span>DOSSIER · ABAKWE CARRINGTON</span>
+                <span className="text-white/60">REV 2026</span>
+              </header>
 
-            <AnimatedQuote inView={sectionInView} />
+              <div className="grid sm:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+                {/* Portrait */}
+                <div className="p-4 pr-5 pb-5 sm:p-5 sm:pr-6">
+                  <div className="portrait relative aspect-[4/5] w-full bg-black/5">
+                    <Image
+                      src="/me.png"
+                      alt="Abakwe Carrington, software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
+                      fill
+                      sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 28vw"
+                      className="portrait-img object-cover object-top"
+                    />
+                    <span aria-hidden className="portrait-frame" />
+                    <span aria-hidden className="t-mono absolute bottom-2 left-2 z-[3] bg-[#0A0A0A] px-2 py-0.5 text-white">
+                      FIG. 01 · LAGOS, NG
+                    </span>
+                  </div>
+                </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.55, ease: EASE }}
-              className="space-y-5"
-            >
-              <ScrollRevealText
-                className="leading-relaxed"
-                style={{ fontSize: 'clamp(1.05rem, 1.5vw, 1.3rem)' }}
-                rgb="10,10,10"
-                from={0.14}
-                to={0.72}
-              >
-                A software engineer based in Lagos, Nigeria — 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery.
-              </ScrollRevealText>
-              <ScrollRevealText
-                className="leading-relaxed"
-                style={{ fontSize: 'clamp(1rem, 1.3vw, 1.15rem)' }}
-                rgb="10,10,10"
-                from={0.12}
-                to={0.55}
-              >
-                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system — not just the feature.
-              </ScrollRevealText>
+                {/* Résumé + certifications */}
+                <div className="flex flex-col border-t border-black/10 sm:border-t-0 sm:border-l">
+                  <div className="border-b border-black/10 p-5">
+                    <p className="t-mono text-on-canvas-3">RÉSUMÉ · PDF · 2025</p>
+                    <p className="mt-2 text-xl font-extrabold tracking-tight text-ink">Infrastructure &amp; Systems Architect</p>
+                    <p className="t-body mt-1 text-sm text-on-canvas-2">5+ years · Remote worldwide</p>
+                    <p className="t-mono mt-3 text-on-canvas-3">AWS · DOCKER · GO · DJANGO · POSTGRESQL · REDIS</p>
+                    <a
+                      href="/resume/Abakwe Carrington.pdf"
+                      download
+                      className="group t-mono mt-4 inline-flex min-h-11 w-full items-center justify-between bg-[#0A0A0A] px-4 text-white uppercase transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    >
+                      Download résumé
+                      <ArrowDownRight size={14} aria-hidden className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
+                    </a>
+                  </div>
 
-              <motion.div
-                className="flex gap-4 pt-2"
-                initial={{ opacity: 0 }}
-                animate={sectionInView ? { opacity: 1 } : {}}
-                transition={{ duration: 0.6, delay: 0.8, ease: EASE }}
-              >
-                <a
-                  href="https://github.com/Donrington"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[0.65rem] tracking-[0.18em] uppercase font-medium text-black/40 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                >
-                  GitHub
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/carrington-abakwe-b0b0a0217"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[0.65rem] tracking-[0.18em] uppercase font-medium text-black/40 hover:text-black border-b border-black/20 hover:border-black pb-px transition-colors"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-                >
-                  LinkedIn
-                </a>
-              </motion.div>
-            </motion.div>
-
-            {/* Headshot — GSAP clip reveal */}
-            <div
-              ref={imageRef}
-              className="relative aspect-4/3 w-full overflow-hidden bg-black/4"
-            >
-              <Image
-                src="/me.png"
-                alt="Abakwe Carrington — software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
-                fill
-                className="object-cover object-top grayscale"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 mix-blend-multiply bg-white/10" />
-            </div>
-          </div>
+                  <div className="flex-1">
+                    <p className="t-mono border-b border-black/10 px-5 py-2 text-on-canvas-3">CERTIFICATIONS · {String(CERTIFICATIONS.length).padStart(2, '0')}</p>
+                    <ul aria-label="Certifications">
+                      {CERTIFICATIONS.map((c) => (
+                        <li key={c.title} className="border-b border-black/10 last:border-b-0">
+                          <a
+                            href={c.file}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex min-h-14 items-center justify-between gap-3 px-5 py-3 transition-colors hover:bg-[#0A0A0A] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black"
+                          >
+                            <span>
+                              <span className="block text-sm font-bold text-ink group-hover:text-white">{c.title}</span>
+                              <span className="t-mono text-on-canvas-3 group-hover:text-white/60">
+                                {c.issuer} · {c.year}
+                              </span>
+                            </span>
+                            <ArrowUpRight size={15} aria-hidden className="shrink-0 text-on-canvas-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
+                            <span className="sr-only">(opens certificate)</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </Reveal>
         </div>
+
+        <dl className="mt-[clamp(2.5rem,5vw,4.5rem)] grid grid-cols-2 border-t border-l border-black/15 lg:grid-cols-4">
+          {STATS.map((s) => (
+            <div key={s.label} className="relative border-r border-b border-black/15 px-4 py-6">
+              <dd className="text-[clamp(2.75rem,5vw,4.75rem)] leading-none font-black tracking-tighter text-ink tabular-nums">
+                <CountUp target={s.target} suffix={s.suffix} />
+              </dd>
+              <dt className="t-mono mt-2 text-on-canvas-3 uppercase">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
+
       </div>
     </section>
   );

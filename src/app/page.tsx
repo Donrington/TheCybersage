@@ -1,97 +1,80 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { BlueprintLoader } from '@/components/BlueprintLoader';
+import { SheetFrame } from '@/components/SheetFrame';
 import { SmoothScroll } from '@/lib/SmoothScroll';
-import { PageLoader } from '@/components/PageLoader';
 import { Navbar } from '@/components/Navbar';
-import { Hero } from '@/components/Hero';
-import { TechTicker } from '@/components/TechTicker';
+import { HeroV2 } from '@/components/HeroV2';
 import { About } from '@/components/About';
-import { Projects } from '@/components/Projects';
+import { WorkV2 } from '@/components/WorkV2';
 import { Services } from '@/components/Services';
-import { SystemsBlueprint } from '@/components/SystemsBlueprint';
-import { Credentials } from '@/components/Credentials';
+import { SystemsStackV2 } from '@/components/SystemsStackV2';
 import { Marquee } from '@/components/Marquee';
-import { CurrentlyBuilding } from '@/components/CurrentlyBuilding';
+import { TypeBand } from '@/components/TypeBand';
+import { LabRow } from '@/components/LabRow';
+import { BackToTop } from '@/components/BackToTop';
 import { Process } from '@/components/Process';
 import { Testimonials } from '@/components/Testimonials';
 import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
-import { Stack } from '@/components/Stack';
 import { Contact } from '@/components/Contact';
-import { AIAssistant } from '@/components/AIAssistant';
-import { StudioMarquee } from '@/components/StudioMarquee';
-import { CustomCursor } from '@/components/CustomCursor';
 
-function BackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const fn = () => setVisible(window.scrollY > 600);
-    window.addEventListener('scroll', fn, { passive: true });
-    return () => window.removeEventListener('scroll', fn);
-  }, []);
-
-  return (
-    <AnimatePresence>
-      {visible && (
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-8 right-8 z-50 w-11 h-11 bg-black text-white flex items-center justify-center hover:bg-black/75 transition-colors duration-200"
-          aria-label="Back to top"
-        >
-          <ArrowUp size={14} />
-        </motion.button>
-      )}
-    </AnimatePresence>
-  );
-}
+// Both are fixed-position chrome with no layout footprint of their own, so a
+// client-only chunk (no SSR, no server-rendered placeholder) costs nothing
+// visually and keeps thinking-orbs / the cursor's rAF loop out of the main bundle.
+const AIAssistant = dynamic(() => import('@/components/AIAssistant').then((m) => m.AIAssistant), { ssr: false });
+const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) => m.CustomCursor), { ssr: false });
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
+  const finish = () => {
+    (window as unknown as { __loaderDone?: boolean }).__loaderDone = true;
+    window.dispatchEvent(new Event('loader-done'));
+    setLoaded(true);
+  };
 
   return (
     <>
       <CustomCursor />
-      {!loaded && <PageLoader onDone={() => setLoaded(true)} />}
+      {!loaded && <BlueprintLoader onDone={finish} />}
+      <SheetFrame />
       <SmoothScroll>
+        <a
+          href="#main"
+          className="fixed top-3 left-3 z-[10000] -translate-y-24 bg-white px-4 py-3 text-sm font-semibold text-[#0A0A0A] focus:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+        >
+          Skip to content
+        </a>
         <Navbar />
-        <main>
-          {/* Static indexing helper for crawlers & search bots */}
+        <main id="main" tabIndex={-1} className="outline-none">
+          {/* Static indexing helper for crawlers & search bots. h2 (not h1):
+              the page's one h1 is the visible name in Hero, just below. */}
           <article className="sr-only">
-            <h1>Abakwe Carrington — Software Engineer &amp; Systems Architect</h1>
+            <h2>Abakwe Carrington — Software Engineer &amp; Systems Architect</h2>
             <p>
               Abakwe Carrington (Cybersage / Donrington) is an Infrastructure &amp; Systems Architect and Senior Software Engineer based in Lagos, Nigeria, working with remote clients worldwide across the United States, United Kingdom, Canada, Australia, and Europe.
             </p>
-            <h2>Core Stack &amp; Engineering Disciplines</h2>
+            <h3>Core Stack &amp; Engineering Disciplines</h3>
             <p>AWS Cloud Infrastructure, Docker Containerisation, Kubernetes, Terraform Infrastructure as Code, Go (Golang), Python Django, PostgreSQL, Redis, Microservices System Design, Next.js, and TypeScript.</p>
           </article>
 
-          <Hero />
-          <TechTicker />
-          <About />
-          <Projects />
+          <HeroV2 />
+          <WorkV2 />
           <Marquee />
-          <CurrentlyBuilding />
-          <Stack />
+          <TypeBand />
+          <SystemsStackV2 />
+          <About />
           <Services />
           <Process />
-          <SystemsBlueprint />
-          <Credentials />
           <Testimonials />
-          <FAQ />
+          <LabRow />
           <PricingPromo />
-          <StudioMarquee />
+          <FAQ />
           <Contact />
-        </main>
+        </main>        <AIAssistant />
         <BackToTop />
-        <AIAssistant />
       </SmoothScroll>
     </>
   );

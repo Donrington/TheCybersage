@@ -127,10 +127,10 @@ function MessageOrb() {
       <span
         style={{
           fontFamily: 'Satoshi, system-ui, sans-serif',
-          fontSize: '0.6rem',
+          fontSize: '0.75rem',
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
-          color: 'rgba(255,255,255,0.2)',
+          color: 'rgba(255,255,255,0.56)',
         }}
       >
         thinking
@@ -268,18 +268,20 @@ export function AIAssistant() {
         }}
         onPointerEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
         onPointerLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
-        className="fixed bottom-8 left-8 z-50 flex items-center text-white"
+        className="fixed bottom-6 left-6 z-50 flex items-center justify-center text-white"
         style={{
           background: '#0a0a0a',
-          border: '1px solid rgba(255,255,255,0.12)',
-          padding: '0.7rem 1.1rem',
+          border: '1px solid rgba(255,255,255,0.18)',
+          height: 48,
+          paddingLeft: 14,
+          paddingRight: 18,
         }}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 4.5, duration: 0.6, ease: EASE }}
         whileHover={{ borderColor: 'rgba(255,255,255,0.28)' }}
         whileTap={{ scale: 0.96 }}
-        aria-label="Open AI Assistant"
+        aria-label="Ask the AI assistant about my work"
       >
         {/* Liquid-metal edge + cursor-following sheen — decorative, inert to
             pointer/AT. Skipped under reduced-motion; the static 1px border
@@ -292,35 +294,12 @@ export function AIAssistant() {
         )}
         <span aria-hidden className="metal-highlight" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
 
-        <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Pulse dot */}
-          <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 6, height: 6 }}>
-            <motion.span
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.25)',
-              }}
-              animate={{ scale: [1, 2.2, 1], opacity: [0.6, 0, 0.6] }}
-              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'rgba(255,255,255,0.7)', display: 'block' }} />
+        <span style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* The same animated orb as the chat header, small, in place of the old icon. */}
+          <span aria-hidden style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <ThinkingOrb state="solving" size={20} />
           </span>
-
-          <Sparkles size={11} style={{ color: 'rgba(255,255,255,0.45)' }} />
-
-          <span
-            style={{
-              fontFamily: 'Satoshi, system-ui, sans-serif',
-              fontSize: '0.6rem',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              fontWeight: 500,
-              color: 'rgba(255,255,255,0.65)',
-            }}
-          >
+          <span className="t-mono" style={{ color: 'rgba(255,255,255,0.9)', letterSpacing: '0.14em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 600 }}>
             Ask AI
           </span>
         </span>
@@ -417,7 +396,7 @@ export function AIAssistant() {
                       <p
                         style={{
                           fontFamily: 'Satoshi, system-ui, sans-serif',
-                          fontSize: '0.65rem',
+                          fontSize: '0.75rem',
                           fontWeight: 700,
                           letterSpacing: '0.18em',
                           textTransform: 'uppercase',
@@ -445,10 +424,10 @@ export function AIAssistant() {
                     <p
                       style={{
                         fontFamily: 'Satoshi, system-ui, sans-serif',
-                        fontSize: '0.5rem',
+                        fontSize: '0.75rem',
                         letterSpacing: '0.14em',
                         textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.2)',
+                        color: 'rgba(255,255,255,0.56)',
                         margin: 0,
                         marginTop: 2,
                       }}
@@ -468,7 +447,7 @@ export function AIAssistant() {
                     justifyContent: 'center',
                     border: '1px solid rgba(255,255,255,0.09)',
                     background: 'transparent',
-                    color: 'rgba(255,255,255,0.28)',
+                    color: 'rgba(255,255,255,0.56)',
                     cursor: 'pointer',
                     transition: 'color 0.2s, border-color 0.2s',
                   }}
@@ -515,14 +494,14 @@ export function AIAssistant() {
                           margin: 0,
                         }}
                       >
-                        Hello. I'm Carrington's AI assistant — I know his full engineering history, every project he's shipped, and what he's currently building.
+                        Hello. I&rsquo;m Carrington&rsquo;s AI assistant — I know his full engineering history, every project he&rsquo;s shipped, and what he&rsquo;s currently building.
                       </p>
                       <p
                         style={{
                           fontFamily: 'Satoshi, system-ui, sans-serif',
                           fontSize: '0.95rem',
                           lineHeight: 1.65,
-                          color: 'rgba(255,255,255,0.28)',
+                          color: 'rgba(255,255,255,0.56)',
                           margin: '0.6rem 0 0',
                         }}
                       >
@@ -573,15 +552,15 @@ export function AIAssistant() {
                                 <span
                                   style={{
                                     fontFamily: 'Satoshi, system-ui, sans-serif',
-                                    fontSize: '0.65rem',
+                                    fontSize: '0.75rem',
                                     letterSpacing: '0.03em',
-                                    color: 'rgba(255,255,255,0.42)',
+                                    color: 'rgba(255,255,255,0.56)',
                                     lineHeight: 1.4,
                                   }}
                                 >
                                   {s.label}
                                 </span>
-                                <ArrowUpRight size={9} style={{ color: 'rgba(255,255,255,0.2)', flexShrink: 0 }} />
+                                <ArrowUpRight size={9} style={{ color: 'rgba(255,255,255,0.56)', flexShrink: 0 }} />
                               </motion.button>
                             ))}
                           </AnimatePresence>
@@ -619,7 +598,7 @@ export function AIAssistant() {
                           background: 'rgba(255,255,255,0.02)',
                         }}
                       >
-                        <Sparkles size={9} style={{ color: 'rgba(255,255,255,0.35)' }} />
+                        <Sparkles size={9} style={{ color: 'rgba(255,255,255,0.56)' }} />
                       </div>
                     )}
 
@@ -731,7 +710,7 @@ export function AIAssistant() {
                 <p
                   style={{
                     fontFamily: 'Satoshi, system-ui, sans-serif',
-                    fontSize: '0.46rem',
+                    fontSize: '0.75rem',
                     letterSpacing: '0.16em',
                     textTransform: 'uppercase',
                     color: 'rgba(255,255,255,0.12)',

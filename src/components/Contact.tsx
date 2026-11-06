@@ -7,9 +7,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
 import Image from 'next/image';
-import { ContactCanvas } from './ContactCanvas';
+import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
+import { SECTIONS, FOOTER_LINKS } from '@/content/site';
+import { SplitHeading } from '@/components/ui/SplitHeading';
+import { Corners } from '@/components/ui/Corners';
+
+// three + @react-three/fiber in their own chunk, fetched only once Contact is
+// reached (it is the bottom-most section) and never under reduced motion.
+const ContactCanvas = dynamic(() => import('./ContactCanvas').then((m) => m.ContactCanvas), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -96,7 +103,7 @@ function MagneticCTA({
         <span aria-hidden className="metal-highlight-light" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }} />
       )}
       <span
-        className="text-[0.65rem] tracking-[0.22em] uppercase font-medium"
+        className="text-xs tracking-[0.22em] uppercase font-medium"
         style={{ fontFamily: 'Satoshi, system-ui, sans-serif', position: 'relative', zIndex: 1 }}
       >
         {label}
@@ -163,7 +170,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
     `w-full bg-transparent border ${hasError ? 'border-red-400/50 focus:border-red-400/70' : 'border-white/12 focus:border-white/40'} text-white placeholder:text-white/18 px-5 py-3.5 text-sm focus:outline-none transition-colors duration-200`;
 
   const errorClass =
-    'text-[0.58rem] tracking-[0.04em] text-red-400/70 mt-1.5 block';
+    'text-xs tracking-[0.04em] text-red-400/70 mt-1.5 block';
 
   return (
     <motion.div
@@ -213,7 +220,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
           <div className="flex items-start justify-between mb-8">
             <div>
               <span
-                className="text-[0.55rem] tracking-[0.28em] uppercase text-white/25 font-medium block mb-2"
+                className="text-xs tracking-[0.28em] uppercase text-on-ink-3 font-medium block mb-2"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 {intent === 'call' ? 'Book a Call' : 'Get in Touch'}
@@ -226,22 +233,12 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
                 }}
               >
-                {intent === 'call' ? 'Let’s' : 'Start a'}{' '}
-                <span
-                  style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
-                    fontWeight: 400,
-                    color: 'rgba(255,255,255,0.32)',
-                  }}
-                >
-                  {intent === 'call' ? 'talk' : 'conversation'}
-                </span>
+                {intent === 'call' ? 'Let’s book a call.' : 'Start a conversation.'}
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="w-9 h-9 border border-white/12 flex items-center justify-center text-white/30 hover:text-white hover:border-white/35 transition-colors duration-200 shrink-0 mt-1"
+              className="w-9 h-9 border border-white/12 flex items-center justify-center text-on-ink-3 hover:text-white hover:border-white/35 transition-colors duration-200 shrink-0 mt-1"
             >
               <X size={14} />
             </button>
@@ -257,24 +254,24 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
               >
                 <div className="w-12 h-px bg-white/20 mx-auto mb-8" />
                 <p
-                  className="text-white/55 leading-relaxed mb-2"
+                  className="text-on-ink-1 leading-relaxed mb-2"
                   style={{
-                    fontFamily: 'var(--font-instrument), Georgia, serif',
-                    fontStyle: 'italic',
+                    fontFamily: 'Satoshi, system-ui, sans-serif',
+                    fontWeight: 800,
                     fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)',
                   }}
                 >
                   Message received.
                 </p>
                 <p
-                  className="text-white/30 text-sm"
+                  className="text-on-ink-3 text-sm"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   I&apos;ll be in touch within 24 hours.
                 </p>
                 <button
                   onClick={onClose}
-                  className="mt-8 text-[0.6rem] tracking-[0.2em] uppercase text-white/25 hover:text-white/60 transition-colors"
+                  className="mt-8 text-xs tracking-[0.2em] uppercase text-on-ink-3 hover:text-white/60 transition-colors"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   Close
@@ -291,7 +288,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label
-                      className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                      className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     >
                       Name
@@ -312,7 +309,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   </div>
                   <div>
                     <label
-                      className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                      className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                       style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                     >
                       Email
@@ -335,7 +332,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 <div>
                   <label
-                    className="block text-[0.58rem] tracking-[0.18em] uppercase text-white/28 mb-2 font-medium"
+                    className="block text-xs tracking-[0.18em] uppercase text-on-ink-3 mb-2 font-medium"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                   >
                     Message
@@ -357,7 +354,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 {status === 'error' && (
                   <p
-                    className="text-[0.6rem] tracking-[0.12em] text-red-400/70 font-medium"
+                    className="text-xs tracking-[0.12em] text-red-400/70 font-medium"
                     style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                   >
                     Something went wrong — please try again or email directly.
@@ -374,7 +371,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.setProperty('--mh', '1')}
                   onMouseLeave={(e) => e.currentTarget.style.setProperty('--mh', '0')}
-                  className="relative w-full bg-white text-black py-4 text-[0.62rem] tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
+                  className="relative w-full bg-white text-black py-4 text-xs tracking-[0.22em] uppercase font-semibold hover:bg-white/88 transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed mt-2"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
                   {!reduced && canSubmit && (
@@ -402,43 +399,8 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
    nav and the bottom bar so they read as one consistent system. Scoped to
    @media(hover:hover) so touch devices just show the dim resting state
    rather than risking a hover state that never properly clears on tap. */
-const DIM_HOVER = 'opacity-30 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
+const DIM_HOVER = 'opacity-60 [@media(hover:hover)]:hover:opacity-100 transition-opacity duration-200';
 
-function FooterNavRow() {
-  const linkClass = `${DIM_HOVER} text-[0.62rem] tracking-[0.2em] uppercase font-medium whitespace-nowrap`;
-  return (
-    <nav
-      className="relative flex items-center justify-between text-white"
-      style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
-      aria-label="Footer"
-    >
-      <div className="flex items-center gap-6 sm:gap-8">
-        <a href="#work" className={linkClass}>Work.</a>
-        <a href="#services" className={linkClass}>Services.</a>
-      </div>
-
-      <a
-        href="#"
-        aria-label="Cybersage — back to top"
-        className={`hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${DIM_HOVER}`}
-      >
-        <Image
-          src="/sage/sage_prim_white.png"
-          alt=""
-          width={130}
-          height={32}
-          className="block object-contain"
-          style={{ height: 34, width: 'auto' }}
-        />
-      </a>
-
-      <div className="flex items-center gap-6 sm:gap-8">
-        <a href="#about" className={linkClass}>About.</a>
-        <a href="#contact" className={linkClass}>Contact.</a>
-      </div>
-    </nav>
-  );
-}
 
 /* Per-character 3D flip-up reveal on both lines of a heading at once — see
    useSplitReveal. The ref'd span (containing both visual lines as block
@@ -460,7 +422,7 @@ function FlipHeading({
       style={{
         fontFamily: 'Satoshi, system-ui, sans-serif',
         fontWeight: 900,
-        fontSize: 'clamp(2.5rem, 7vw, 6rem)',
+        fontSize: 'clamp(2.5rem, 4.6vw, 5rem)',
         letterSpacing: '-0.03em',
         lineHeight: 0.88,
         textTransform: 'uppercase',
@@ -468,8 +430,8 @@ function FlipHeading({
       }}
     >
       <span ref={ref} aria-hidden="true" className={align === 'right' ? 'lg:text-right' : 'lg:text-left'} style={{ display: 'inline-block' }}>
-        <span className="block">{lines[0]}</span>
-        <span className="block">{lines[1]}</span>
+        <span className="block whitespace-nowrap">{lines[0]}</span>
+        <span className="block whitespace-nowrap">{lines[1]}</span>
       </span>
       <span className="sr-only">{plainText}</span>
     </h2>
@@ -478,26 +440,49 @@ function FlipHeading({
 
 function FooterCtaBlock({ onContact }: { onContact: () => void }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 items-center gap-10 lg:gap-6">
-      <div className="order-1 lg:col-span-1">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,28rem)_1fr] items-center gap-10 lg:gap-8">
+      <div className="order-1">
         <FlipHeading lines={['You Bring', 'The Brief.']} plainText="You Bring The Brief." align="left" />
       </div>
 
-      <div className="order-3 lg:order-2 lg:col-span-2 flex flex-col items-center gap-5">
+      <div className="order-3 lg:order-2 flex flex-col items-center gap-5">
         <div
-          className="relative w-full max-w-md overflow-hidden aspect-[4/5] lg:aspect-[3/2]"
-          style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+          className="relative w-full max-w-md border border-white/15"
         >
-          <Image src="/hero_vide_new_poster.jpg" alt="" fill sizes="400px" className="object-cover" />
-          <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.2)' }} />
+          <p className="t-mono flex items-center justify-between border-b border-white/15 px-3 py-1.5 text-on-ink-3"><span>FIG. 99 · FINAL SHEET</span><span>+</span></p>
+          <div className="relative aspect-[4/5] overflow-hidden lg:aspect-[3/2]">
+            <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover grayscale" />
+            <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
+          </div>
+          <Corners />
         </div>
         <MagneticCTA label="Contact Us." variant="solid" onClick={onContact} />
       </div>
 
-      <div className="order-2 lg:order-3 lg:col-span-1">
+      <div className="order-2 lg:order-3">
         <FlipHeading lines={['It Gets', 'Shipped.']} plainText="It Gets Shipped." align="right" />
       </div>
     </div>
+  );
+}
+
+/** Every section, including the ones that left the main nav (Process, Systems,
+ *  Credentials, Reviews, FAQ). Source: src/content/site.ts → FOOTER_LINKS. */
+function FooterIndex() {
+  return (
+    <nav aria-label="Site index" className="pb-8">
+      <p className="t-mono mb-3 text-on-ink-3">INDEX / ALL SHEETS</p>
+      <ul className="grid grid-cols-2 border-t border-l border-white/15 sm:grid-cols-5">
+        {FOOTER_LINKS.map((l, i) => (
+          <li key={l.label} className="border-r border-b border-white/15">
+            <a href={l.href} className="nav-tile h-full min-h-[4.25rem] justify-between">
+              <span className="t-mono text-on-ink-3">{String(i + 1).padStart(2, '0')}</span>
+              <span className="text-sm font-extrabold tracking-tight text-white uppercase">{l.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 
@@ -511,7 +496,7 @@ function FooterBottomBar() {
         href="https://websitelaunches.com/site/cybersage.dev"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${DIM_HOVER} text-[0.55rem] tracking-[0.16em] uppercase font-medium text-center sm:text-left`}
+        className={`${DIM_HOVER} flex min-h-11 items-center text-[0.75rem] tracking-[0.12em] uppercase font-medium text-center sm:text-left`}
       >
         © 2026 Abakwe Carrington · Cybersage — Established Online ↗
       </a>
@@ -524,14 +509,14 @@ function FooterBottomBar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className={`${DIM_HOVER} w-8 h-8 flex items-center justify-center`}
+            className={`${DIM_HOVER} w-11 h-11 flex items-center justify-center`}
           >
             {svg}
           </a>
         ))}
       </div>
 
-      <p className={`${DIM_HOVER} text-[0.55rem] tracking-[0.14em] uppercase text-center sm:text-right`}>
+      <p className={`${DIM_HOVER} text-[0.75rem] tracking-[0.12em] uppercase text-center sm:text-right`}>
         Designed &amp; Developed by Carrington
       </p>
     </div>
@@ -543,6 +528,8 @@ export function Contact() {
   const sectionRef   = useRef<HTMLElement>(null);
   const emailRef     = useRef<HTMLAnchorElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  // The constellation exists only while the section is within about a screen of the viewport (one WebGL context at a time).
+  const canvasNear = useInView(sectionRef, { margin: '60% 0px 60% 0px' });
   const reduced = useReducedMotion();
   const [modal, setModal] = useState<null | 'message' | 'call'>(null);
 
@@ -583,23 +570,23 @@ export function Contact() {
         data-theme="dark"
         className="w-full bg-[#0A0A0A] border-t border-white/6 relative overflow-hidden"
       >
-        {/* Constellation background */}
+        {/* Constellation background. Skipped entirely under reduced motion,
+            and not mounted until the section is actually in view. */}
         <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
-          <ContactCanvas />
+          {canvasNear && !reduced && <ContactCanvas />}
         </div>
 
-        <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(5rem,10vw,11rem)] pb-0">
+        <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,7vw,7rem)] pb-0">
 
           {/* Section label */}
-          <div className="flex items-center gap-4 mb-[clamp(3rem,6vw,8rem)]">
+          <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,5rem)]">
             <motion.span
-              className="text-[0.6rem] tracking-[0.22em] uppercase text-white/20 font-medium shrink-0"
-              style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+              className="t-label text-on-ink-3 shrink-0"
               initial={{ opacity: 0, x: -16 }}
               animate={sectionInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, ease: EASE }}
             >
-              08 / Contact
+              {SECTIONS.contact.label}
             </motion.span>
             <motion.div
               className="flex-1 h-px bg-white/10"
@@ -607,29 +594,19 @@ export function Contact() {
               animate={sectionInView ? { scaleX: 1 } : {}}
               transition={{ duration: 1.4, delay: 0.15, ease: EASE }}
             />
+            <span className="t-mono hidden shrink-0 text-on-ink-3 sm:inline">SHEET 07 / CONTACT</span>
           </div>
 
           {/* Giant email CTA */}
-          <div className="mb-[clamp(3rem,6vw,8rem)]">
-            <motion.p
-              className="text-white/30 mb-5"
-              style={{
-                fontFamily: 'var(--font-instrument), Georgia, serif',
-                fontStyle: 'italic',
-                fontSize: 'clamp(1rem, 2vw, 1.6rem)',
-              }}
-              initial={{ opacity: 0, y: 12 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
-            >
-              Have a project in mind?
-            </motion.p>
+          <div className="mb-[clamp(2.5rem,4vw,5rem)]">
+            <SplitHeading className="mb-5 text-on-ink-1" style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(1.5rem, 3.2vw, 2.75rem)' }} text={SECTIONS.contact.heading} />
 
-            <div className="overflow-hidden mb-8">
+            {/* pb keeps y/g descenders inside the clip mask at leading 0.88 */}
+            <div className="overflow-hidden mb-6 pb-[0.14em]" style={{ fontSize: 'clamp(1.8rem, 5.5vw, 7rem)' }}>
               <a
                 ref={emailRef}
                 href="mailto:hello@cybersage.dev"
-                className="block font-black text-white tracking-[-0.04em] leading-[0.88] hover:text-white/45 transition-colors duration-300 will-change-transform"
+                className="block min-h-11 font-black text-white tracking-[-0.04em] leading-[0.88] hover:text-white/45 transition-colors duration-300 will-change-transform"
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',
                   fontWeight: 800,
@@ -651,7 +628,7 @@ export function Contact() {
               <MagneticCTA label="Send a Message" onClick={() => setModal('message')} />
               <a
                 href="mailto:hello@cybersage.dev"
-                className="text-[0.62rem] tracking-[0.18em] uppercase text-white/28 hover:text-white/60 transition-colors duration-200 font-medium"
+                className="inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-on-ink-3 hover:text-white/60 transition-colors duration-200 font-medium"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 or email directly →
@@ -661,7 +638,7 @@ export function Contact() {
 
           {/* Info strip */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-0 border-t border-white/8 mb-0"
+            className="relative grid grid-cols-1 sm:grid-cols-3 gap-0 border border-white/15 mb-0"
             initial={{ opacity: 0 }}
             animate={sectionInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.55, ease: EASE }}
@@ -673,18 +650,17 @@ export function Contact() {
             ].map((item, i) => (
               <div
                 key={item.label}
-                className={`py-8 pr-8 ${i > 0 ? 'sm:border-l sm:border-white/8 sm:pl-8 sm:pr-0' : ''}`}
+                className={`relative px-6 py-6 ${i > 0 ? 'border-t border-white/15 sm:border-t-0 sm:border-l' : ''}`}
               >
                 <p
-                  className="text-[0.55rem] tracking-[0.22em] uppercase text-white/22 font-medium mb-2"
-                  style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
+                  className="t-mono text-on-ink-3 mb-2 uppercase"
                 >
                   {item.label}
                 </p>
                 <div className="flex items-center gap-2">
-                  {item.pulse && <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse shrink-0" />}
+                  {item.pulse && <span className="w-1.5 h-1.5 rounded-full bg-live animate-pulse shrink-0" />}
                   <p
-                    className="text-white/55 font-medium"
+                    className="text-on-ink-1 font-medium"
                     style={{
                       fontFamily: 'Satoshi, system-ui, sans-serif',
                       fontSize: 'clamp(0.85rem, 1.3vw, 1rem)',
@@ -695,6 +671,7 @@ export function Contact() {
                 </div>
               </div>
             ))}
+          <Corners />
           </motion.div>
         </div>
 
@@ -713,21 +690,14 @@ export function Contact() {
             className="max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] flex flex-col"
             style={{ paddingTop: 'clamp(2rem,4vw,3rem)', paddingBottom: 'clamp(2rem,4vw,3rem)', gap: 'clamp(3.5rem,8vw,7rem)' }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
-            >
-              <FooterNavRow />
-            </motion.div>
-
-            <FooterCtaBlock onContact={() => setModal('message')} />
+                        <FooterCtaBlock onContact={() => setModal('message')} />
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={sectionInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.6, ease: EASE }}
             >
+              <FooterIndex />
               <FooterBottomBar />
             </motion.div>
           </div>

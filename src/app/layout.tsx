@@ -3,6 +3,7 @@ import { Instrument_Serif } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { headers } from 'next/headers';
 import './globals.css';
+import { FAQS } from '@/content/faq';
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -339,8 +340,15 @@ const personSchema = {
       address: { '@type': 'PostalAddress', addressLocality: 'Lagos', addressCountry: 'NG' },
     },
     { '@type': 'EducationalOrganization', name: 'IBT Learning' },
+    { '@type': 'EducationalOrganization', name: 'TS Academy' },
   ],
   hasCredential: [
+    {
+      '@type': 'EducationalOccupationalCredential',
+      name: 'Software Development',
+      credentialCategory: 'certificate',
+      recognizedBy: { '@type': 'EducationalOrganization', name: 'TS Academy' },
+    },
     {
       '@type': 'EducationalOccupationalCredential',
       name: 'Web Application Development',
@@ -501,48 +509,11 @@ const profilePageSchema = {
 const faqSchema = {
   '@type': 'FAQPage',
   '@id': `${BASE_URL}/#faq`,
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Who is Abakwe Carrington?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Abakwe Carrington (also known as Cybersage or Donrington) is an Infrastructure & Systems Architect and Senior Software Engineer based in Lagos, Nigeria. He has over 5 years of commercial experience designing distributed cloud infrastructure, microservices, Go and Django backends, and high-performance web applications for clients worldwide.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What services does Abakwe Carrington / Cybersage offer?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Abakwe Carrington offers four core services: 1) Systems Architecture & Design, 2) Cloud Infrastructure & DevOps (AWS, Docker, IaC), 3) Distributed Backend & API Engineering (Go, Django, PostgreSQL, Redis), and 4) Full Stack Web Engineering (Next.js, TypeScript, React).',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Does Abakwe Carrington work with international clients remotely?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. Abakwe Carrington works remotely with companies, startups, and enterprises worldwide across the United States, United Kingdom, Canada, Australia, Europe, and Africa.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is Wytnest?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Wytnest is a video and written testimonial platform built by Abakwe Carrington. It isolates embeddable video widgets using Shadow DOM technology to avoid style contamination and automatically converts video testimonials into searchable text transcripts.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How can I hire or contact Abakwe Carrington?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'You can contact Abakwe Carrington directly via email at hello@cybersage.dev or submit a message through his official portfolio website at https://cybersage.dev.',
-      },
-    },
-  ],
+  mainEntity: FAQS.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  })),
 };
 
 const projectItemListSchema = {
@@ -620,6 +591,8 @@ export default async function RootLayout({
   return (
     <html lang="en" className={instrumentSerif.variable} suppressHydrationWarning>
       <head>
+        {/* Hero h1 face: fetched with the HTML, not after the CSS (LCP). */}
+        <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Machine Readable Profile" />
         <script
           type="application/ld+json"
@@ -629,6 +602,8 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
+        {/* Without JavaScript the full-screen loader can never lift: hide it so the page reads. */}
+        <noscript><style>{'[role="status"][aria-label="Loading"]{display:none!important}'}</style></noscript>
         {children}
         <Analytics />
       </body>

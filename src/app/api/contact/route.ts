@@ -3,7 +3,12 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Created per request: the constructor throws when the key is missing, which would fail `next build` on any
+// environment (a preview, a fresh project) that does not have RESEND_API_KEY set yet.
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  return key ? new Resend(key) : null;
+}
 
 function readLogoB64(filename: string): string {
   try {
@@ -174,6 +179,12 @@ export async function POST(req: NextRequest) {
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    }
+
+    const resend = getResend();
+    if (!resend) {
+      console.error('Contact form: RESEND_API_KEY is not set');
+      return NextResponse.json({ error: 'Email service is not configured' }, { status: 503 });
     }
 
     const { error } = await resend.emails.send({
