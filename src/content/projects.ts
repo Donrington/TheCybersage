@@ -325,27 +325,19 @@ export const PROJECTS: Project[] = [...ALL_PROJECTS].sort((a, b) => {
 /** The home-page shortlist, in scroll order. Templates rotate so no two neighbours match. */
 export const FEATURED: FeaturedScene[] = [
   {
-    id: 'winsko', template: 'pair',
+    id: 'winsko', template: 'metric',
     role: 'Design and build',
     outcome: 'A Port Harcourt logistics and oil & gas EPC company gets nine service pages and a scroll-driven Mapbox globe.',
     tags: ['Next.js', 'GSAP', 'Mapbox'],
     metric: { value: '9', label: 'service pages' },
-    shots: ['/projects/winsko.webp', '/projects/winsko-reel-poster.webp'],
+    shots: ['/projects/winsko.webp'],
   },
   {
-    id: 'tuffapp', template: 'device',
+    id: 'tuffapp', template: 'pair',
     role: 'Product, architecture and build',
     outcome: 'Team fitness challenges with streaks and leaderboards, every stat computed live from logged activity.',
     tags: ['Next.js', 'Express', 'MongoDB'],
-    shots: ['/projects/tuff-app-home.png'],
-  },
-  {
-    id: 'circlesoflife', template: 'metric',
-    role: 'Design, build and AI features',
-    outcome: 'An Atlanta in-home care provider gets a CMS and a Claude-powered care-advisor suite with streaming chat.',
-    tags: ['Next.js', 'Supabase', 'Claude AI'],
-    metric: { value: '4', label: 'AI features in production' },
-    shots: ['/projects/colhc.png'],
+    shots: ['/projects/tuff-app-home.png', '/projects/tuff-dashboard.png'],
   },
   {
     id: 'recoverderm', template: 'device',
@@ -356,12 +348,20 @@ export const FEATURED: FeaturedScene[] = [
     shots: ['/projects/recoverderm.png'],
   },
   {
-    id: 'wynscollections', template: 'pair',
+    id: 'circlesoflife', template: 'pair',
+    role: 'Design, build and AI features',
+    outcome: 'An Atlanta in-home care provider gets a CMS and a Claude-powered care-advisor suite with streaming chat.',
+    tags: ['Next.js', 'Supabase', 'Claude AI'],
+    metric: { value: '4', label: 'AI features in production' },
+    shots: ['/logo/colhcs.png', '/projects/colhc.png'],
+  },
+  {
+    id: 'wynscollections', template: 'metric',
     role: 'Storefront, back office and payments',
     outcome: 'A Port Harcourt fashion label gets a storefront with Paystack checkout and a back office for orders and analytics.',
     tags: ['Next.js', 'Supabase', 'Paystack'],
     metric: { value: '10', label: 'migrations with row-level security' },
-    shots: ['/projects/wynscollections.png', '/projects/wyns2.png'],
+    shots: ['/projects/wynscollections.png'],
   },
   {
     id: 'theblacke', template: 'device',

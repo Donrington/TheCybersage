@@ -33,7 +33,7 @@ const SERVICES_PREVIEW = [
 const WORK_PREVIEW = [
   { name: 'Winsko Serves', category: 'Logistics & EPC Platform', image: '/projects/winsko.webp', link: 'https://winskoserves.com.ng' },
   { name: 'TUFF', category: 'Fitness Challenge Platform', image: '/projects/tuff-app-home.png', link: 'https://thetuffapp.com' },
-  { name: 'Circles of Life Healthcare', category: 'Healthcare + AI Platform', image: '/projects/colhc.png', link: 'https://circlesoflifehcs.com' },
+  { name: 'Circles of Life Healthcare', category: 'Healthcare + AI Platform', image: '/logo/colhcs.png', link: 'https://circlesoflifehcs.com' },
   { name: 'RecoverDerm', category: 'Paramedical Platform', image: '/projects/recoverderm.png', link: 'https://recoverderm.ca' },
   { name: 'Wyns Collections', category: 'Ecommerce Platform', image: '/projects/wynscollections.png', link: 'https://wyns-collections.vercel.app' },
   { name: 'The Black-E', category: 'Arts & Culture', image: '/projects/THE_BLACK-E.png', link: 'https://theblacke.vercel.app' },
