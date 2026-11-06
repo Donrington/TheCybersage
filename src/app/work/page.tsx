@@ -33,7 +33,7 @@ export default function WorkPage() {
         <h1 className="t-h2 max-w-[20ch] text-white">Every build, sorted by the industry it serves.</h1>
         <p className="t-body mt-5 max-w-[60ch] text-on-ink-2">
           {PROJECTS.length} projects for clients in Nigeria, the United States, the United Kingdom and Canada.
-          The eight with the most behind them are on the home page.
+          The latest eight are on the home page, newest first.
         </p>
         <WorkIndex />
       </main>

@@ -26,7 +26,7 @@ export interface Project {
   videoPoster?: string;
 }
 
-export const PROJECTS: Project[] = [
+const ALL_PROJECTS: Project[] = [
   {
     id: 'autoboy',
     name: 'Autoboy Express',
@@ -314,55 +314,16 @@ export interface FeaturedScene {
   shots: string[];
 }
 
+/** Newest work first; the owner's picks lead. Anything not listed here follows by year (newest first). */
+const LEAD = ['winsko', 'tuffapp', 'circlesoflife', 'recoverderm', 'wynscollections', 'theblacke'];
+export const PROJECTS: Project[] = [...ALL_PROJECTS].sort((a, b) => {
+  const ia = LEAD.indexOf(a.id), ib = LEAD.indexOf(b.id);
+  if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  return Number(b.year) - Number(a.year);
+});
+
 /** The home-page shortlist, in scroll order. Templates rotate so no two neighbours match. */
 export const FEATURED: FeaturedScene[] = [
-  {
-    id: 'anoc', template: 'pair',
-    role: 'Full-stack build',
-    outcome: 'Chartered accountants handle compliance, documents and audit records in one encrypted platform.',
-    tags: ['Next.js', 'Node.js', 'PostgreSQL'],
-    metric: { value: 'Zero', label: 'breaches' },
-    shots: ['/projects/anoc.png', '/projects/anoc_2.png'],
-  },
-  {
-    id: 'recoverderm', template: 'metric',
-    role: 'Full-stack build',
-    outcome: 'A paramedical clinic runs secure patient portals and treatment tracking on a HIPAA-compliant stack.',
-    tags: ['Next.js', 'Django', 'PostgreSQL'],
-    metric: { value: '60%', label: 'smaller unauthorized-access surface' },
-    shots: ['/projects/recoverderm.png'],
-  },
-  {
-    id: 'circlesoflife', template: 'device',
-    role: 'Design, build and AI features',
-    outcome: 'An Atlanta in-home care provider gets a CMS and a Claude-powered care-advisor suite with streaming chat.',
-    tags: ['Next.js', 'Supabase', 'Claude AI'],
-    metric: { value: '4', label: 'AI features in production' },
-    shots: ['/projects/colhc.png'],
-  },
-  {
-    id: 'nextgen', template: 'metric',
-    role: 'Web platform and cloud deployment',
-    outcome: 'A robotics company ships through CI/CD on a Go backend on AWS, with engagement up 25% after launch.',
-    tags: ['Go', 'AWS', 'Docker'],
-    metric: { value: '45%', label: 'faster deployments' },
-    shots: ['/projects/nextgen2.png'],
-  },
-  {
-    id: 'autoboy', template: 'pair',
-    role: 'Backend architecture and build',
-    outcome: 'A dual-sided automotive marketplace serves real-time inventory from Go microservices and Redis-cached feeds.',
-    tags: ['Go', 'PostgreSQL', 'Redis'],
-    metric: { value: '30%', label: 'lower DB latency' },
-    shots: ['/projects/autoboy.png', '/projects/autoboy2.png'],
-  },
-  {
-    id: 'wytnest', template: 'device',
-    role: 'Product, architecture and build',
-    outcome: 'A multi-tenant testimonial platform with video, embeddable widgets and dual-rail payments in NGN and USD.',
-    tags: ['Next.js', 'Supabase', 'Stripe'],
-    shots: ['/projects/wytnest_hero.png'],
-  },
   {
     id: 'winsko', template: 'pair',
     role: 'Design and build',
@@ -372,11 +333,56 @@ export const FEATURED: FeaturedScene[] = [
     shots: ['/projects/winsko.webp', '/projects/winsko-reel-poster.webp'],
   },
   {
+    id: 'tuffapp', template: 'device',
+    role: 'Product, architecture and build',
+    outcome: 'Team fitness challenges with streaks and leaderboards, every stat computed live from logged activity.',
+    tags: ['Next.js', 'Express', 'MongoDB'],
+    shots: ['/projects/tuff-app-home.png'],
+  },
+  {
+    id: 'circlesoflife', template: 'metric',
+    role: 'Design, build and AI features',
+    outcome: 'An Atlanta in-home care provider gets a CMS and a Claude-powered care-advisor suite with streaming chat.',
+    tags: ['Next.js', 'Supabase', 'Claude AI'],
+    metric: { value: '4', label: 'AI features in production' },
+    shots: ['/projects/colhc.png'],
+  },
+  {
+    id: 'recoverderm', template: 'device',
+    role: 'Full-stack build',
+    outcome: 'A paramedical clinic runs secure patient portals and treatment tracking on a HIPAA-compliant stack.',
+    tags: ['Next.js', 'Django', 'PostgreSQL'],
+    metric: { value: '60%', label: 'smaller unauthorized-access surface' },
+    shots: ['/projects/recoverderm.png'],
+  },
+  {
+    id: 'wynscollections', template: 'pair',
+    role: 'Storefront, back office and payments',
+    outcome: 'A Port Harcourt fashion label gets a storefront with Paystack checkout and a back office for orders and analytics.',
+    tags: ['Next.js', 'Supabase', 'Paystack'],
+    metric: { value: '10', label: 'migrations with row-level security' },
+    shots: ['/projects/wynscollections.png', '/projects/wyns2.png'],
+  },
+  {
     id: 'theblacke', template: 'device',
     role: 'Redesign and build',
     outcome: 'Britain’s first community arts centre, in Liverpool since 1967, moves off legacy WordPress to an editorial build.',
     tags: ['Next.js', 'GSAP', 'Lenis'],
     shots: ['/projects/THE_BLACK-E.png'],
+  },
+  {
+    id: 'chronos', template: 'pair',
+    role: 'AI pipeline and build',
+    outcome: 'An ambient display system uses Gemini to tag images and choose content by time of day, mood and context.',
+    tags: ['Python', 'Streamlit', 'Gemini AI'],
+    shots: ['/projects/chronos.png', '/projects/chronos_2.png'],
+  },
+  {
+    id: 'wytnest', template: 'device',
+    role: 'Product, architecture and build',
+    outcome: 'A multi-tenant testimonial platform with video, embeddable widgets and dual-rail payments in NGN and USD.',
+    tags: ['Next.js', 'Supabase', 'Stripe'],
+    shots: ['/projects/wytnest_hero.png'],
   },
 ];
 

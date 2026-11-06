@@ -257,7 +257,7 @@ export function WorkV2() {
       </div>
 
       <div className="relative z-10 mx-auto flex max-w-[1440px] items-center justify-between gap-6 border-t border-on-ink-line bg-[#0A0A0A] px-[clamp(1rem,4vw,5rem)] py-12">
-        <p className="t-body text-on-ink-2">Fintech, e-commerce, healthcare, SaaS and oil &amp; gas builds, all in one index.</p>
+        <p className="t-body text-on-ink-2">The latest builds are above. Every project, from fintech to oil &amp; gas, is in the index.</p>
         <Link
           href="/work"
           className="group inline-flex min-h-11 shrink-0 items-center gap-2 bg-white px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#0A0A0A] transition-colors duration-200 hover:bg-white/85"

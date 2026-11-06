@@ -31,11 +31,11 @@ const SERVICES_PREVIEW = [
 ];
 
 const WORK_PREVIEW = [
-  { name: 'Autoboy Express', category: 'B2B / B2C Marketplace', image: '/projects/autoboy.png', link: 'https://autoboyexpress.com' },
+  { name: 'Winsko Serves', category: 'Logistics & EPC Platform', image: '/projects/winsko.webp', link: 'https://winskoserves.com.ng' },
+  { name: 'TUFF', category: 'Fitness Challenge Platform', image: '/projects/tuff-app-home.png', link: 'https://thetuffapp.com' },
+  { name: 'Circles of Life Healthcare', category: 'Healthcare + AI Platform', image: '/projects/colhc.png', link: 'https://circlesoflifehcs.com' },
   { name: 'RecoverDerm', category: 'Paramedical Platform', image: '/projects/recoverderm.png', link: 'https://recoverderm.ca' },
-  { name: 'Chronos', category: 'Ambient AI Platform', image: '/projects/chronos.png', link: 'https://thechronosaura.com' },
-  { name: 'NextGen Robotics', category: 'Automation Hub', image: '/projects/nextgen.png', link: 'https://nextgenerationrobotics.org' },
-  { name: 'Circles of Life Healthcare', category: 'Healthcare + AI Platform', image: '/logo/colhcs.png', link: 'https://circlesoflifehcs.com' },
+  { name: 'Wyns Collections', category: 'Ecommerce Platform', image: '/projects/wynscollections.png', link: 'https://wyns-collections.vercel.app' },
   { name: 'The Black-E', category: 'Arts & Culture', image: '/projects/THE_BLACK-E.png', link: 'https://theblacke.vercel.app' },
 ];
 
