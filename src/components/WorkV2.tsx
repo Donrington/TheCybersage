@@ -118,7 +118,7 @@ function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index:
     const fit = () => {
       el.style.zoom = '1';
       if (window.innerWidth < 768) return;
-      const room = window.innerHeight * 0.77 - 100;
+      const room = window.innerHeight * 0.77 - 150;
       const h = el.getBoundingClientRect().height;
       if (h > room) el.style.zoom = String(Math.max(0.62, room / h));
     };
@@ -194,15 +194,15 @@ function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index:
       className="work-scene md:sticky md:top-0 md:h-[77svh]"
     >
       {/* Full-height, opaque: it must completely cover the scene it stacks over. */}
-      <article className="work-scene-card relative w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-16">
+      <article className="work-scene-card relative w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-16 md:pb-16">
         <div ref={innerRef} className="mx-auto w-full max-w-[1440px] px-[clamp(1rem,4vw,5rem)]">
           {body}
         </div>
-        {/* Caption panel (md+): where we are, and what comes next. */}
-        <div aria-hidden className="absolute bottom-7 left-24 hidden w-[17rem] border border-on-ink-line bg-[#0A0A0A] md:block">
-          <p className="t-mono bg-white px-3 py-1.5 text-[#0A0A0A]">PLATE {pad(index + 1)} / {pad(total)}</p>
-          <p className="t-body px-3 pt-2 text-sm text-on-ink-2">{nextProject ? <>Next: <span className="text-white">{nextProject.name}</span></> : 'That is the last plate.'}</p>
-          <p className="t-mono px-3 pt-1 pb-2 text-on-ink-3">{nextProject ? '[SCROLL TO CONTINUE]' : '[SEE ALL WORK BELOW]'}</p>
+        {/* Caption strip (md+): its own reserved band at the bottom of the plate, so it can never cover content. */}
+        <div aria-hidden className="t-mono absolute right-[clamp(1rem,4vw,5rem)] bottom-3 left-[clamp(1rem,4vw,5rem)] hidden items-center justify-between gap-6 border border-on-ink-line bg-[#0A0A0A] md:flex">
+          <span className="bg-white px-3 py-1.5 text-[#0A0A0A]">PLATE {pad(index + 1)} / {pad(total)}</span>
+          <span className="flex-1 truncate text-on-ink-2">{nextProject ? <>NEXT: <span className="text-white">{nextProject.name.toUpperCase()}</span></> : 'LAST PLATE'}</span>
+          <span className="pr-3 text-on-ink-3">{nextProject ? '[SCROLL TO CONTINUE]' : '[SEE ALL WORK BELOW]'}</span>
         </div>
       </article>
     </li>
