@@ -25,7 +25,7 @@ export function Testimonials() {
 
   return (
     <section id="testimonials" aria-labelledby="testimonials-heading" data-theme="dark" className="bg-[#0A0A0A] text-white">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-ink-2">{SECTIONS.testimonials.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
@@ -39,7 +39,7 @@ export function Testimonials() {
               <span>EXHIBIT {pad(i + 1)} / {pad(N)}</span>
               <span>{t.company.toUpperCase()}</span>
             </figcaption>
-            <div className="relative h-[min(66svh,600px)] w-full overflow-hidden">
+            <div className="relative h-[min(60svh,560px)] w-full overflow-hidden">
               <Image
                 src={t.image}
                 alt={`Screenshot of ${t.name}'s message about working with Abakwe Carrington (${t.company})`}

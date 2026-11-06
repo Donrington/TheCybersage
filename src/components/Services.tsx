@@ -20,7 +20,7 @@ export function Services() {
 
   return (
     <section id="services" aria-labelledby="services-heading" data-theme="light" className="border-t border-black/[0.08] bg-white text-ink">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-canvas-3">{SECTIONS.services.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />

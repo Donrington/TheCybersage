@@ -17,7 +17,7 @@ export function LabRow() {
   const entries = now.entries.slice(0, 3);
   return (
     <section id="lab" aria-labelledby="lab-heading" data-theme="dark" className="bg-[#0A0A0A] text-white">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,7rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-ink-2">{SECTIONS.lab.label}</span>
           <span aria-hidden className="h-px flex-1 bg-on-ink-line" />

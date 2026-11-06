@@ -19,7 +19,7 @@ export function TypeBand() {
     </>
   );
   return (
-    <section aria-label="What I do" data-theme="dark" className="overflow-hidden border-t border-on-ink-line bg-[#0A0A0A] py-[clamp(2rem,5vw,4.5rem)] text-white">
+    <section aria-label="What I do" data-theme="dark" className="overflow-hidden border-t border-on-ink-line bg-[#0A0A0A] py-[clamp(1.5rem,3.5vw,3rem)] text-white">
       <div className="type-band flex w-max" style={{ fontSize: 'clamp(3.5rem, 11vw, 10rem)', lineHeight: 1 }} aria-hidden>
         <div className="flex">{row}</div>
         <div className="flex">{row}</div>

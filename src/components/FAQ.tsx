@@ -7,7 +7,7 @@ import { SplitHeading } from '@/components/ui/SplitHeading';
 export function FAQ() {
   return (
     <section id="faq-section" aria-labelledby="faq-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-white text-ink">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-canvas-3">{SECTIONS.faq.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />
@@ -17,7 +17,7 @@ export function FAQ() {
         <div className="mt-12 border-t border-l border-r border-black/25">
           {FAQS.map((faq, i) => (
             <details key={faq.id} name="faq" open={i === 0} className="faq-item border-b border-black/25">
-              <summary className="flex min-h-20 cursor-pointer list-none items-start justify-between gap-6 px-5 py-5 transition-colors hover:bg-black/[0.03] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black sm:px-7 [&::-webkit-details-marker]:hidden">
+              <summary className="flex min-h-16 cursor-pointer list-none items-start justify-between gap-6 px-5 py-5 transition-colors hover:bg-black/[0.03] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black sm:px-7 [&::-webkit-details-marker]:hidden">
                 <span className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-6">
                   <span className="t-mono w-28 shrink-0 text-on-canvas-3">
                     {String(i + 1).padStart(2, '0')} · {faq.category.toUpperCase()}

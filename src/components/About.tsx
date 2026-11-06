@@ -60,7 +60,7 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 export function About() {
   return (
     <section id="about" aria-labelledby="about-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-[#F5F5F3] text-ink">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-canvas-3">{SECTIONS.about.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />

@@ -83,7 +83,7 @@ function SceneText({ scene, project, index, total }: { scene: FeaturedScene; pro
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex min-h-11 items-center gap-2 border border-white/60 px-5 text-xs font-medium uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:border-white hover:bg-white/10"
+            className="group inline-flex min-h-12 items-center gap-2 border border-white/60 px-5 text-xs font-medium uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:border-white hover:bg-white/10"
           >
             Visit site
             <ArrowUpRight size={14} aria-hidden className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -118,9 +118,9 @@ function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index:
     const fit = () => {
       el.style.zoom = '1';
       if (window.innerWidth < 768) return;
-      const room = window.innerHeight - 150;
+      const room = window.innerHeight * 0.77 - 100;
       const h = el.getBoundingClientRect().height;
-      if (h > room) el.style.zoom = String(Math.max(0.75, room / h));
+      if (h > room) el.style.zoom = String(Math.max(0.62, room / h));
     };
     fit();
     window.addEventListener('resize', fit);
@@ -191,7 +191,7 @@ function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index:
     <li
       ref={ref}
       aria-label={`${project.name}, ${index + 1} of ${total}`}
-      className="work-scene md:sticky md:top-0 md:h-[100svh]"
+      className="work-scene md:sticky md:top-0 md:h-[77svh]"
     >
       {/* Full-height, opaque: it must completely cover the scene it stacks over. */}
       <article className="work-scene-card relative w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-16">

@@ -59,7 +59,7 @@ export function ProjectVideo({
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.45rem',
-          minHeight: compact ? '44px' : undefined,
+          minHeight: '48px',
           padding: compact ? '0 1rem' : '0.5rem 0.9rem',
           border: '1px solid rgba(255,255,255,0.14)',
           borderRadius: compact ? '999px' : 0,

@@ -40,8 +40,14 @@ export default function Home() {
       {!loaded && <BlueprintLoader onDone={finish} />}
       <SheetFrame />
       <SmoothScroll>
+        <a
+          href="#main"
+          className="fixed top-3 left-3 z-[10000] -translate-y-24 bg-white px-4 py-3 text-sm font-semibold text-[#0A0A0A] focus:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+        >
+          Skip to content
+        </a>
         <Navbar />
-        <main>
+        <main id="main" tabIndex={-1} className="outline-none">
           {/* Static indexing helper for crawlers & search bots. h2 (not h1):
               the page's one h1 is the visible name in Hero, just below. */}
           <article className="sr-only">

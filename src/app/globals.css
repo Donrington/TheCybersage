@@ -639,3 +639,6 @@ body[data-nav-open] button[aria-label^='Ask the AI'] { display: none; }
 
 /* Corner ticks on light sheets are ink, not white. */
 [data-theme='light'] .nav-corner { border-color: #0a0a0a; opacity: 0.6; }
+
+/* Focus ring for the wipe-style controls (they also fill on focus; the ring uses currentColor so it flips with the fill). */
+.nav-cell:focus-visible, .nav-tile:focus-visible, .nav-hire:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }

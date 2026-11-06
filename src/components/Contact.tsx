@@ -496,7 +496,7 @@ function FooterBottomBar() {
         href="https://websitelaunches.com/site/cybersage.dev"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${DIM_HOVER} text-[0.75rem] tracking-[0.12em] uppercase font-medium text-center sm:text-left`}
+        className={`${DIM_HOVER} flex min-h-11 items-center text-[0.75rem] tracking-[0.12em] uppercase font-medium text-center sm:text-left`}
       >
         © 2026 Abakwe Carrington · Cybersage — Established Online ↗
       </a>
@@ -509,7 +509,7 @@ function FooterBottomBar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className={`${DIM_HOVER} w-8 h-8 flex items-center justify-center`}
+            className={`${DIM_HOVER} w-11 h-11 flex items-center justify-center`}
           >
             {svg}
           </a>
@@ -528,6 +528,8 @@ export function Contact() {
   const sectionRef   = useRef<HTMLElement>(null);
   const emailRef     = useRef<HTMLAnchorElement>(null);
   const sectionInView = useInView(sectionRef, { once: true, margin: '-12%' });
+  // The constellation exists only while the section is within about a screen of the viewport (one WebGL context at a time).
+  const canvasNear = useInView(sectionRef, { margin: '60% 0px 60% 0px' });
   const reduced = useReducedMotion();
   const [modal, setModal] = useState<null | 'message' | 'call'>(null);
 
@@ -571,13 +573,13 @@ export function Contact() {
         {/* Constellation background. Skipped entirely under reduced motion,
             and not mounted until the section is actually in view. */}
         <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
-          {sectionInView && !reduced && <ContactCanvas />}
+          {canvasNear && !reduced && <ContactCanvas />}
         </div>
 
-        <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(5rem,10vw,11rem)] pb-0">
+        <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,7vw,7rem)] pb-0">
 
           {/* Section label */}
-          <div className="flex items-center gap-4 mb-[clamp(3rem,6vw,8rem)]">
+          <div className="flex items-center gap-4 mb-[clamp(2rem,4vw,5rem)]">
             <motion.span
               className="t-label text-on-ink-3 shrink-0"
               initial={{ opacity: 0, x: -16 }}
@@ -596,7 +598,7 @@ export function Contact() {
           </div>
 
           {/* Giant email CTA */}
-          <div className="mb-[clamp(3rem,6vw,8rem)]">
+          <div className="mb-[clamp(2.5rem,4vw,5rem)]">
             <SplitHeading className="mb-5 text-on-ink-1" style={{ fontWeight: 700, letterSpacing: '-0.02em', fontSize: 'clamp(1.5rem, 3.2vw, 2.75rem)' }} text={SECTIONS.contact.heading} />
 
             {/* pb keeps y/g descenders inside the clip mask at leading 0.88 */}
@@ -604,7 +606,7 @@ export function Contact() {
               <a
                 ref={emailRef}
                 href="mailto:hello@cybersage.dev"
-                className="block font-black text-white tracking-[-0.04em] leading-[0.88] hover:text-white/45 transition-colors duration-300 will-change-transform"
+                className="block min-h-11 font-black text-white tracking-[-0.04em] leading-[0.88] hover:text-white/45 transition-colors duration-300 will-change-transform"
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',
                   fontWeight: 800,
@@ -626,7 +628,7 @@ export function Contact() {
               <MagneticCTA label="Send a Message" onClick={() => setModal('message')} />
               <a
                 href="mailto:hello@cybersage.dev"
-                className="text-xs tracking-[0.18em] uppercase text-on-ink-3 hover:text-white/60 transition-colors duration-200 font-medium"
+                className="inline-flex min-h-11 items-center text-xs tracking-[0.18em] uppercase text-on-ink-3 hover:text-white/60 transition-colors duration-200 font-medium"
                 style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
               >
                 or email directly →

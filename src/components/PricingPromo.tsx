@@ -18,7 +18,7 @@ const TIERS = [
 export function PricingPromo() {
   return (
     <section id="pricing" aria-labelledby="pricing-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-[#F5F5F3] text-ink">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(4rem,8vw,8rem)]">
+      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
         <div className="mb-8 flex items-center gap-4">
           <span className="t-label text-on-canvas-3">{SECTIONS.pricing.label}</span>
           <span aria-hidden className="h-px flex-1 bg-black/10" />
@@ -33,7 +33,7 @@ export function PricingPromo() {
           <li className="border-b border-black/25">
             <Link
               href="#contact"
-              className="group relative flex min-h-24 flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-[#0A0A0A] px-5 py-5 text-white transition-colors hover:bg-black/85 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black sm:px-7"
+              className="group relative flex min-h-20 flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-[#0A0A0A] px-5 py-5 text-white transition-colors hover:bg-black/85 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black sm:px-7"
             >
               <span className="flex items-baseline gap-5">
                 <span className="t-mono text-white/55">00</span>
@@ -49,7 +49,7 @@ export function PricingPromo() {
             </Link>
           </li>
           {TIERS.map((t, i) => (
-            <li key={t.label} className="price-row relative flex min-h-24 flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-black/25 px-5 py-5 transition-colors duration-300 hover:bg-white sm:px-7">
+            <li key={t.label} className="price-row relative flex min-h-20 flex-wrap items-center justify-between gap-x-6 gap-y-1 border-b border-black/25 px-5 py-5 transition-colors duration-300 hover:bg-white sm:px-7">
               <span className="flex items-baseline gap-5">
                 <span className="t-mono text-on-canvas-3">{String(i + 1).padStart(2, '0')}</span>
                 <span>

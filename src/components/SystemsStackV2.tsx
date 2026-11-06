@@ -129,7 +129,7 @@ function StackStage() {
   };
 
   return (
-    <div ref={wrapRef} className="relative" style={{ height: `calc(100svh + ${N} * 60svh)` }}>
+    <div ref={wrapRef} className="relative" style={{ height: `calc(100svh + ${N} * 21svh)` }}>
       <div className="sticky top-0 flex h-[100svh] items-center">
         <div className="mx-auto grid w-full max-w-[1440px] grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-10 px-[clamp(1rem,4vw,5rem)] pt-16">
           {/* Stage: decoration. Every word in it is repeated in the panel and the list. */}

@@ -49,7 +49,7 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 8 | About, Services, Process | done |
 | 9 | Testimonials, Pricing, FAQ | done |
 | 10 | Contact and footer | |
-| 11 | Final pass (Lighthouse, four widths, a11y, metadata) | |
+| 11 | Final pass (Lighthouse, four widths, a11y, metadata) | done, with open items (see final report) |
 
 ## Open items from Prompt 1 (not fixed — need a decision or dedicated pass)
 
@@ -144,3 +144,11 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 2. Every animation has a reduced-motion path and a no-JS path (final state visible).
 3. Check 1440, 1024, 768 and 390 px wide before a milestone is called done; no horizontal overflow.
 4. Never invent facts: numbers, clients and claims come from the existing copy or the owner.
+
+## Final pass (Prompt 11) notes
+
+- Page height 23,325 → 17,907 px at 1440: Under the Hood scroll 60 → 21 svh per layer, Work plates 77 svh, Wytnest dropped from Work (it is in the Lab row), tighter section padding.
+- Accessibility: skip link (first tab stop), main landmark, 136 tab stops all with a visible ring (wipe-style controls got an outline too), one h1, no heading-level skips, no images without alt, canvases aria-hidden, tap targets ≥ 44 px on phones (4 desktop buttons shrink to 33 px only because Work plates scale down on short screens).
+- No-JS: the full-screen loader is hidden by a noscript style (it could never lift), all 14 h2s render at full opacity, no pending reveal states. Reduced motion verified earlier (static hero, no pending reveals, no custom cursor).
+- WebGL: hero field is disposed (not just paused) when more than a screen away and rebuilt on a fresh canvas when it returns; the Contact constellation unmounts when far. Max one live context at a time; no console errors across three full scroll round trips.
+- Metadata: title, description (308 chars: long; Google shows about 160), canonical, OG image, twitter card, one JSON-LD graph (Person, ProfessionalService, WebSite, ProfilePage, FAQPage, ItemList), sitemap includes /work, /work has its own title and canonical.

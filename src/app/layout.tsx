@@ -602,6 +602,8 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
+        {/* Without JavaScript the full-screen loader can never lift: hide it so the page reads. */}
+        <noscript><style>{'[role="status"][aria-label="Loading"]{display:none!important}'}</style></noscript>
         {children}
         <Analytics />
       </body>

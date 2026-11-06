@@ -1,7 +1,7 @@
 # Performance budget
 
 Measured with Lighthouse 12, mobile preset, against a local production build (`next build && next start`).
-Baseline: `docs/perf/baseline.json`. After Prompt 1: `docs/perf/after-1.json`. After Prompt 3: `docs/perf/after-3.json`. After Prompt 4: `docs/perf/after-4.json`.
+Baseline: `docs/perf/baseline.json`. After Prompt 1: `docs/perf/after-1.json`. After Prompt 3: `docs/perf/after-3.json`. After Prompt 4: `docs/perf/after-4.json`. Final: `docs/perf/after-final.json` (mobile), `docs/perf/after-final-desktop.json`.
 
 | Metric | Budget | Baseline (2026-11-05) | After Prompt 1 | After Prompt 3 | After Prompt 4 |
 | --- | --- | --- | --- | --- | --- |
@@ -42,6 +42,30 @@ Not yet measured on a real mid-range Android.
 - LCP is NOT reliably measurable on this laptop: the same build ranged 5.0–7.5 s between back-to-back runs
   (the machine is also running the editor, dev tooling and Chrome). Treat LCP as unverified until it is
   measured on the Vercel preview with PageSpeed Insights, which is part of Prompt 11.
+
+## Final (Prompt 11)
+
+Lighthouse 12.8.2, local production build, this laptop. Mobile = default mobile preset (simulated 4x CPU); desktop = desktop preset.
+**Measured on a working tree that also contained uncommitted hero work by the owner (HeroSpecimen, SmoothScroll) — see the hand-off note.**
+
+| | Baseline (mobile) | Final mobile (2 runs) | Final desktop |
+| --- | --- | --- | --- |
+| Performance | 32 | 37 / 38 | 69 |
+| Accessibility | 96 | **100** | **100** |
+| Best practices | 96 | 96 | 96 |
+| SEO | 100 | 100 | 100 |
+| FCP | 3.6 s | 2.4 / 2.8 s | 0.6 s |
+| LCP | 5.8 s | 6.3 / 5.5 s (not better) | 1.0 s |
+| TBT | 16,360 ms | 3,860 / 5,030 ms | 640 ms |
+| CLS | 0.022 | 0.001 | 0.011 |
+| Transferred | 3.9 MB | 570 KB | 554 KB |
+| Script transfer | 644 KB | 326 KB | 326 KB |
+| Page height, 1440 | ~41,000 px | **17,907 px** (budget 18,000) | |
+| Page height, 1024 / 390 | | 15,657 px / ~25,000 px | |
+
+Budget status: transfer ✓, CLS ✓, page height ✓, WebGL ✓ (3.4 KB). **Mobile LCP and TBT are still over budget** and Lighthouse
+scores on this machine swing ±2 s run to run. Root cause is unchanged since Prompt 1: `/` is rendered per request because of the
+CSP nonce (TTFB, no CDN cache) and the page hydrates ~326 KB of script. The one-line fix is in the open decision below.
 
 ## Open decision: static `/` vs the current CSP nonce
 

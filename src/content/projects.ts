@@ -377,13 +377,6 @@ export const FEATURED: FeaturedScene[] = [
     tags: ['Python', 'Streamlit', 'Gemini AI'],
     shots: ['/projects/chronos.png', '/projects/chronos_2.png'],
   },
-  {
-    id: 'wytnest', template: 'device',
-    role: 'Product, architecture and build',
-    outcome: 'A multi-tenant testimonial platform with video, embeddable widgets and dual-rail payments in NGN and USD.',
-    tags: ['Next.js', 'Supabase', 'Stripe'],
-    shots: ['/projects/wytnest_hero.png'],
-  },
 ];
 
 export const projectById = (id: string) => PROJECTS.find((p) => p.id === id);
