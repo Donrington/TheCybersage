@@ -1,192 +1,329 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { ArrowDownRight } from 'lucide-react';
+import { useEffect, useRef, type MouseEvent } from 'react';
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { animate, scrambleText } from 'animejs';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { POSITIONING } from '@/content/site';
-import { NowChip } from '@/components/NowChip';
-import { HeroField } from '@/components/hero/HeroField';
+import { HeroSpecimen } from '@/components/hero/HeroSpecimen';
+import { lenisInstance } from '@/lib/SmoothScroll';
 
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@_!∆';
 
+const SPECS = [
+  { label: 'Role', value: 'Infrastructure & systems architect' },
+  { label: 'Base', value: 'Lagos, Nigeria / UTC+1' },
+  { label: 'Stack', value: 'AWS · Go · Django · PostgreSQL' },
+] as const;
+
 /**
- * Hero, v2. The name is real text in the server HTML (readable, indexable, and
- * what no-JS and reduced-motion visitors see); after mount each line runs the
- * original glyph-scramble reveal, and replays on hover. The network field is
- * WebGL behind it, loaded after first paint; without WebGL the static poster
- * below IS the background.
+ * The hero is drawn as a cover sheet: a drafting grid, a specimen portrait
+ * scanned by the same seven layers as the loader, and a title block of real
+ * facts along the bottom edge.
+ *
+ * The name stays real text in the server HTML. Once the loader hands over, each
+ * line rises out of a mask and runs the original glyph-scramble; the second
+ * line is an outline until you point at it, then fills and scrambles again.
  */
 export function HeroV2() {
+  const sheet = useRef<HTMLElement>(null);
   const line1 = useRef<HTMLSpanElement>(null);
   const line2 = useRef<HTMLSpanElement>(null);
-  const card = useRef<HTMLDivElement>(null);
+  const ctaWrap = useRef<HTMLSpanElement>(null);
+  const cta = useRef<HTMLAnchorElement>(null);
 
-  // Crosshair with live coordinates (fine pointers only). Idea from the heronaiapp.com study.
+  // Entrance and the name scramble, both released by the loader. The sheet is
+  // armed on mount (the loader covers it) and disarmed on `loader-done`; CSS
+  // transitions do the rest. A timeout means a stuck loader can never hold the
+  // page hostage. Reduced motion never arms anything.
   useEffect(() => {
-    const el = card.current;
-    if (!el || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    let raf = 0, x = 0, y = 0;
-    const paint = () => {
-      raf = 0;
-      el.style.setProperty('--cx', x + 'px');
-      el.style.setProperty('--cy', y + 'px');
-      const lab = el.querySelector<HTMLElement>('[data-xy]');
-      if (lab) lab.textContent = 'X ' + String(Math.round(x)).padStart(4, '0') + '  Y ' + String(Math.round(y)).padStart(4, '0');
-    };
-    const move = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      x = e.clientX - r.left; y = e.clientY - r.top;
-      el.dataset.xhair = 'on';
-      if (!raf) raf = requestAnimationFrame(paint);
-    };
-    const leave = () => { el.dataset.xhair = 'off'; };
-    el.addEventListener('pointermove', move, { passive: true });
-    el.addEventListener('pointerleave', leave);
-    return () => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); cancelAnimationFrame(raf); };
-  }, []);
-
-  // Scroll shrink + dim of the whole card as the hero leaves (CSS var, no re-renders).
-  useEffect(() => {
-    const el = card.current;
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const p = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.9)));
-      el.style.setProperty('--hs', p.toFixed(3));
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
-  }, []);
-
-  useEffect(() => {
+    const el = sheet.current;
+    if (!el) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const els = [line1.current, line2.current];
-    if (els.some((e) => !e)) return;
-    const cleanups: (() => void)[] = [];
 
-    const run = (el: HTMLElement, delay = 0, duration = 820) =>
-        animate(el, {
-          innerHTML: scrambleText({ chars: SCRAMBLE_CHARS, duration, delay, perturbation: 0.22, cursor: '█▓▒░', settleDuration: 260 }),
-        });
-    const start = () => {
-      run(els[0]!, 120);
-      run(els[1]!, 260);
+    const lines = [line1.current, line2.current].filter(Boolean) as HTMLElement[];
+    let alive = true;
+    let started = false;
+    let fallback = 0;
+
+    const run = (target: HTMLElement | undefined, delay = 0, duration = 820) => {
+      if (!target || !alive) return;
+      animate(target, {
+        innerHTML: scrambleText({
+          chars: SCRAMBLE_CHARS,
+          duration,
+          delay,
+          perturbation: 0.22,
+          cursor: '█▓▒░',
+          settleDuration: 260,
+        }),
+      });
     };
+
+    const start = () => {
+      if (!alive || started) return;
+      started = true;
+      window.clearTimeout(fallback);
+      // Two frames so the armed state paints before the transition begins.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (alive) el.removeAttribute('data-armed');
+        });
+      });
+      window.setTimeout(() => {
+        run(lines[0], 260);
+        run(lines[1], 380);
+      }, 240);
+    };
+
+    el.setAttribute('data-armed', '');
     const done = (window as unknown as { __loaderDone?: boolean }).__loaderDone;
     if (done) start();
-    else window.addEventListener('loader-done', start, { once: true });
-    cleanups.push(() => window.removeEventListener('loader-done', start));
-    for (const el of els as HTMLElement[]) {
-      const onEnter = () => run(el, 0, 700);
-      el.addEventListener('pointerenter', onEnter);
-      cleanups.push(() => el.removeEventListener('pointerenter', onEnter));
+    else {
+      window.addEventListener('loader-done', start, { once: true });
+      fallback = window.setTimeout(start, 6000);
     }
+
+    const onEnter = (event: Event) => {
+      if (!started) return;
+      run(event.currentTarget as HTMLElement, 0, 700);
+    };
+    lines.forEach((line) => line.addEventListener('pointerenter', onEnter));
+
     return () => {
-      cleanups.forEach((fn) => fn());
+      alive = false;
+      window.clearTimeout(fallback);
+      window.removeEventListener('loader-done', start);
+      lines.forEach((line) => line.removeEventListener('pointerenter', onEnter));
+      el.removeAttribute('data-armed');
     };
   }, []);
+
+  // A faint drafting spotlight follows the pointer. Direct DOM writes only, so
+  // moving the mouse never re-renders React.
+  useEffect(() => {
+    const el = sheet.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    let raf = 0;
+    let x = 0;
+    let y = 0;
+    const paint = () => {
+      raf = 0;
+      el.style.setProperty('--mx', `${x}px`);
+      el.style.setProperty('--my', `${y}px`);
+      el.style.setProperty('--spot', '1');
+    };
+    const move = (event: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+      if (!raf) raf = requestAnimationFrame(paint);
+    };
+    const leave = () => {
+      el.style.setProperty('--spot', '0');
+    };
+
+    el.addEventListener('pointermove', move, { passive: true });
+    el.addEventListener('pointerleave', leave);
+    return () => {
+      el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerleave', leave);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // Magnetic primary CTA: a few pixels of lag toward the pointer, springing
+  // back on leave. Disabled for touch and reduced motion.
+  useEffect(() => {
+    const wrap = ctaWrap.current;
+    const anchor = cta.current;
+    if (!wrap || !anchor) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    let raf = 0;
+    let tx = 0;
+    let ty = 0;
+    let cx = 0;
+    let cy = 0;
+    const clamp = (n: number) => Math.max(-5, Math.min(5, n));
+
+    const tick = () => {
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      wrap.style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0)`;
+      if (Math.abs(tx - cx) > 0.08 || Math.abs(ty - cy) > 0.08) raf = requestAnimationFrame(tick);
+      else raf = 0;
+    };
+    const wake = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    const move = (event: PointerEvent) => {
+      const rect = anchor.getBoundingClientRect();
+      tx = clamp((event.clientX - (rect.left + rect.width / 2)) * 0.16);
+      ty = clamp((event.clientY - (rect.top + rect.height / 2)) * 0.16);
+      wake();
+    };
+    const leave = () => {
+      tx = 0;
+      ty = 0;
+      wake();
+    };
+
+    wrap.addEventListener('pointermove', move);
+    wrap.addEventListener('pointerleave', leave);
+    return () => {
+      wrap.removeEventListener('pointermove', move);
+      wrap.removeEventListener('pointerleave', leave);
+      cancelAnimationFrame(raf);
+      wrap.style.transform = '';
+    };
+  }, []);
+
+  // Scroll choreography: the sheet lifts away while the name lines drift apart
+  // and the specimen lags behind, giving the handoff to Work some depth. GSAP
+  // is ticked by Lenis in SmoothScroll, so the scrub stays in sync.
+  useEffect(() => {
+    const root = sheet.current;
+    if (!root) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 960px)', () => {
+      const q = gsap.utils.selector(root);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.5,
+        },
+      });
+
+      tl.to(q('.hero-topline'), { yPercent: -120, opacity: 0, duration: 0.35, ease: 'none' }, 0)
+        .to(q('.hero-copy'), { y: -80, opacity: 0.12, duration: 1, ease: 'none' }, 0)
+        .to(q('.hero-specimen'), { y: 56, opacity: 0.2, duration: 1, ease: 'none' }, 0)
+        .fromTo(q('.hero-plate-parallax'), { yPercent: 0 }, { yPercent: 6, duration: 1, ease: 'none' }, 0)
+        .to(q('.hero-grid-bg'), { y: 48, duration: 1, ease: 'none' }, 0);
+
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    });
+
+    return () => mm.revert();
+  }, []);
+
+  const onWork = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = document.querySelector<HTMLElement>('#work');
+    if (!target) return;
+    event.preventDefault();
+
+    if (lenisInstance) {
+      lenisInstance.scrollTo('#work', { duration: 1.6 });
+      return;
+    }
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY,
+      behavior: reduced ? 'auto' : 'smooth',
+    });
+  };
 
   return (
     <section
+      ref={sheet}
       id="top"
       aria-labelledby="hero-name"
-      data-theme="dark"
-      className="relative flex w-full min-h-[100svh]"
-      style={{ isolation: 'isolate', zIndex: 2, padding: 'clamp(4px, 0.6vw, 10px)' }}
+      data-theme="light"
+      className="hero-sheet"
     >
-      <div
-        ref={card}
-        className="hero-card relative flex flex-1 flex-col overflow-hidden bg-[#0A0A0A]"
-        style={{ borderRadius: 0 }}
-      >
-        {/* Rotating light ring around the card, as before. */}
-        <span aria-hidden className="beam-ring pointer-events-none absolute inset-0 z-20 motion-reduce:hidden" style={{ padding: 2, animationDuration: '9s', borderRadius: 'inherit' }} />
-        {/* Crosshair + live coordinates. */}
-        <div aria-hidden className="hero-xhair pointer-events-none absolute inset-0 z-[15] hidden [@media(hover:hover)]:block">
-          <span className="hero-xhair-v" />
-          <span className="hero-xhair-h" />
-          <span data-xy className="hero-xhair-label t-mono" />
-        </div>
-        {/* Mono spec block (real facts only). */}
-        <dl aria-label="At a glance" className="t-mono absolute top-24 right-[clamp(1rem,4vw,5rem)] z-10 hidden grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-on-ink-2 lg:grid">
-          <dt className="text-on-ink-3">ROLE</dt><dd>INFRASTRUCTURE &amp; SYSTEMS ARCHITECT</dd>
-          <dt className="text-on-ink-3">BASE</dt><dd>LAGOS, NIGERIA · UTC+1</dd>
-          <dt className="text-on-ink-3">STACK</dt><dd>AWS · GO · DJANGO · POSTGRESQL</dd>
-          <dt className="text-on-ink-3">STATUS</dt><dd className="flex items-center gap-2"><span aria-hidden className="h-1.5 w-1.5 rounded-full bg-live" />AVAILABLE FOR WORK</dd>
-        </dl>
-        {/* Background: static poster (always), WebGL field fades in over it. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
-          <div className="hero-poster absolute inset-0" />
-          <HeroField />
-          {/* Keeps the name and buttons on calm ground whatever the field does. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 85% 75% at 0% 100%, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.7) 40%, rgba(10,10,10,0) 75%)',
-            }}
-          />
-        </div>
+      <div aria-hidden className="hero-grid-bg" />
+      <div aria-hidden className="hero-glow" />
+      <div aria-hidden className="hero-spotlight" />
 
-        <div className="relative z-10 flex flex-1 flex-col justify-end px-[clamp(1rem,4vw,5rem)] pt-28 pb-24 sm:pb-[clamp(2.5rem,6vw,6rem)]">
-          <p className="t-label text-on-ink-2 mb-[clamp(1.25rem,2.5vw,2.5rem)] flex flex-wrap gap-x-2 gap-y-1 lg:hidden">
-            <span>Infrastructure &amp; Systems Architect</span>
-            <span aria-hidden className="text-on-ink-3">·</span>
-            <span>Lagos, Nigeria</span>
-            <span aria-hidden className="hidden text-on-ink-3 sm:inline">·</span>
-            <span className="hidden sm:inline">Remote worldwide</span>
-          </p>
+      <div className="hero-content">
+        <header className="hero-topline">
+          <span>Cybersage</span>
+          <span className="hero-topline-mid">Portfolio / 2026</span>
+          <span>Cover sheet / 00</span>
+        </header>
 
-          <h1
-            id="hero-name"
-            aria-label="Abakwe Carrington"
-            className="font-black leading-[0.88] tracking-tighter text-white"
-            style={{ fontFamily: 'Satoshi, system-ui, sans-serif', fontWeight: 800, fontSize: 'clamp(3.6rem, 11.5vw, 14rem)' }}
-          >
-            <span className="hero-line"><span ref={line1} className="cursor-default select-none">Abakwe</span></span>
-            <span className="hero-line"><span ref={line2} className="cursor-default select-none">Carrington</span></span>
-          </h1>
+        <div className="hero-stage">
+          <div className="hero-copy">
+            <p className="hero-kicker">
+              <span>Infrastructure &amp; systems architect</span>
+              <span aria-hidden className="hero-kicker-line" />
+              <span>Lagos, Nigeria / UTC+1</span>
+            </p>
 
-          <p
-            className="hero-slide mt-[clamp(1rem,2.5vw,2.25rem)] max-w-[34ch] text-on-ink-1"
-            style={{
-              fontFamily: 'var(--font-instrument), Georgia, serif',
-              fontStyle: 'italic',
-              fontSize: 'clamp(1.35rem, 2.6vw, 2.6rem)',
-              lineHeight: 1.2,
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {POSITIONING}
-          </p>
+            <h1 id="hero-name" aria-label="Abakwe Carrington" className="hero-name">
+              <span className="hero-name-mask">
+                <span ref={line1} className="hero-name-line cursor-default select-none">ABAKWE</span>
+              </span>
+              <span className="hero-name-mask">
+                <span ref={line2} className="hero-name-line hero-name-outline cursor-default select-none">CARRINGTON</span>
+              </span>
+            </h1>
 
-          <div className="hero-fade mt-[clamp(2rem,4vw,3.5rem)] flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href="#work"
-                data-cursor="view"
-                className="group relative inline-flex min-h-11 items-center gap-2 bg-white px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#0A0A0A] transition-colors duration-200 hover:bg-white/85"
-              >
-                <span aria-hidden className="metal-edge motion-reduce:hidden" style={{ position: 'absolute', inset: 0, padding: 1.5, pointerEvents: 'none', animationDuration: '7s' }} />
-                <span className="relative">View work</span>
-                <ArrowDownRight size={14} aria-hidden className="transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
-              </a>
+            <p className="hero-positioning">{POSITIONING}</p>
+
+            <div className="hero-actions">
+              <span ref={ctaWrap} className="hero-cta-wrap">
+                <a
+                  ref={cta}
+                  href="#work"
+                  onClick={onWork}
+                  data-cursor="view"
+                  data-theme="dark"
+                  className="hero-cta"
+                >
+                  <span>View work</span>
+                  <span aria-hidden className="hero-cta-icon">
+                    <ArrowDownRight size={16} strokeWidth={2} />
+                  </span>
+                </a>
+              </span>
+
               <button
                 type="button"
                 data-cursor="hire"
                 onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
-                className="inline-flex min-h-11 items-center border border-white/60 px-6 text-xs font-medium uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:border-white hover:bg-white/10"
+                className="hero-contact"
               >
-                Contact
+                <span>Contact</span>
+                <ArrowUpRight size={13} aria-hidden />
               </button>
             </div>
-
-            <NowChip />
           </div>
+
+          <HeroSpecimen />
         </div>
+
+        <dl className="hero-titleblock" aria-label="At a glance">
+          {SPECS.map((spec) => (
+            <div key={spec.label} className="hero-cell">
+              <dt>{spec.label}</dt>
+              <dd>{spec.value}</dd>
+            </div>
+          ))}
+          <div className="hero-cell">
+            <dt>Status</dt>
+            <dd>
+              <span className="hero-status">
+                <span aria-hidden className="hero-live" />
+                <span>Available for work</span>
+              </span>
+            </dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

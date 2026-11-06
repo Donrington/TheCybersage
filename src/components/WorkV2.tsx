@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { SECTIONS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
@@ -12,6 +14,21 @@ import { ProjectVideo } from '@/components/ProjectVideo';
 import { Corners } from '@/components/ui/Corners';
 
 const pad = (n: number) => String(n).padStart(2, '0');
+
+/**
+ * The spread rhythm. Copy and media swap sides on every plate, and the copy
+ * column widens in a 5 → 6 → 7 → 5 cycle, so no two neighbours share a
+ * silhouette. Kept as data so the markup stays one predictable branch.
+ */
+const SPREADS = [
+  { side: 'left', copy: 5 },
+  { side: 'right', copy: 5 },
+  { side: 'left', copy: 6 },
+  { side: 'right', copy: 6 },
+  { side: 'left', copy: 7 },
+  { side: 'right', copy: 7 },
+  { side: 'left', copy: 5 },
+] as const;
 
 /** True once the element is within about one viewport. Images mount then, not before. */
 function useNear<T extends HTMLElement>() {
@@ -35,174 +52,226 @@ function useNear<T extends HTMLElement>() {
   return [ref, near] as const;
 }
 
-/** A screenshot in a fixed 16:9 browser frame: no layout shift whether or not the image has mounted. */
-function Shot({ src, alt, near, sizes, plate, className = '' }: { src: string; alt: string; near: boolean; sizes: string; plate?: string; className?: string }) {
+/**
+ * A screenshot in a print-plate frame: a mono caption bar, a sharp hairline
+ * border, corner ticks, and a fixed aspect ratio so nothing shifts when the
+ * image mounts. `work-shot` is the reveal target for useScrollEngine.
+ */
+function Shot({
+  src,
+  alt,
+  near,
+  sizes,
+  plate,
+  meta,
+  aspect,
+  className = '',
+  bar = true,
+}: {
+  src: string;
+  alt: string;
+  near: boolean;
+  sizes: string;
+  plate: string;
+  meta?: string;
+  aspect: string;
+  className?: string;
+  bar?: boolean;
+}) {
   return (
-    <div className={`work-shot relative border border-on-ink-line bg-[#141414] ${className}`}>
-      <div aria-hidden className="t-mono flex h-7 items-center justify-between border-b border-on-ink-line px-3 text-on-ink-3">
-        <span>{plate ?? 'PLATE'}</span>
-        <span>+</span>
-      </div>
-      <div className="relative aspect-[16/9] overflow-hidden">
-        {near && <Image src={src} alt={alt} fill sizes={sizes} quality={70} className="object-cover object-top" />}
+    <div className={`work-frame ${className}`}>
+      {bar && (
+        <div aria-hidden className="work-frame-bar">
+          <span>{plate}</span>
+          <span className="work-frame-meta">{meta ?? 'LIVE'}</span>
+        </div>
+      )}
+      <div className="work-shot work-frame-body" style={{ aspectRatio: aspect }}>
+        {near && (
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            quality={78}
+            loading="eager"
+            className="work-frame-img"
+          />
+        )}
       </div>
       <Corners />
     </div>
   );
 }
 
-function SceneText({ scene, project, index, total }: { scene: FeaturedScene; project: Project; index: number; total: number }) {
+function SceneMedia({
+  scene,
+  project,
+  index,
+  near,
+}: {
+  scene: FeaturedScene;
+  project: Project;
+  index: number;
+  near: boolean;
+}) {
+  const alt = `${project.name}: ${project.category}`;
+  const plate = `PLATE ${pad(index + 1)}`;
+  const host = project.link ? new URL(project.link).host.replace(/^www\./, '').toUpperCase() : 'PRIVATE BUILD';
+
+  if (scene.template === 'pair') {
+    return (
+      <figure className="work-media work-media-pair">
+        <div className="work-pair-stage">
+          <Shot
+            className="work-pair-a"
+            src={scene.shots[0]}
+            alt={alt}
+            near={near}
+            sizes="(min-width: 900px) 36vw, 82vw"
+            plate={plate}
+            meta={host}
+            aspect="16 / 10"
+          />
+          <Shot
+            className="work-pair-b"
+            src={scene.shots[1] ?? scene.shots[0]}
+            alt=""
+            near={near}
+            sizes="(min-width: 900px) 24vw, 54vw"
+            plate={plate}
+            aspect="16 / 10"
+            bar={false}
+          />
+        </div>
+        <figcaption className="work-media-cap">
+          <span>FIG. {pad(index + 1)} / {project.name}</span>
+          <span>TWO VIEWS</span>
+        </figcaption>
+      </figure>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-5">
-      <div className="t-label flex flex-wrap items-center gap-x-3 gap-y-1 text-on-ink-3">
-        <span className="t-mono text-on-ink-2">
-          {pad(index + 1)} / {pad(total)}
-        </span>
-        <span aria-hidden>·</span>
-        <span>{project.category}</span>
-        <span aria-hidden>·</span>
-        <span>{project.year}</span>
+    <figure className="work-media work-media-single">
+      <Shot
+        className="work-media-frame"
+        src={scene.shots[0]}
+        alt={alt}
+        near={near}
+        sizes="(min-width: 900px) 52vw, 100vw"
+        plate={plate}
+        meta={host}
+        aspect={scene.template === 'device' ? '4 / 3' : '16 / 10'}
+      />
+      <figcaption className="work-media-cap">
+        <span>FIG. {pad(index + 1)} / {project.name}</span>
+        <span>{scene.template === 'device' ? 'PRODUCT SURFACE' : 'LIVE INTERFACE'}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function SceneCopy({ scene, project, index }: { scene: FeaturedScene; project: Project; index: number }) {
+  return (
+    <div className="work-copy">
+      <h3 className="work-name">{project.name}</h3>
+      <p className="work-outcome">{scene.outcome}</p>
+
+      <div className="work-facts">
+        {scene.metric ? (
+          <p className="work-metric">
+            <span className="work-metric-value">{scene.metric.value}</span>
+            <span className="work-metric-label">{scene.metric.label}</span>
+          </p>
+        ) : (
+          <p className="work-plate-mark" aria-hidden="true">
+            <span>{pad(index + 1)}</span>
+            <small>Plate</small>
+          </p>
+        )}
+
+        <dl className="work-spec">
+          <div>
+            <dt>Role</dt>
+            <dd>{scene.role}</dd>
+          </div>
+          <div>
+            <dt>Stack</dt>
+            <dd>{scene.tags.join(' / ')}</dd>
+          </div>
+        </dl>
       </div>
-      <h3 className="t-h3 text-white" style={{ fontSize: 'clamp(2rem, 3.6vw, 3.5rem)', lineHeight: 1 }}>
-        {project.name}
-      </h3>
-      <p className="t-body max-w-[46ch] text-on-ink-2">{scene.outcome}</p>
-      <p className="t-label text-on-ink-3">
-        Role <span className="text-on-ink-2">· {scene.role}</span>
-      </p>
-      <ul className="flex flex-wrap gap-2" aria-label="Stack">
-        {scene.tags.map((t) => (
-          <li key={t} className="t-label border border-on-ink-line px-3 py-1.5 text-on-ink-2">
-            {t}
-          </li>
-        ))}
-      </ul>
-      <div className="flex flex-wrap items-center gap-3 pt-1">
+
+      <div className="work-actions">
         {project.link && (
           <a
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex min-h-12 items-center gap-2 border border-white/60 px-5 text-xs font-medium uppercase tracking-[0.18em] text-white transition-colors duration-200 hover:border-white hover:bg-white/10"
+            className="work-link"
           >
-            Visit site
-            <ArrowUpRight size={14} aria-hidden className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <span>Visit site</span>
+            <ArrowUpRight size={14} aria-hidden />
             <span className="sr-only">(opens {project.name} in a new tab)</span>
           </a>
         )}
-        {project.video && <ProjectVideo src={project.video} poster={project.videoPoster} title={project.name} compact />}
+        {project.video && (
+          <ProjectVideo src={project.video} poster={project.videoPoster} title={project.name} compact />
+        )}
       </div>
     </div>
   );
 }
 
-function Metric({ metric, compact = false }: { metric: NonNullable<FeaturedScene['metric']>; compact?: boolean }) {
-  return (
-    <p className="flex flex-col">
-      <span className="font-black leading-[0.85] tracking-tighter text-white" style={{ fontSize: compact ? 'clamp(3rem, 5vw, 4.5rem)' : 'clamp(3.5rem, min(8vw, 13svh), 7.5rem)' }}>
-        {metric.value}
-      </span>
-      <span className="t-label mt-3 text-on-ink-2">{metric.label}</span>
-    </p>
-  );
-}
-
-function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index: number; total: number; onActive: (i: number) => void }) {
+function Scene({ scene, index, total }: { scene: FeaturedScene; index: number; total: number }) {
   const project = projectById(scene.id);
   const [ref, near] = useNear<HTMLLIElement>();
-  const innerRef = useRef<HTMLDivElement>(null);
-  // On short screens shrink the plate's content so it always fits between the nav and the bottom edge.
-  useEffect(() => {
-    const el = innerRef.current;
-    if (!el) return;
-    const fit = () => {
-      el.style.zoom = '1';
-      if (window.innerWidth < 768) return;
-      const room = window.innerHeight * 0.77 - 150;
-      const h = el.getBoundingClientRect().height;
-      if (h > room) el.style.zoom = String(Math.max(0.62, room / h));
-    };
-    fit();
-    window.addEventListener('resize', fit);
-    return () => window.removeEventListener('resize', fit);
-  }, []);
   useScrollEngine(ref, { prop: '--enter', range: 'enter' });
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) onActive(index); }, { rootMargin: '-50% 0px -50% 0px' });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [index, onActive, ref]);
+
   if (!project) return null;
+
+  const spread = SPREADS[index % SPREADS.length];
   const nextProject = FEATURED[index + 1] ? projectById(FEATURED[index + 1].id) : null;
-
-  const alt = `${project.name}: ${project.category}`;
   const host = project.link ? new URL(project.link).host.replace(/^www\./, '').toUpperCase() : 'PRIVATE BUILD';
-  const plate = `PLATE ${pad(index + 1)} · ${host}`;
-  const text = <SceneText scene={scene} project={project} index={index} total={total} />;
-
-  let body: React.ReactNode;
-  if (scene.template === 'device') {
-    // Full-bleed device: the screenshot owns the scene, copy sits beside it.
-    body = (
-      <div className="grid items-center gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12">
-        <div className="order-2 flex flex-col gap-6 md:order-1">
-          {scene.metric && <Metric metric={scene.metric} compact />}
-          {text}
-        </div>
-        <Shot plate={plate} className="order-1 md:order-2" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 58vw, 100vw" />
-      </div>
-    );
-  } else if (scene.template === 'metric') {
-    // Split with a big number: metric and copy left, one screenshot right.
-    body = (
-      <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
-        <div className="flex flex-col gap-8">
-          {scene.metric && <Metric metric={scene.metric} />}
-          {text}
-        </div>
-        <Shot plate={plate} src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 48vw, 100vw" />
-      </div>
-    );
-  } else {
-    // Two-up screenshots, overlapped, beside the metric and copy.
-    body = (
-      <div className="grid items-center gap-8 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12">
-        <div className="order-2 flex flex-col gap-8 md:order-1">
-          {scene.metric && <Metric metric={scene.metric} />}
-          {text}
-        </div>
-        <div className="relative order-1 pb-[24%] md:order-2">
-          <Shot plate={plate} className="w-[84%]" src={scene.shots[0]} alt={alt} near={near} sizes="(min-width: 768px) 49vw, 84vw" />
-          <Shot
-            className="absolute right-0 bottom-0 w-[56%] shadow-[0_24px_60px_rgba(0,0,0,0.6)]"
-            src={scene.shots[1] ?? scene.shots[0]}
-            alt=""
-            near={near}
-            sizes="(min-width: 768px) 33vw, 56vw"
-          />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <li
       ref={ref}
+      data-side={spread.side}
+      data-copy={spread.copy}
+      className="work-case"
       aria-label={`${project.name}, ${index + 1} of ${total}`}
-      className="work-scene md:sticky md:top-0 md:h-[77svh]"
     >
-      {/* Full-height, opaque: it must completely cover the scene it stacks over. */}
-      <article className="work-scene-card relative w-full border-t border-on-ink-line bg-[#0A0A0A] py-10 md:flex md:h-full md:flex-col md:justify-center md:py-0 md:pt-16 md:pb-16">
-        <div ref={innerRef} className="mx-auto w-full max-w-[1440px] px-[clamp(1rem,4vw,5rem)]">
-          {body}
+      <article className="work-case-inner">
+        <div className="work-case-rail">
+          <span className="work-rail-index">
+            {pad(index + 1)}
+            <i>/{pad(total)}</i>
+          </span>
+          <span className="work-rail-cat">{project.category}</span>
+          <span className="work-rail-end">
+            <span>{project.year}</span>
+            <span>{host}</span>
+          </span>
         </div>
-        {/* Caption strip (md+): its own reserved band at the bottom of the plate, so it can never cover content. */}
-        <div aria-hidden className="t-mono absolute right-[clamp(1rem,4vw,5rem)] bottom-3 left-[clamp(1rem,4vw,5rem)] hidden items-center justify-between gap-6 border border-on-ink-line bg-[#0A0A0A] md:flex">
-          <span className="bg-white px-3 py-1.5 text-[#0A0A0A]">PLATE {pad(index + 1)} / {pad(total)}</span>
-          <span className="flex-1 truncate text-on-ink-2">{nextProject ? <>NEXT: <span className="text-white">{nextProject.name.toUpperCase()}</span></> : 'LAST PLATE'}</span>
-          <span className="pr-3 text-on-ink-3">{nextProject ? '[SCROLL TO CONTINUE]' : '[SEE ALL WORK BELOW]'}</span>
+
+        <div className="work-case-grid">
+          <div className="work-case-copy">
+            <SceneCopy scene={scene} project={project} index={index} />
+          </div>
+          <div className="work-case-media">
+            <SceneMedia scene={scene} project={project} index={index} near={near} />
+          </div>
+        </div>
+
+        <div className="work-case-foot">
+          <span className="work-foot-label">Next</span>
+          <span className="work-foot-name">{nextProject ? nextProject.name : 'End of set'}</span>
+          <span aria-hidden className="work-foot-rule" />
+          <span className="work-foot-note">
+            {project.link ? 'LIVE BUILD' : 'PRIVATE BUILD'} / {pad(index + 1)}
+          </span>
         </div>
       </article>
     </li>
@@ -210,62 +279,134 @@ function Scene({ scene, index, total, onActive }: { scene: FeaturedScene; index:
 }
 
 /**
- * Selected Work, v2: eight flagship scenes instead of 26 near-identical ones.
- * Desktop: each scene sticks for one viewport and the next rises over it.
- * Mobile: plain vertical cards. Everything else lives on /work.
+ * Selected Work, v3. Seven full-height editorial plates with alternating sides
+ * and column ratios. On desktop each plate pins at the top and the next rises
+ * over it, with a short GSAP scrub for depth; the plate height is fixed, so
+ * the old caption clipping cannot return. Below 1024px it is a plain readable
+ * list. Everything beyond the shortlist lives on /work.
  */
 export function WorkV2() {
+  const listRef = useRef<HTMLOListElement>(null);
   const total = FEATURED.length;
-  const [active, setActive] = useState(0);
-  const stats: [string, string][] = [[String(PROJECTS.length), 'PROJECTS SHIPPED'], [pad(total), 'FEATURED BELOW'], ['06', 'INDUSTRIES'], ['08', 'COUNTRIES SERVED']];
+
+  // Scroll choreography for the desktop stack. CSS makes every plate sticky
+  // at the top (see the matching media query in globals.css), so each one
+  // holds the screen while the next rises over it. GSAP only scrubs the depth:
+  // the outgoing plate eases back, the incoming media and copy settle forward.
+  // Lenis drives ScrollTrigger from SmoothScroll, so the scrub stays in sync.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 1024px) and (min-height: 720px)', () => {
+      const cases = gsap.utils.toArray<HTMLElement>('.work-case', list);
+
+      cases.forEach((el, i) => {
+        const inner = el.querySelector<HTMLElement>('.work-case-inner');
+        const media = el.querySelector<HTMLElement>('.work-case-media');
+        const copy = el.querySelector<HTMLElement>('.work-case-copy');
+        if (!inner) return;
+
+        if (media) {
+          gsap.fromTo(
+            media,
+            { y: 34 },
+            {
+              y: 0,
+              ease: 'none',
+              scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 55%', scrub: 0.4 },
+            },
+          );
+        }
+        if (copy) {
+          gsap.fromTo(
+            copy,
+            { y: 18 },
+            {
+              y: 0,
+              ease: 'none',
+              scrollTrigger: { trigger: el, start: 'top bottom', end: 'top 60%', scrub: 0.4 },
+            },
+          );
+        }
+
+        // The next plate is the timer for this one's exit: its top travels from
+        // the bottom of the viewport to the top, exactly one plate of scroll.
+        const next = cases[i + 1];
+        if (next) {
+          gsap.to(inner, {
+            y: -28,
+            scale: 0.95,
+            opacity: 0.42,
+            ease: 'none',
+            scrollTrigger: { trigger: next, start: 'top bottom', end: 'top top', scrub: 0.4 },
+          });
+        }
+      });
+    });
+
+    return () => mm.revert();
+  }, []);
+
+  const stats: [string, string][] = [
+    [String(PROJECTS.length), 'PROJECTS SHIPPED'],
+    [pad(total), 'FEATURED BELOW'],
+    ['06', 'INDUSTRIES'],
+    ['08', 'COUNTRIES SERVED'],
+  ];
+
   return (
-    <section id="work" aria-labelledby="work-heading" data-theme="dark" className="relative bg-[#0A0A0A] text-white">
-      <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] pt-[clamp(5rem,10vw,9rem)] pb-[clamp(2rem,5vw,4rem)]">
-        <div className="mb-8 flex items-center gap-4">
-          <span className="t-label text-on-ink-2">{SECTIONS.work.label}</span>
-          <span aria-hidden className="h-px flex-1 bg-on-ink-line" />
-          <span className="t-label text-on-ink-3">
-            {pad(total)} of {PROJECTS.length}
+    <section id="work" aria-labelledby="work-heading" data-theme="dark" className="work-section">
+      <header className="work-head">
+        <div className="work-head-top">
+          <span className="work-head-label">
+            <i aria-hidden />
+            {SECTIONS.work.label}
+          </span>
+          <span aria-hidden className="work-head-line" />
+          <span className="work-head-count">
+            {pad(total)} plates / {PROJECTS.length} projects
           </span>
         </div>
-        <SplitHeading id="work-heading" className="t-h2 max-w-[18ch] text-white" text={SECTIONS.work.heading} />
-        <dl className="mt-10 grid grid-cols-2 border-t border-l border-on-ink-line md:grid-cols-4">
-          {stats.map(([n, l]) => (
-            <div key={l} className="relative border-r border-b border-on-ink-line px-4 py-4">
-              <dt className="t-mono text-on-ink-3">{l}</dt>
-              <dd className="mt-1 text-3xl font-extrabold tracking-tighter tabular-nums text-white">{n}</dd>
+
+        <div className="work-head-main">
+          <SplitHeading id="work-heading" className="t-h2 work-heading" text={SECTIONS.work.heading} />
+
+          <dl className="work-ledger">
+            <div className="work-ledger-lead">
+              <dt>{stats[0][1]}</dt>
+              <dd>{stats[0][0]}</dd>
             </div>
-          ))}
-        </dl>
-      </div>
-
-      <div className="relative">
-        {/* Progress ruler: a tick per plate, the current one lit (md+). */}
-        <div aria-hidden className="pointer-events-none absolute inset-y-0 right-[clamp(0.5rem,1.6vw,1.5rem)] z-20 hidden w-6 md:block">
-          <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center gap-3">
-            {FEATURED.map((f, i) => (
-              <span key={f.id} className={`block h-px transition-all duration-500 ${i === active ? 'w-6 bg-white' : 'w-3 bg-white/30'}`} />
-            ))}
-            <span className="t-mono mt-2 text-on-ink-3">{pad(active + 1)}</span>
-          </div>
+            <div className="work-ledger-rows">
+              {stats.slice(1).map(([n, l]) => (
+                <div key={l} className="work-ledger-row">
+                  <dt>{l}</dt>
+                  <dd>{n}</dd>
+                </div>
+              ))}
+            </div>
+          </dl>
         </div>
-        <ol className="relative">
-          {FEATURED.map((scene, i) => (
-            <Scene key={scene.id} scene={scene} index={i} total={total} onActive={setActive} />
-          ))}
-        </ol>
-      </div>
+      </header>
 
-      <div className="relative z-10 mx-auto flex max-w-[1440px] items-center justify-between gap-6 border-t border-on-ink-line bg-[#0A0A0A] px-[clamp(1rem,4vw,5rem)] py-12">
-        <p className="t-body text-on-ink-2">The latest builds are above. Every project, from fintech to oil &amp; gas, is in the index.</p>
-        <Link
-          href="/work"
-          className="group inline-flex min-h-11 shrink-0 items-center gap-2 bg-white px-6 text-xs font-medium uppercase tracking-[0.18em] text-[#0A0A0A] transition-colors duration-200 hover:bg-white/85"
-        >
-          See all {PROJECTS.length}
-          <ArrowRight size={14} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
+      <ol ref={listRef} className="work-cases">
+        {FEATURED.map((scene, i) => (
+          <Scene key={scene.id} scene={scene} index={i} total={total} />
+        ))}
+      </ol>
+
+      <footer className="work-tail">
+        <p className="work-tail-copy">
+          The latest builds are above. Every project, from fintech to oil &amp; gas, is in the index.
+        </p>
+        <Link href="/work" className="work-tail-link">
+          <span>See all {PROJECTS.length}</span>
+          <ArrowRight size={15} aria-hidden />
         </Link>
-      </div>
+      </footer>
     </section>
   );
 }
