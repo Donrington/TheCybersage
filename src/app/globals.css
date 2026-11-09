@@ -678,6 +678,45 @@ body {
   border-left: 0;
 }
 
+/* Layer stack (hero/HeroStack.tsx): the seven layers drawn as an isometric
+   overlay along the plate's left edge, beside the face. Lines are drawn in
+   paper white and differenced into the plate: ink on the white field, paper
+   over the dark coat. Fades in only after the entrance releases the sheet. */
+.hero-stack {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: clamp(84px, 22%, 150px);
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+  transition: opacity 0.9s var(--ease-sig);
+}
+.hero-stack[data-live] { opacity: 1; }
+.hero-stack[data-mode='3d'][data-live] { pointer-events: auto; }
+.hero-stack-view {
+  position: absolute;
+  inset: 0;
+}
+svg.hero-stack-view {
+  inset: 6px;
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  overflow: visible;
+}
+/* Rail labels become hover targets only while the stack is mounted. */
+.hero-specimen[data-stack] .hero-layer { pointer-events: auto; }
+.hero-layer::after {
+  transform-origin: left center;
+  transition: opacity 0.3s var(--ease-sig), transform 0.3s var(--ease-sig);
+}
+.hero-layer[data-hot] b { color: #0a0a0a; }
+.hero-layer[data-hot]::after {
+  opacity: 1;
+  transform: scaleX(1.6);
+}
+
 .hero-specimen-caption {
   display: flex;
   justify-content: space-between;
@@ -927,6 +966,8 @@ body {
   .hero-plate-scan,
   .hero-packet,
   .hero-live { animation: none !important; }
+  .hero-stack,
+  .hero-layer::after { transition: none; }
 }
 
 /* ── Under the hood v2 (Prompt 5) ───────────────────────────────────────────
