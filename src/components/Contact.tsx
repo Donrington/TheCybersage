@@ -6,12 +6,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
+import { LoopVideo } from '@/components/LoopVideo';
 import { Corners } from '@/components/ui/Corners';
 
 // three + @react-three/fiber in their own chunk, fetched only once Contact is
@@ -451,7 +451,13 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
         >
           <p className="t-mono flex items-center justify-between border-b border-white/15 px-3 py-1.5 text-on-ink-3"><span>FIG. 99 · FINAL SHEET</span><span>+</span></p>
           <div className="relative aspect-[4/5] overflow-hidden lg:aspect-[3/2]">
-            <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover grayscale" />
+            <LoopVideo
+              mp4="/videos/coding-session.mp4"
+              webm="/videos/coding-session.webm"
+              poster="/videos/coding-session-poster.webp"
+              label="Late-night build session: two monitors, one deploy away"
+              className="absolute inset-0 h-full w-full object-cover object-[72%_50%]"
+            />
             <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
           </div>
           <Corners />
