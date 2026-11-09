@@ -748,17 +748,102 @@ body {
   50% { opacity: 0.45; }
 }
 
-/* Entrance: JS adds data-armed on mount, then removes it when the loader hands
-   over. Without JS or under reduced motion nothing is ever hidden. */
-.hero-sheet[data-armed] .hero-topline { opacity: 0; transform: translateY(-6px); }
+/* Entrance: JS adds data-armed on mount, then the anime.js timeline in
+   hero/heroEntrance.ts plays when the loader hands over and removes it when
+   done. Without JS or under reduced motion nothing is ever hidden. The timeline
+   owns every property below while armed, so CSS transitions are switched off. */
+.hero-sheet[data-armed] .hero-grid-bg { opacity: 0; }
+.hero-sheet[data-armed] .hero-topline,
+.hero-sheet[data-armed] .hero-titleblock,
+.hero-sheet[data-armed] .hero-specimen-labels,
+.hero-sheet[data-armed] .hero-cell { --rule: 0; }
+.hero-sheet[data-armed] .hero-topline > span { opacity: 0; transform: translateY(-6px); }
 .hero-sheet[data-armed] .hero-kicker { opacity: 0; }
 .hero-sheet[data-armed] .hero-name-line { transform: translateY(115%); }
-.hero-sheet[data-armed] .hero-positioning { opacity: 0; transform: translateY(18px); }
-.hero-sheet[data-armed] .hero-actions { opacity: 0; transform: translateY(16px); }
-.hero-sheet[data-armed] .hero-plate { opacity: 0; transform: translateY(12px) scale(1.015); }
-.hero-sheet[data-armed] .hero-layer { opacity: 0; transform: translateX(10px); }
+.hero-sheet[data-armed] .hero-positioning { opacity: 0; transform: translateY(20px); }
+.hero-sheet[data-armed] .hero-cta,
+.hero-sheet[data-armed] .hero-contact { opacity: 0; transform: translateY(16px); }
+.hero-sheet[data-armed] .hero-plate { clip-path: inset(0 0 100% 0); }
+.hero-sheet[data-armed] .hero-layer { opacity: 0; transform: translateX(-14px); }
 .hero-sheet[data-armed] .hero-specimen-caption { opacity: 0; }
-.hero-sheet[data-armed] .hero-titleblock { opacity: 0; transform: translateY(14px); }
+.hero-sheet[data-armed] .hero-cell > * { opacity: 0; }
+.hero-sheet[data-armed] .hero-topline > span,
+.hero-sheet[data-armed] .hero-kicker,
+.hero-sheet[data-armed] .hero-positioning,
+.hero-sheet[data-armed] .hero-cta,
+.hero-sheet[data-armed] .hero-contact,
+.hero-sheet[data-armed] .hero-plate,
+.hero-sheet[data-armed] .hero-layer,
+.hero-sheet[data-armed] .hero-specimen-caption { transition: none; }
+/* Keep the outline's colour and stroke transitions live; only the rise is timeline-driven. */
+.hero-sheet[data-armed] .hero-name-line { transition-property: none; }
+.hero-sheet[data-armed] .hero-name-outline { transition-property: color, -webkit-text-stroke-color; }
+
+/* Hairlines that draw in. Each used to be a plain border; the border stays as
+   a transparent spacer so layout is unchanged, and a 1px pseudo-element in the
+   same colour sits on the same pixel row, scaled by --rule (1 when idle). */
+.hero-topline { position: relative; border-bottom-color: transparent; }
+.hero-topline::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: rgba(10, 10, 10, 0.14);
+  transform: scaleX(var(--rule, 1));
+  transform-origin: left center;
+  pointer-events: none;
+}
+.hero-titleblock { position: relative; border-top-color: transparent; }
+.hero-titleblock::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(10, 10, 10, 0.16);
+  transform: scaleX(var(--rule, 1));
+  transform-origin: left center;
+  pointer-events: none;
+}
+.hero-specimen-labels::before {
+  transform: scaleY(var(--rule, 1));
+  transform-origin: top center;
+}
+@media (min-width: 960px) {
+  .hero-cell { position: relative; }
+  .hero-cell:not(:last-child) { border-right-color: transparent; }
+  .hero-cell:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    width: 1px;
+    background: rgba(10, 10, 10, 0.1);
+    transform: scaleY(var(--rule, 1));
+    transform-origin: top center;
+    pointer-events: none;
+  }
+}
+
+/* One-shot scan band that settles over the portrait during the entrance. Hidden
+   at rest; the timeline sweeps it once. */
+.hero-plate-glitch {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 12%;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(10, 10, 10, 0.14) 0 1px, transparent 1px 3px),
+    linear-gradient(to bottom, transparent, rgba(10, 10, 10, 0.08) 50%, transparent);
+  mix-blend-mode: multiply;
+}
 
 .hero-kicker { transition: opacity 0.8s var(--ease-sig) 0.32s; }
 .hero-positioning { transition: opacity 0.9s var(--ease-sig) 0.52s, transform 0.9s var(--ease-sig) 0.52s; }

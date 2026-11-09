@@ -42,6 +42,7 @@ export function HeroSpecimen() {
             />
           </div>
           <span className="hero-plate-scan" />
+          <span className="hero-plate-glitch" />
           <span className="hero-scanlines" />
           <span className="hero-packet-track"><span className="hero-packet" /></span>
           <span className="hero-plate-frame" />
