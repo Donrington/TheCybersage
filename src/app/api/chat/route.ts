@@ -139,9 +139,6 @@ Storefront and back office for a premium fashion accessories label based in Port
 Terryon Fagan Vinyl Flooring, 2026, Home Services, terryonfaganflooring.com.
 Marketing site for a vinyl flooring specialist in Gloucester, Massachusetts. An arch-clipped media hero with contour arc motifs, a bento-grid floor range with detail modals, a seasonal comparison toggle, and three labour pricing tiers. The contact pipeline is hardened with CSRF tokens, rate limiting, input escaping, and Resend delivery, and it degrades gracefully to a phone prompt when no API key is present. LocalBusiness JSON-LD structured data supports local search. Stack: Next.js 15, Tailwind, Framer Motion, Resend.
 
-Judy Golden Tiling Company, 2026, Home Services, judygoldentiling.com.
-Marketing site for a tiling business in Gulfport, Mississippi. The design system is taken directly from the brand board — a hard-edged identity with no border radius anywhere, because the brand mark is a hard-edged diamond over a square inlay; gold is the single accent and appears in every section, while teal is reserved strictly for structural hairlines and never for buttons. Space Grotesk, Inter, and JetBrains Mono are loaded through next/font. Same hardened contact architecture as the Terryon Fagan build. Stack: Next.js 15, Tailwind, Framer Motion, Resend.
-
 Orion — NextGen Robotics AI Surveillance System, 2025, nextgenerationrobotics.org.
 A distributed AI surveillance platform across three microservices: Orion-Core on the embedded camera device handling video capture and streaming, OrionUI as the Django Channels WebSocket bridge and browser dashboard, and Orion-Storage as a Flask REST API on a dedicated VPS for video upload and metadata management. The AI inference layer featuring motion detection, person recognition, and thermal pipeline leak detection is currently in active development.
 

@@ -224,16 +224,6 @@ const ALL_PROJECTS: Project[] = [
     link: 'https://terryonfaganflooring.com',
   },
   {
-    id: 'judygolden',
-    name: 'Judy Golden Tiling',
-    category: 'Home Services',
-    tagline: 'Marketing site for a Gulfport, Mississippi tiling company. Hard-edged brand system with a single gold accent, LocalBusiness structured data, and a CSRF-protected contact pipeline that degrades gracefully without keys.',
-    stack: ['Next.js', 'Tailwind', 'Framer Motion', 'Resend'],
-    image: '/projects/judygolden.png',
-    year: '2026',
-    link: 'https://judygoldentiling.com',
-  },
-  {
     id: 'wynscollections',
     name: 'Wyns Collections',
     category: 'Ecommerce Platform',
@@ -294,7 +284,7 @@ export const VERTICAL_OF: Record<string, Vertical> = {
   wytnest: 'saas', chronos: 'saas', ver: 'saas', tuffapp: 'saas', techhub: 'saas', amanigo: 'saas', nextgen: 'saas',
   axflo: 'energy', samdus: 'energy', winsko: 'energy', deets: 'energy',
   handyman: 'brand', twerk: 'brand', chrisconteras: 'brand', myrakeleher: 'brand', tuantling: 'brand',
-  terryonfagan: 'brand', judygolden: 'brand', theblacke: 'brand',
+  terryonfagan: 'brand', theblacke: 'brand',
 };
 
 export type SceneTemplate = 'device' | 'metric' | 'pair';
