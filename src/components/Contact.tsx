@@ -11,9 +11,9 @@ import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
+import { LoopVideo } from '@/components/LoopVideo';
 import { Corners } from '@/components/ui/Corners';
 import { InkWordmark } from '@/components/ui/InkWordmark';
-import { LoopVideo } from '@/components/ui/LoopVideo';
 
 // Fetched only once Contact is near and never under reduced motion. The hero's own WebGL network field, calmer: no three.js, no second renderer.
 const ContactField = dynamic(() => import('./hero/HeroField').then((m) => m.HeroField), { ssr: false });
@@ -453,7 +453,13 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
         >
           <p className="t-mono flex items-center justify-between border-b border-white/15 px-3 py-1.5 text-on-ink-3"><span>FIG. 99 · FINAL SHEET</span><span>+</span></p>
           <div className="relative aspect-[4/5] overflow-hidden lg:aspect-[3/2]">
-            <LoopVideo src="/footer-loop.mp4" poster="/hero-poster.jpg" className="object-cover grayscale" />
+            <LoopVideo
+              mp4="/videos/coding-session.mp4"
+              webm="/videos/coding-session.webm"
+              poster="/videos/coding-session-poster.webp"
+              label="Late-night build session: two monitors, one deploy away"
+              className="absolute inset-0 h-full w-full object-cover object-[72%_50%]"
+            />
             <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
           </div>
           <Corners />

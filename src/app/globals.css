@@ -94,9 +94,6 @@
   opacity: clamp(0.22, calc(0.22 + (var(--fill, 0) * (var(--n) + 6) - var(--i)) / 6), 1);
 }
 
-/* LoopVideo: hidden over its poster until it is actually playing. */
-.loop-video { opacity: 0; transition: opacity var(--dur-base) var(--ease-sig); }
-.loop-video[data-playing] { opacity: 1; }
 
 /* ── Cinematic pass (docs/storyboard.md) ─────────────────────────────────── */
 /* Curtain (ui/Curtain.tsx): zero-height; its band hangs over the incoming

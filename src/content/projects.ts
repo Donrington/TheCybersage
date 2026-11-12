@@ -275,12 +275,24 @@ const ALL_PROJECTS: Project[] = [
     year: '2026',
     link: 'https://winskoserves.com.ng',
   },
+  {
+    id: 'slotwise',
+    name: 'Slotwise',
+    category: 'Clinic Booking Platform',
+    tagline: 'Clinic booking API, patient app and staff console. A partial unique index makes double booking impossible under concurrent load, idempotent retries never book twice, a Postgres sliding-window rate limit holds across serverless instances, and slot availability updates live over Neon Realtime.',
+    stack: ['Fastify', 'PostgreSQL', 'Next.js', 'Neon'],
+    image: '/projects/slotwise.webp',
+    video: '/videos/slotwise-reel.mp4',
+    videoPoster: '/projects/slotwise-reel-poster.webp',
+    year: '2026',
+    link: 'https://slotwise-one-delta.vercel.app',
+  },
 ];
 
 export const VERTICAL_OF: Record<string, Vertical> = {
   anoc: 'fintech',
   autoboy: 'ecommerce', rokeyla: 'ecommerce', wynscollections: 'ecommerce', krkmotors: 'ecommerce',
-  recoverderm: 'healthcare', circlesoflife: 'healthcare',
+  recoverderm: 'healthcare', circlesoflife: 'healthcare', slotwise: 'healthcare',
   wytnest: 'saas', chronos: 'saas', ver: 'saas', tuffapp: 'saas', techhub: 'saas', amanigo: 'saas', nextgen: 'saas',
   axflo: 'energy', samdus: 'energy', winsko: 'energy', deets: 'energy',
   handyman: 'brand', twerk: 'brand', chrisconteras: 'brand', myrakeleher: 'brand', tuantling: 'brand',
@@ -352,6 +364,14 @@ export const FEATURED: FeaturedScene[] = [
     tags: ['Next.js', 'Supabase', 'Paystack'],
     metric: { value: '10', label: 'migrations with row-level security' },
     shots: ['/projects/wynscollections.png'],
+  },
+  {
+    id: 'slotwise', template: 'pair',
+    role: 'API, patient app, staff console and deployment',
+    outcome: 'A clinic books patients into slots that cannot be double-booked, even when thirty requests land at once.',
+    tags: ['Fastify', 'PostgreSQL', 'Next.js'],
+    metric: { value: '59/59', label: 'contract checks passing on the live API' },
+    shots: ['/projects/slotwise-booking.webp', '/projects/slotwise-console.webp'],
   },
   {
     id: 'theblacke', template: 'device',
