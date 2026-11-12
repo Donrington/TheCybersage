@@ -6,17 +6,17 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
 import { Corners } from '@/components/ui/Corners';
+import { InkWordmark } from '@/components/ui/InkWordmark';
+import { LoopVideo } from '@/components/ui/LoopVideo';
 
-// three + @react-three/fiber in their own chunk, fetched only once Contact is
-// reached (it is the bottom-most section) and never under reduced motion.
-const ContactCanvas = dynamic(() => import('./ContactCanvas').then((m) => m.ContactCanvas), { ssr: false });
+// Fetched only once Contact is near and never under reduced motion. The hero's own WebGL network field, calmer: no three.js, no second renderer.
+const ContactField = dynamic(() => import('./hero/HeroField').then((m) => m.HeroField), { ssr: false });
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -77,8 +77,10 @@ function MagneticCTA({
       onClick={onClick}
       onMouseMove={(e) => {
         const r = e.currentTarget.getBoundingClientRect();
-        rawX.set((e.clientX - r.left - r.width / 2) * 0.3);
-        rawY.set((e.clientY - r.top - r.height / 2) * 0.3);
+        // Storyboard: magnetic pull stays within 6px.
+        const clamp6 = (v: number) => Math.max(-6, Math.min(6, v));
+        rawX.set(clamp6((e.clientX - r.left - r.width / 2) * 0.3));
+        rawY.set(clamp6((e.clientY - r.top - r.height / 2) * 0.3));
         e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
         e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
       }}
@@ -451,7 +453,7 @@ function FooterCtaBlock({ onContact }: { onContact: () => void }) {
         >
           <p className="t-mono flex items-center justify-between border-b border-white/15 px-3 py-1.5 text-on-ink-3"><span>FIG. 99 · FINAL SHEET</span><span>+</span></p>
           <div className="relative aspect-[4/5] overflow-hidden lg:aspect-[3/2]">
-            <Image src="/hero-poster.jpg" alt="" fill sizes="400px" className="object-cover grayscale" />
+            <LoopVideo src="/footer-loop.mp4" poster="/hero-poster.jpg" className="object-cover grayscale" />
             <div className="absolute inset-0" style={{ background: 'rgba(0,0,0,0.3)' }} />
           </div>
           <Corners />
@@ -573,7 +575,7 @@ export function Contact() {
         {/* Constellation background. Skipped entirely under reduced motion,
             and not mounted until the section is actually in view. */}
         <div className="absolute inset-0 pointer-events-none z-0" aria-hidden>
-          {canvasNear && !reduced && <ContactCanvas />}
+          {canvasNear && !reduced && <ContactField energy={0.45} density={0.5} scrollFade={false} />}
         </div>
 
         <div className="relative z-10 max-w-360 mx-auto px-[clamp(1.25rem,5vw,5rem)] pt-[clamp(4rem,7vw,7rem)] pb-0">
@@ -677,10 +679,8 @@ export function Contact() {
 
         {/* ── Footer ──────────────────────────────────────────────────────────
             Full rebuild: three stacked rows (dimmed utility nav / CTA block
-            with a per-character flip reveal / dimmed bottom bar), replacing
-            the previous asymmetric-split + giant-wordmark layout entirely —
-            nothing lingers or floats in the background anymore; the section
-            is just the three rows on a flat near-black canvas.
+            with a per-character flip reveal / dimmed bottom bar), closed by
+            the outline CYBERSAGE wordmark that the cursor paints solid.
             Height is intentionally NOT forced to 100vh (unlike the reference
             this was adapted from) — every other section on this site sizes
             itself from content + clamp-based padding, and breaking that
@@ -700,6 +700,9 @@ export function Contact() {
               <FooterIndex />
               <FooterBottomBar />
             </motion.div>
+
+            {/* Outline wordmark the cursor paints solid (Prompt 15). */}
+            <InkWordmark className="-mt-[clamp(1.5rem,4vw,4rem)] w-full" />
           </div>
         </footer>
       </section>

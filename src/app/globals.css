@@ -77,6 +77,66 @@
   transition: opacity var(--dur-base) var(--ease-sig), transform var(--dur-slow) var(--ease-sig);
 }
 
+/* Isometric line drawings (src/components/ui/IsoDrawing.tsx). Finished by
+   default; inside a pending Reveal the strokes are hidden, and they draw in
+   one after another once it flips to "in". */
+.iso-draw path { stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+[data-reveal="pending"] .iso-draw path { stroke-dashoffset: 1; }
+[data-reveal="in"] .iso-draw path {
+  transition: stroke-dashoffset var(--dur-slow) var(--ease-sig);
+  transition-delay: calc(200ms + var(--i, 0) * 60ms);
+}
+
+/* WordFill (src/components/ui/WordFill.tsx): words light up in reading order
+   as --fill runs 0 → 1. A head sweeps past the last word by 6 words so the
+   tail completes; unreached words sit at 0.22. */
+.word-fill[data-fill] > span {
+  opacity: clamp(0.22, calc(0.22 + (var(--fill, 0) * (var(--n) + 6) - var(--i)) / 6), 1);
+}
+
+/* LoopVideo: hidden over its poster until it is actually playing. */
+.loop-video { opacity: 0; transition: opacity var(--dur-base) var(--ease-sig); }
+.loop-video[data-playing] { opacity: 1; }
+
+/* ── Cinematic pass (docs/storyboard.md) ─────────────────────────────────── */
+/* Curtain (ui/Curtain.tsx): zero-height; its band hangs over the incoming
+   section and retracts as --curtain runs 0 -> 1. Defaults to gone. */
+.curtain { position: relative; z-index: 3; height: 0; pointer-events: none; }
+.curtain > div {
+  position: absolute; inset: 0 0 auto; height: 25vh;
+  transform-origin: top; transform: scaleY(calc(1 - var(--curtain, 1)));
+}
+/* Under the Hood un-pins with About rising over its last 10vh. */
+.stack-overlap { position: relative; z-index: 2; margin-top: -10vh; }
+@media (prefers-reduced-motion: reduce) { .stack-overlap { margin-top: 0; } }
+
+/* About portrait: one gentle parallax layer (1.1x), --portrait from the scroll engine. */
+.portrait-clip { position: absolute; inset: 0; overflow: hidden; }
+.portrait-img { scale: 1.08; translate: 0 calc((0.5 - var(--portrait, 0.5)) * 6%); }
+
+/* Page-to-page: cross-document View Transitions (Chrome/Edge/Safari 18+);
+   other browsers navigate normally. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-out 280ms var(--ease-sig) both; }
+::view-transition-new(root) { animation: vt-in 600ms var(--ease-sig) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
+
+/* Nav entrance: hidden 8px up while the loader runs, drops in 600 ms after it exits. */
+.nav-enter { transition: opacity 600ms var(--ease-sig) 600ms, translate 600ms var(--ease-sig) 600ms; }
+html[data-loading] .nav-enter { opacity: 0; translate: 0 -8px; transition: none; }
+@media (prefers-reduced-motion: reduce) { .nav-enter { transition: none; } }
+
+/* Magnetic pull on primary buttons (data-magnetic), written by CustomCursor. */
+html [data-magnetic] {
+  translate: var(--mag-x, 0) var(--mag-y, 0);
+  /* Higher specificity than the buttons' own rules, so their colour transitions are kept here too. */
+  transition: translate 180ms var(--ease-sig), color 180ms var(--ease-sig), background-color 180ms var(--ease-sig), border-color 180ms var(--ease-sig);
+}
+
 /* SplitHeading line masks */
 .split-line      { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
 .split-line > span { display: inline-block; will-change: transform; }
@@ -88,6 +148,27 @@
 html.has-custom-cursor, html.has-custom-cursor *, html.has-custom-cursor *::before, html.has-custom-cursor *::after {
   cursor: none !important;
 }
+/* Text fields keep the native I-beam; the custom cursor hides there. */
+html.has-custom-cursor :is(input:not([type=button],[type=submit],[type=checkbox],[type=radio]), textarea, select, [contenteditable]) {
+  cursor: auto !important;
+}
+
+/* Custom cursor (src/components/CustomCursor.tsx). Outer elements take the
+   raw transform from JS; the inner <i> owns size and scale transitions.
+   difference + white = ink on canvas, white on ink, legible everywhere. */
+.cur > div { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; mix-blend-mode: difference; opacity: 0; will-change: transform; }
+html[data-cursor] .cur-dot, html[data-cursor] .cur-ring { opacity: 1; }
+html[data-cursor=text] .cur-dot, html[data-cursor=text] .cur-ring { opacity: 0; }
+.cur i { position: absolute; display: block; border-radius: 50%; transform: translate(-50%, -50%); transition: width 150ms var(--ease-sig), height 150ms var(--ease-sig), scale 150ms var(--ease-sig); }
+.cur-dot i { width: 5px; height: 5px; background: #fff; }
+.cur-ring i { width: 28px; height: 28px; border: 1px solid #fff; }
+html[data-cursor=link] .cur-dot i { width: 3px; height: 3px; }
+html[data-cursor=link] .cur-ring i { width: 48px; height: 48px; }
+html[data-cursor-down] .cur-ring i { scale: 0.8; }
+.cur-tag { font: 500 11px/1 var(--font-mono); letter-spacing: 0.08em; color: #fff; white-space: nowrap; }
+.cur-h { height: 0; border-top: 1px dashed rgba(255, 255, 255, 0.35); }
+.cur-v { width: 0; border-left: 1px dashed rgba(255, 255, 255, 0.35); }
+html[data-cursor][data-cursor-hero]:not([data-cursor=text]) :is(.cur-tag, .cur-h, .cur-v) { opacity: 1; }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 html {
@@ -678,45 +759,6 @@ body {
   border-left: 0;
 }
 
-/* Layer stack (hero/HeroStack.tsx): the seven layers drawn as an isometric
-   overlay along the plate's left edge, beside the face. Lines are drawn in
-   paper white and differenced into the plate: ink on the white field, paper
-   over the dark coat. Fades in only after the entrance releases the sheet. */
-.hero-stack {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: clamp(84px, 22%, 150px);
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: difference;
-  transition: opacity 0.9s var(--ease-sig);
-}
-.hero-stack[data-live] { opacity: 1; }
-.hero-stack[data-mode='3d'][data-live] { pointer-events: auto; }
-.hero-stack-view {
-  position: absolute;
-  inset: 0;
-}
-svg.hero-stack-view {
-  inset: 6px;
-  width: calc(100% - 12px);
-  height: calc(100% - 12px);
-  overflow: visible;
-}
-/* Rail labels become hover targets only while the stack is mounted. */
-.hero-specimen[data-stack] .hero-layer { pointer-events: auto; }
-.hero-layer::after {
-  transform-origin: left center;
-  transition: opacity 0.3s var(--ease-sig), transform 0.3s var(--ease-sig);
-}
-.hero-layer[data-hot] b { color: #0a0a0a; }
-.hero-layer[data-hot]::after {
-  opacity: 1;
-  transform: scaleX(1.6);
-}
-
 .hero-specimen-caption {
   display: flex;
   justify-content: space-between;
@@ -966,8 +1008,6 @@ svg.hero-stack-view {
   .hero-plate-scan,
   .hero-packet,
   .hero-live { animation: none !important; }
-  .hero-stack,
-  .hero-layer::after { transition: none; }
 }
 
 /* ── Under the hood v2 (Prompt 5) ───────────────────────────────────────────
@@ -1137,10 +1177,12 @@ svg.hero-stack-view {
 @keyframes type-band { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .type-band { animation: none; } }
 
-/* Film grain on dark sections: one tiny SVG, painted once. */
-section[data-theme='dark'] { position: relative; }
-section[data-theme='dark']::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.035;
+/* Film grain: ≈4% on dark sections, 2% on light ones. One tiny SVG, painted once. */
+section[data-theme='dark'], section[data-theme='light'] { position: relative; }
+section[data-theme='dark']::after { opacity: 0.04; }
+section[data-theme='light']:not(.hero-sheet)::after { opacity: 0.02; }
+section[data-theme='dark']::after, section[data-theme='light']:not(.hero-sheet)::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
@@ -1755,12 +1797,12 @@ section[data-theme='dark']::after {
   position: relative; isolation: isolate; display: flex; align-items: center; gap: 8px; padding: 0 16px;
   font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
   color: rgba(255, 255, 255, 0.86); border-left: 1px solid rgba(255, 255, 255, 0.08);
-  transition: color var(--dur-fast) var(--ease-sig);
 }
 .nav-cell:last-child { border-right: 1px solid rgba(255, 255, 255, 0.08); }
+/* Hard cut: the fill switches instantly (no wipe); only the label rolls. */
 .nav-cell::before {
   content: ''; position: absolute; inset: 0; z-index: -1; background: #fff;
-  transform: scaleY(0); transform-origin: bottom; transition: transform var(--dur-base) var(--ease-sig);
+  transform: scaleY(0);
 }
 .nav-cell:hover, .nav-cell:focus-visible, .nav-cell[data-open] { color: #0a0a0a; outline: none; }
 .nav-cell:hover::before, .nav-cell:focus-visible::before, .nav-cell[data-open]::before { transform: scaleY(1); }
@@ -1772,8 +1814,8 @@ section[data-theme='dark']::after {
 
 /* Rolling label: the text leaves upward as a copy arrives from below. */
 .nav-roll { position: relative; display: inline-block; overflow: hidden; height: 1.2em; line-height: 1.2em; vertical-align: middle; }
-.nav-roll > span { display: block; transition: transform var(--dur-base) var(--ease-sig); }
-.nav-roll::after { content: attr(data-text); position: absolute; left: 0; top: 100%; transition: transform var(--dur-base) var(--ease-sig); }
+.nav-roll > span { display: block; transition: transform 0.35s var(--ease-sig); }
+.nav-roll::after { content: attr(data-text); position: absolute; left: 0; top: 100%; transition: transform 0.35s var(--ease-sig); }
 .nav-cell:hover .nav-roll > span, .nav-cell:focus-visible .nav-roll > span, .nav-cell[data-open] .nav-roll > span,
 .nav-hire:hover .nav-roll > span, .nav-hire:focus-visible .nav-roll > span { transform: translateY(-100%); }
 .nav-cell:hover .nav-roll::after, .nav-cell:focus-visible .nav-roll::after, .nav-cell[data-open] .nav-roll::after,

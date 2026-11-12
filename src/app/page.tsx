@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BlueprintLoader } from '@/components/BlueprintLoader';
 import { SheetFrame } from '@/components/SheetFrame';
@@ -20,6 +20,8 @@ import { Testimonials } from '@/components/Testimonials';
 import { FAQ } from '@/components/FAQ';
 import { PricingPromo } from '@/components/PricingPromo';
 import { Contact } from '@/components/Contact';
+import { BreathLine } from '@/components/BreathLine';
+import { Curtain } from '@/components/ui/Curtain';
 
 // Both are fixed-position chrome with no layout footprint of their own, so a
 // client-only chunk (no SSR, no server-rendered placeholder) costs nothing
@@ -29,7 +31,12 @@ const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) 
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
+  // While the loader is up the nav waits; it drops in 600 ms after it leaves (docs/storyboard.md).
+  useEffect(() => {
+    if (!(window as unknown as { __loaderDone?: boolean }).__loaderDone) document.documentElement.dataset.loading = '';
+  }, []);
   const finish = () => {
+    delete document.documentElement.dataset.loading;
     (window as unknown as { __loaderDone?: boolean }).__loaderDone = true;
     window.dispatchEvent(new Event('loader-done'));
     setLoaded(true);
@@ -60,20 +67,30 @@ export default function Home() {
             <p>AWS Cloud Infrastructure, Docker Containerisation, Kubernetes, Terraform Infrastructure as Code, Go (Golang), Python Django, PostgreSQL, Redis, Microservices System Design, Next.js, and TypeScript.</p>
           </article>
 
+          {/* Scene order and theme-flip curtains follow docs/storyboard.md. */}
           <HeroV2 />
+          <Curtain from="#FFFFFF" />
           <WorkV2 />
           <Marquee />
           <TypeBand />
           <SystemsStackV2 />
-          <About />
+          <div className="stack-overlap">
+            <Curtain from="#0A0A0A" />
+            <About />
+          </div>
           <Services />
+          <BreathLine />
+          <Curtain from="#FFFFFF" />
           <Process />
           <Testimonials />
           <LabRow />
+          <Curtain from="#0A0A0A" />
           <PricingPromo />
           <FAQ />
+          <Curtain from="#FFFFFF" />
           <Contact />
-        </main>        <AIAssistant />
+        </main>
+        <AIAssistant />
         <BackToTop />
       </SmoothScroll>
     </>

@@ -71,7 +71,7 @@ export default function NotFound() {
   const numRef  = useRef<HTMLHeadingElement>(null);
   const sub1Ref = useRef<HTMLSpanElement>(null);
   const sub2Ref = useRef<HTMLSpanElement>(null);
-  const floaters = useMemo(buildFloaters, []);
+  const floaters = useMemo(() => buildFloaters(), []);
 
   useEffect(() => {
     const timers = [

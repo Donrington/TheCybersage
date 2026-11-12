@@ -81,7 +81,7 @@ export function useSplitReveal<T extends HTMLElement>(options: SplitRevealOption
       ctx.revert();
       split.revert();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [reduced, stagger, duration, delay]);
 
   return ref;

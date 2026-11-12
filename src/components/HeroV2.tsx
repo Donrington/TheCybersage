@@ -272,6 +272,7 @@ export function HeroV2() {
                   href="#work"
                   onClick={onWork}
                   data-cursor="view"
+                  data-magnetic
                   data-theme="dark"
                   className="hero-cta"
                 >

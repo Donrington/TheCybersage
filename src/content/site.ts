@@ -45,6 +45,8 @@ export const SECTIONS = {
   faq: { label: 'FAQ', heading: 'Questions people ask *before* hiring me.' },
   pricing: { label: 'Pricing', heading: 'Prices, *published* up front.' },
   contact: { label: 'Contact', heading: "Have a *project* in mind? Let's talk." },
+  // Breath scene between Services and Process (docs/storyboard.md). The audit's "best sentence".
+  breath: { line: 'Every claim here shipped in a real client build.' },
 } as const;
 
 export type SectionKey = keyof typeof SECTIONS;
