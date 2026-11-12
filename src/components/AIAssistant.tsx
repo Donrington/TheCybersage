@@ -188,9 +188,13 @@ export function AIAssistant() {
   /* Shuffle a fresh set of suggestions on open, then rotate every 5s while idle */
   useEffect(() => {
     if (!open || messages.length > 0 || !showSugg) return;
-    setSuggestions((prev) => freshSuggestions(prev));
-    const id = setInterval(() => setSuggestions((prev) => freshSuggestions(prev)), 5000);
-    return () => clearInterval(id);
+    const shuffle = () => setSuggestions((prev) => freshSuggestions(prev));
+    const first = setTimeout(shuffle, 0);
+    const id = setInterval(shuffle, 5000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, [open, messages.length, showSugg]);
 
   useEffect(() => {
@@ -236,9 +240,10 @@ export function AIAssistant() {
         const { done, value } = await reader.read();
         if (done) break;
         reply += decoder.decode(value, { stream: true });
+        const content = reply;
         setMessages((prev) => {
           const updated = [...prev];
-          updated[updated.length - 1] = { role: 'assistant', content: reply };
+          updated[updated.length - 1] = { role: 'assistant', content };
           return updated;
         });
       }

@@ -1,10 +1,12 @@
-// Services, copy moved verbatim from the old Services component. proof = [project id, one real result].
+// Services, copy moved verbatim from the old Services component. proof = [project id, one real result];
+// drawing = which isometric line drawing the card carries (components/ui/IsoDrawing.tsx).
 
 export const SERVICES: {
-  index: string; proof: [string, string]; title: string; short: string; body: string; keywords: string[];
+  index: string; drawing: 'architecture' | 'devops' | 'backends' | 'reliability' | 'fullstack'; proof: [string, string]; title: string; short: string; body: string; keywords: string[];
 }[] = [
   {
     index: '01',
+    drawing: 'architecture',
     proof: ['wytnest', 'Multi-tenant workspace isolation enforced with row-level security.'],
     title: 'Systems Architecture',
     short: 'Design before code.',
@@ -13,6 +15,7 @@ export const SERVICES: {
   },
   {
     index: '02',
+    drawing: 'devops',
     proof: ['nextgen', 'Deployment time cut 45%.'],
     title: 'Cloud Infrastructure & DevOps',
     short: 'AWS · Docker · CI/CD.',
@@ -21,6 +24,7 @@ export const SERVICES: {
   },
   {
     index: '03',
+    drawing: 'backends',
     proof: ['circlesoflife', 'Streaming AI chat, care assessment and applicant auto-scoring on Supabase row-level security.'],
     title: 'Distributed Backends & APIs',
     short: 'Services that survive traffic spikes.',
@@ -29,6 +33,7 @@ export const SERVICES: {
   },
   {
     index: '04',
+    drawing: 'reliability',
     proof: ['recoverderm', 'Unauthorized-access surface down 60%.'],
     title: 'Reliability & Performance',
     short: "Find and fix what's slow.",
@@ -37,6 +42,7 @@ export const SERVICES: {
   },
   {
     index: '05',
+    drawing: 'fullstack',
     proof: ['winsko', 'Nine service pages, a scroll-driven Mapbox globe and a Turnstile-validated contact form.'],
     title: 'Full Stack Delivery',
     short: 'When the system needs a face.',

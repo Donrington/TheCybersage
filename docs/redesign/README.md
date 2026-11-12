@@ -48,8 +48,11 @@ rule, and one easing curve (`cubic-bezier(.2,.7,.2,1)`) replaces the 17 copies o
 | 7 | Delete, merge, condense, reorder | done (page 24,246 px at 1440, over the 18,000 target; see notes) |
 | 8 | About, Services, Process | done |
 | 9 | Testimonials, Pricing, FAQ | done |
-| 10 | Contact and footer | |
+| 10 | Contact and footer | done (Contact now reuses the hero network field; three.js constellation removed) |
 | 11 | Final pass (Lighthouse, four widths, a11y, metadata) | done, with open items (see final report) |
+| 14 | Services cards + isometric drawings, WordFill | done (PinnedStatement skipped: Built to Scale is gone and the page is over height) |
+| 15 | Ink-fill wordmark footer | done (`ui/InkWordmark.tsx`) |
+| 16 | Cinematic pass | done (see `docs/storyboard.md` for decisions and deviations) |
 
 ## Open items from Prompt 1 (not fixed — need a decision or dedicated pass)
 

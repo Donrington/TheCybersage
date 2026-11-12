@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
@@ -402,10 +401,11 @@ export function WorkV2() {
         <p className="work-tail-copy">
           The latest builds are above. Every project, from fintech to oil &amp; gas, is in the index.
         </p>
-        <Link href="/work" className="work-tail-link">
+        {/* Plain <a>: a document navigation, so the cross-document View Transition (globals.css) runs. */}
+        <a href="/work" className="work-tail-link">
           <span>See all {PROJECTS.length}</span>
           <ArrowRight size={15} aria-hidden />
-        </Link>
+        </a>
       </footer>
     </section>
   );

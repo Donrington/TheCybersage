@@ -107,6 +107,7 @@ function HireBtn() {
     <button
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
+      data-magnetic
       className="nav-hire group"
     >
       <Roll>Hire me</Roll>
@@ -370,7 +371,7 @@ export function Navbar() {
     <>
       {/* ══ DESKTOP ══ */}
       <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 hidden md:block" style={{ transform: hidden ? 'translateY(-150px)' : 'none', transition: reduced ? 'none' : 'transform 450ms cubic-bezier(0.2,0.7,0.2,1)' }} onFocusCapture={() => { hiddenRef.current = false; setHidden(false); }}>
-        <div className="absolute inset-x-0 top-[22px] flex flex-col items-center" onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+        <div className="nav-enter absolute inset-x-0 top-[22px] flex flex-col items-center" onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
           <motion.nav
             aria-label="Primary"
             animate={{ width: targetW }}
@@ -403,7 +404,7 @@ export function Navbar() {
 
       {/* ══ MOBILE ══ */}
       <div data-theme="dark" className="pointer-events-none fixed top-0 right-0 left-0 z-50 md:hidden" style={{ transform: hidden ? 'translateY(-90px)' : 'none', transition: reduced ? 'none' : 'transform 450ms cubic-bezier(0.2,0.7,0.2,1)' }}>
-        <div className="pointer-events-auto absolute top-[14px] right-[14px] left-[14px] z-20 flex h-14 items-stretch border border-white/15 bg-[#0A0A0A]/90 backdrop-blur-md">
+        <div className="nav-enter pointer-events-auto absolute top-[14px] right-[14px] left-[14px] z-20 flex h-14 items-stretch border border-white/15 bg-[#0A0A0A]/90 backdrop-blur-md">
           <a href="#" className="flex items-center border-r border-white/10 px-3.5" aria-label="Cybersage home">
             <Image src="/sage/sage_horiz1_white.png" alt="Cybersage" width={200} height={88} loading="eager" className="block object-contain" style={{ height: 34, width: 'auto' }} />
           </a>

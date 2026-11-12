@@ -2,14 +2,12 @@
 
 import { useEffect, useRef, type MouseEvent } from 'react';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
-import { animate, scrambleText } from 'animejs';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { POSITIONING } from '@/content/site';
 import { HeroSpecimen } from '@/components/hero/HeroSpecimen';
+import type { HeroEntrance } from '@/components/hero/heroEntrance';
 import { lenisInstance } from '@/lib/SmoothScroll';
-
-const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@_!∆';
 
 const SPECS = [
   { label: 'Role', value: 'Infrastructure & systems architect' },
@@ -46,35 +44,26 @@ export function HeroV2() {
     let alive = true;
     let started = false;
     let fallback = 0;
+    let entrance: HeroEntrance | null = null;
 
-    const run = (target: HTMLElement | undefined, delay = 0, duration = 820) => {
-      if (!target || !alive) return;
-      animate(target, {
-        innerHTML: scrambleText({
-          chars: SCRAMBLE_CHARS,
-          duration,
-          delay,
-          perturbation: 0.22,
-          cursor: '█▓▒░',
-          settleDuration: 260,
-        }),
+    // The timeline lives in its own chunk, fetched while the loader runs.
+    const ready = import('@/components/hero/heroEntrance')
+      .then((mod) => {
+        if (alive) entrance = mod.createHeroEntrance(el, lines);
+      })
+      .catch((error) => {
+        // Never leave the sheet hidden if the chunk fails to load.
+        console.warn('[hero] entrance unavailable', error);
+        el.removeAttribute('data-armed');
       });
-    };
 
     const start = () => {
       if (!alive || started) return;
       started = true;
       window.clearTimeout(fallback);
-      // Two frames so the armed state paints before the transition begins.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (alive) el.removeAttribute('data-armed');
-        });
+      ready.then(() => {
+        if (alive) entrance?.play();
       });
-      window.setTimeout(() => {
-        run(lines[0], 260);
-        run(lines[1], 380);
-      }, 240);
     };
 
     el.setAttribute('data-armed', '');
@@ -87,7 +76,7 @@ export function HeroV2() {
 
     const onEnter = (event: Event) => {
       if (!started) return;
-      run(event.currentTarget as HTMLElement, 0, 700);
+      entrance?.replay(event.currentTarget as HTMLElement);
     };
     lines.forEach((line) => line.addEventListener('pointerenter', onEnter));
 
@@ -96,6 +85,7 @@ export function HeroV2() {
       window.clearTimeout(fallback);
       window.removeEventListener('loader-done', start);
       lines.forEach((line) => line.removeEventListener('pointerenter', onEnter));
+      entrance?.dispose();
       el.removeAttribute('data-armed');
     };
   }, []);
@@ -282,6 +272,7 @@ export function HeroV2() {
                   href="#work"
                   onClick={onWork}
                   data-cursor="view"
+                  data-magnetic
                   data-theme="dark"
                   className="hero-cta"
                 >

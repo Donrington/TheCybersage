@@ -23,7 +23,6 @@ const CLIENTS: { name: string; logo: string; scale?: number }[] = [
   { name: 'TQL', logo: '/logo/TQL LOGO 2-01.png' },
   { name: 'Circles of Life Healthcare', logo: '/logo/colhcs_logo_light.png' },
   { name: 'Terryon Fagan', logo: '/logo/terryonfagan.png' },
-  { name: 'Judy Golden Tiling', logo: '/logo/judygolden.png' },
   { name: 'The Black-E', logo: '/logo/theblacke.png' },
   { name: 'VER', logo: '/logo/ver.png' },
   { name: 'Wyns Collections', logo: '/logo/wynscollections.webp' },
@@ -155,7 +154,7 @@ export function Marquee() {
     );
     observer.observe(section);
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // Scrolling the page gives the rows a burst of speed via GSAP's own

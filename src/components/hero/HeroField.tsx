@@ -11,7 +11,18 @@ import { useEffect, useRef, useState } from 'react';
  *   paused), and it is rebuilt when the hero comes back, so the Contact constellation never has a second one beside it.
  * - The loop pauses when the hero leaves the viewport or the tab is hidden. dpr is capped at 1.5.
  */
-export function HeroField({ energy = 1 }: { energy?: number }) {
+export function HeroField({
+  energy = 1,
+  density = 1,
+  scrollFade = true,
+}: {
+  /** 1 = hero; lower = slower and dimmer (Contact uses ~0.45). */
+  energy?: number;
+  /** Multiplies the point count (Contact uses fewer points). */
+  density?: number;
+  /** Pull the camera back and fade as the host scrolls away (hero only). */
+  scrollFade?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [live, setLive] = useState(false);
   // A canvas whose WebGL context was released can't get a new one, so each rebuild mounts a fresh <canvas>.
@@ -34,7 +45,7 @@ export function HeroField({ energy = 1 }: { energy?: number }) {
       const tier = mod.webglTier();
       if (tier === 'none') return;
       const field = mod.createNetworkField(canvas, {
-        points: tier === 'high' ? 3000 : 1200,
+        points: Math.round((tier === 'high' ? 3000 : 1200) * density),
         lines: tier === 'high',
         dpr: Math.min(window.devicePixelRatio || 1, 1.5),
         energy,
@@ -46,6 +57,7 @@ export function HeroField({ energy = 1 }: { energy?: number }) {
       const onVis = () => sync();
       const onResize = () => field.resize();
       const onScroll = () => {
+        if (!scrollFade) return;
         const r = host.getBoundingClientRect();
         field.setProgress(-r.top / Math.max(1, r.height));
       };
@@ -128,7 +140,7 @@ export function HeroField({ energy = 1 }: { energy?: number }) {
       far.disconnect();
       teardown?.();
     };
-  }, [energy, gen]);
+  }, [energy, density, scrollFade, gen]);
 
   return (
     <canvas

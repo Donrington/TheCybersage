@@ -8,6 +8,8 @@ import { CERTIFICATIONS } from '@/content/certifications';
 import { SplitHeading } from '@/components/ui/SplitHeading';
 import { Reveal } from '@/components/ui/Reveal';
 import { Corners } from '@/components/ui/Corners';
+import { WordFill } from '@/components/ui/WordFill';
+import { useScrollEngine } from '@/lib/useScrollEngine';
 
 const STATS = [
   { label: 'Years of experience', target: 5, suffix: '+' },
@@ -58,6 +60,8 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
  * the portrait beside the résumé and certifications (newest first), so the proof sits next to the person.
  */
 export function About() {
+  const portraitRef = useRef<HTMLDivElement>(null);
+  useScrollEngine(portraitRef, { prop: '--portrait' });
   return (
     <section id="about" aria-labelledby="about-heading" data-theme="light" className="w-full border-t border-black/[0.08] bg-[#F5F5F3] text-ink">
       <div className="mx-auto max-w-[1440px] px-[clamp(1rem,4vw,5rem)] py-[clamp(3rem,6vw,5.5rem)]">
@@ -84,9 +88,10 @@ export function About() {
             </Reveal>
 
             <Reveal className="space-y-4">
-              <p className="t-lede text-on-canvas-1">
-                A software engineer based in Lagos, Nigeria &mdash; 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery.
-              </p>
+              <WordFill
+                className="t-lede text-on-canvas-1"
+                text="A software engineer based in Lagos, Nigeria — 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery."
+              />
               <p className="t-body text-on-canvas-2">
                 Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system &mdash; not just the feature.
               </p>
@@ -124,7 +129,8 @@ export function About() {
               <div className="grid sm:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
                 {/* Portrait */}
                 <div className="p-4 pr-5 pb-5 sm:p-5 sm:pr-6">
-                  <div className="portrait relative aspect-[4/5] w-full bg-black/5">
+                  <div ref={portraitRef} className="portrait relative aspect-[4/5] w-full bg-black/5">
+                    <span className="portrait-clip">
                     <Image
                       src="/me.png"
                       alt="Abakwe Carrington, software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
@@ -132,6 +138,7 @@ export function About() {
                       sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 28vw"
                       className="portrait-img object-cover object-top"
                     />
+                    </span>
                     <span aria-hidden className="portrait-frame" />
                     <span aria-hidden className="t-mono absolute bottom-2 left-2 z-[3] bg-[#0A0A0A] px-2 py-0.5 text-white">
                       FIG. 01 · LAGOS, NG
