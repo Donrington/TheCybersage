@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import type { CSSProperties } from 'react';
 
 /**
@@ -11,9 +10,6 @@ import type { CSSProperties } from 'react';
  * The seven hairlines are the same layers the loader and "Under the hood" use,
  * drawn over the figure as a live scan.
  */
-// The 3D layer stack is its own lazy chunk; nothing of it ships in first load.
-const HeroStack = dynamic(() => import('./HeroStack'), { ssr: false });
-
 const LAYERS = ['EDGE', 'GATEWAY', 'SERVICES', 'CACHE', 'DATABASE', 'ACCESS', 'DEPLOY'];
 
 export function HeroSpecimen() {
@@ -49,7 +45,6 @@ export function HeroSpecimen() {
           <span className="hero-plate-glitch" />
           <span className="hero-scanlines" />
           <span className="hero-packet-track"><span className="hero-packet" /></span>
-          <HeroStack />
           <span className="hero-plate-frame" />
         </div>
       </div>

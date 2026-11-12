@@ -26,6 +26,9 @@ const CLIENTS: { name: string; logo: string; scale?: number }[] = [
   { name: 'The Black-E', logo: '/logo/theblacke.png' },
   { name: 'VER', logo: '/logo/ver.png' },
   { name: 'Wyns Collections', logo: '/logo/wynscollections.webp' },
+  { name: 'Winsko Serves', logo: '/logo/winsko-logo-reverse-600w.png' },
+  { name: 'Tuff', logo: '/logo/tuff.png' },
+  { name: 'Sage', logo: '/sage/sage_horiz1_white.png' },
 ];
 
 const MID = Math.ceil(CLIENTS.length / 2);
