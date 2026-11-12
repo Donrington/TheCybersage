@@ -11,8 +11,6 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",
     "@gsap/react": "^2.1.2",
-    "@react-three/fiber": "^9.6.1",
-    "@types/three": "^0.184.1",
     "@vercel/analytics": "^2.0.1",
     "animejs": "^4.4.1",
     "framer-motion": "^12.39.0",
@@ -23,8 +21,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "resend": "^6.12.3",
-    "thinking-orbs": "^0.3.1",
-    "three": "^0.184.0"
+    "thinking-orbs": "^0.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -9,8 +9,8 @@ import { IsoDrawing, type IsoKind } from '@/components/ui/IsoDrawing';
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
- * Services as a hairline grid of numbered cards (audit Prompt 14). Each card carries an isometric line drawing that
- * strokes in when the card reveals, the service copy, its skills, and one real result linking to the project it came
+ * Services as a hairline grid of numbered cards (audit Prompt 14). Each card carries an isometric technical plate that
+ * engraves in when the card reveals and inverts to ink on hover (data paths run, nodes pulse), the service copy, its skills, and one real result linking to the project it came
  * from. The sixth cell closes the 3×2 grid with a route to Contact. Every service is visible without JS; no accordion.
  */
 export function Services() {
@@ -30,12 +30,18 @@ export function Services() {
             return (
               <Reveal as="li" key={s.index} delay={(i % 3) * 80} className="svc-card flex flex-col border-r border-b border-black/20">
                 <div className="flex items-center justify-between px-6 pt-5">
-                  <span className="t-mono text-ink">[{s.index}]</span>
+                  <span className="svc-index t-mono text-ink" data-n={`[${s.index}]`}><span>[{s.index}]</span></span>
                   <span className="t-mono text-on-canvas-3 uppercase">{s.short}</span>
                 </div>
-                <IsoDrawing kind={s.drawing as IsoKind} className="mx-6 mt-6 h-28 w-auto self-start text-ink lg:h-32" />
+                <div className="svc-plate mx-6 mt-5">
+                  <p aria-hidden className="svc-plate-cap t-mono">
+                    <span>FIG. {s.index}</span>
+                    <span>ISO 1:40</span>
+                  </p>
+                  <IsoDrawing kind={s.drawing as IsoKind} className="svc-draw" />
+                </div>
                 <div className="flex flex-1 flex-col px-6 pt-6 pb-6">
-                  <h3 className="text-2xl font-extrabold tracking-tight text-ink">{s.title}</h3>
+                  <h3 className="svc-title text-2xl font-extrabold tracking-tight text-ink"><span>{s.title}</span></h3>
                   <p className="t-body mt-3 text-on-canvas-2">{s.body}</p>
                   <ul className="mt-5 flex flex-wrap gap-2" aria-label="Key skills">
                     {s.keywords.map((k) => (
