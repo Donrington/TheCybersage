@@ -71,3 +71,16 @@ Abakwe Carrington (known online as **Cybersage** or **Donrington**) is an Infras
 - **LinkedIn**: https://www.linkedin.com/in/carrington-abakwe-b0b0a0217
 - **Twitter / X**: https://x.com/CarlSwitch_CHUG
 - **Email**: hello@cybersage.dev
+
+---
+
+## Pages
+
+- [All work](https://cybersage.dev/work): every project, filterable by industry.
+- [Services](https://cybersage.dev/services): the five services.
+  - [Systems Architecture](https://cybersage.dev/services/systems-architecture)
+  - [Cloud Infrastructure & DevOps](https://cybersage.dev/services/cloud-infrastructure-devops)
+  - [Distributed Backends & APIs](https://cybersage.dev/services/distributed-backends-apis)
+  - [Reliability & Performance](https://cybersage.dev/services/reliability-performance)
+  - [Full Stack Delivery](https://cybersage.dev/services/full-stack-delivery)
+- Case studies live at https://cybersage.dev/work/<project> (for example /work/winsko, /work/recoverderm, /work/slotwise).

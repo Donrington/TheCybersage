@@ -287,13 +287,25 @@ const ALL_PROJECTS: Project[] = [
     year: '2026',
     link: 'https://slotwise-one-delta.vercel.app',
   },
+  {
+    id: 'cybersagedock',
+    name: 'CyberSage Dock',
+    category: 'Windows Desktop App',
+    tagline: 'A frameless, always-on-top side dock for Windows built on Tauri v2 and React. It registers as a Windows AppBar so maximized windows stop at its edge, and carries draggable widgets for focus, to-dos, now playing, system monitor, GitHub activity and Claude API spend, with rate-limited notifications and signed auto-updates.',
+    stack: ['Tauri', 'Rust', 'React', 'TypeScript'],
+    image: '/projects/cybersage-dock.webp',
+    video: '/videos/cybersage-dock-reel.mp4',
+    videoPoster: '/projects/cybersage-dock-reel-poster.webp',
+    year: '2026',
+    link: 'https://github.com/Donrington/cybersage-dock',
+  },
 ];
 
 export const VERTICAL_OF: Record<string, Vertical> = {
   anoc: 'fintech',
   autoboy: 'ecommerce', rokeyla: 'ecommerce', wynscollections: 'ecommerce', krkmotors: 'ecommerce',
   recoverderm: 'healthcare', circlesoflife: 'healthcare', slotwise: 'healthcare',
-  wytnest: 'saas', chronos: 'saas', ver: 'saas', tuffapp: 'saas', techhub: 'saas', amanigo: 'saas', nextgen: 'saas',
+  wytnest: 'saas', chronos: 'saas', cybersagedock: 'saas', ver: 'saas', tuffapp: 'saas', techhub: 'saas', amanigo: 'saas', nextgen: 'saas',
   axflo: 'energy', samdus: 'energy', winsko: 'energy', deets: 'energy',
   handyman: 'brand', twerk: 'brand', chrisconteras: 'brand', myrakeleher: 'brand', tuantling: 'brand',
   terryonfagan: 'brand', theblacke: 'brand',
@@ -317,7 +329,7 @@ export interface FeaturedScene {
 }
 
 /** Newest work first; the owner's picks lead. Anything not listed here follows by year (newest first). */
-const LEAD = ['winsko', 'tuffapp', 'circlesoflife', 'recoverderm', 'wynscollections', 'theblacke'];
+const LEAD = ['winsko', 'tuffapp', 'cybersagedock', 'circlesoflife', 'recoverderm', 'wynscollections', 'theblacke'];
 export const PROJECTS: Project[] = [...ALL_PROJECTS].sort((a, b) => {
   const ia = LEAD.indexOf(a.id), ib = LEAD.indexOf(b.id);
   if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
@@ -390,3 +402,14 @@ export const FEATURED: FeaturedScene[] = [
 ];
 
 export const projectById = (id: string) => PROJECTS.find((p) => p.id === id);
+
+/**
+ * Case-study URLs: /work/<project id>. A page is indexable only when it has a
+ * real write-up (a FEATURED entry with role, outcome and tags). The rest are
+ * live and linked from /work but marked noindex and left out of the sitemap, so
+ * 19 near-identical thin pages do not drag down the 8 good ones. To promote a
+ * project, give it a FEATURED entry (or move this check to a field of its own).
+ */
+export const featuredById = (id: string) => FEATURED.find((f) => f.id === id);
+export const isIndexableCaseStudy = (id: string) => Boolean(featuredById(id));
+export const INDEXABLE_CASE_STUDIES = PROJECTS.filter((p) => isIndexableCaseStudy(p.id));

@@ -21,7 +21,7 @@ Scroll distances are at 1440×900. "vh" means viewport heights.
 | Beat | Now | Proposed |
 | --- | --- | --- |
 | Blueprint loader | Every visit: ≥1.9 s hold + 0.9 s exit (≈2.8 s before the hero) | **Once per session** (sessionStorage). Skipped on repeat visits, Save-Data and reduced motion. Hold cut to 1.2 s. |
-| Hero entrance (anime.js timeline) | Grid 1.4 s → rules → name lines 420 ms → positioning → plate wipe | Unchanged, but on a repeat visit it starts at first paint. The name is real text from frame one, so LCP is never gated. |
+| Hero entrance (anime.js timeline) | Grid 1.4 s → rules → name lines 420 ms → positioning → plate wipe | Rebuilt on `feat/hero-redesign` (2026-11-17): grid and rules → portrait plotted left to right as a line drawing (280 ms) → name rises letter by letter (460 ms) → role, statement, CTAs → the rule sweeps in and develops the photograph (1500 ms) → legend → title block. About 3.3 s. The name is real text from frame one, so LCP is never gated. |
 | Nav | Appears with the page | Drops 8 px into place at +600 ms (standard). |
 | Ticker / Now chip | With the hero | Last beat, at +1000 ms. |
 
