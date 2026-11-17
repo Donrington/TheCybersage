@@ -402,3 +402,14 @@ export const FEATURED: FeaturedScene[] = [
 ];
 
 export const projectById = (id: string) => PROJECTS.find((p) => p.id === id);
+
+/**
+ * Case-study URLs: /work/<project id>. A page is indexable only when it has a
+ * real write-up (a FEATURED entry with role, outcome and tags). The rest are
+ * live and linked from /work but marked noindex and left out of the sitemap, so
+ * 19 near-identical thin pages do not drag down the 8 good ones. To promote a
+ * project, give it a FEATURED entry (or move this check to a field of its own).
+ */
+export const featuredById = (id: string) => FEATURED.find((f) => f.id === id);
+export const isIndexableCaseStudy = (id: string) => Boolean(featuredById(id));
+export const INDEXABLE_CASE_STUDIES = PROJECTS.filter((p) => isIndexableCaseStudy(p.id));

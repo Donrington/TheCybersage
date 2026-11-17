@@ -19,117 +19,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
 
   title: {
-    default:
-      'Abakwe Carrington — Software Engineer & Systems Architect (Lagos, Nigeria & Remote Worldwide)',
-    template: '%s | Abakwe Carrington — Infrastructure & Systems Architect',
+    default: 'Abakwe Carrington | Software Engineer & Systems Architect',
+    template: '%s | Abakwe Carrington',
   },
 
+  // About 150 characters: Google cuts descriptions off at roughly 155-160.
   description:
-    'Abakwe Carrington (Cybersage / Donrington) is a Software Engineer & Infrastructure Architect with 5+ years of experience designing high-availability distributed systems, cloud infrastructure (AWS, Docker, Kubernetes, Terraform), and Go & Django backends for global enterprises and startups worldwide.',
+    'Software engineer and systems architect in Lagos, Nigeria. 5+ years building cloud infrastructure and Go & Django backends for clients worldwide.',
 
-  keywords: [
-    // Brand / name
-    'Abakwe Carrington',
-    'Carrington Abakwe',
-    'Cybersage',
-    'cybersage.dev',
-    'Cybersage developer',
-    'Donrington',
-    // Nigeria / Lagos geo cluster
-    'software engineer in Nigeria',
-    'software engineer in Lagos',
-    'software engineer Lagos Nigeria',
-    'best software engineer in Nigeria',
-    'top software engineers in Nigeria',
-    'top software engineer in Lagos',
-    'Nigerian software engineer',
-    'software developer in Nigeria',
-    'software developer in Lagos',
-    'web developer in Lagos Nigeria',
-    'backend engineer in Nigeria',
-    'DevOps engineer in Nigeria',
-    'cloud architect in Nigeria',
-    'systems architect in Lagos',
-    'hire software engineer in Nigeria',
-    'hire developer in Lagos',
-    'freelance software engineer Nigeria',
-    'remote software engineer Nigeria',
-    'top developers in Africa',
-    'African software engineer',
-    // Global & Remote Intent
-    'hire remote systems architect',
-    'remote infrastructure architect for hire',
-    'freelance cloud architect US UK Europe',
-    'senior backend engineer remote worldwide',
-    'Golang systems developer contract',
-    'AWS DevOps consultant remote',
-    'senior software architect for hire',
-    'distributed systems engineer remote',
-    // Role
-    'Infrastructure Architect',
-    'Systems Architect',
-    'Solutions Architect',
-    'Cloud Architect',
-    'Platform Engineer',
-    'Backend Architect',
-    'DevOps Engineer',
-    'Site Reliability Engineer',
-    'Software Engineer',
-    'Full Stack Engineer',
-    'Backend Engineer',
-    'Go Developer',
-    'Golang Developer',
-    'Django Developer',
-    'Next.js Developer',
-    'Python Developer',
-    // Hire intent
-    'hire systems architect',
-    'hire cloud architect',
-    'hire infrastructure architect',
-    'hire platform engineer',
-    'hire backend architect',
-    'hire software engineer',
-    'freelance solutions architect',
-    'freelance software engineer',
-    'remote systems architect for hire',
-    'contract architect',
-    'available for hire',
-    // Tech stack
-    'AWS',
-    'Docker',
-    'Kubernetes',
-    'Terraform',
-    'Go',
-    'Django',
-    'PostgreSQL',
-    'Redis',
-    'Next.js',
-    'distributed systems',
-    'system design',
-    'infrastructure as code',
-    'REST API development',
-    'Microservices',
-    'CI/CD',
-    'high availability architecture',
-    // Portfolio / reach
-    'Systems Architect portfolio',
-    'Cloud Architect portfolio',
-    'Software Engineer portfolio',
-    'remote developer worldwide',
-    'enterprise web development',
-    'scalable web applications',
-    'production-grade web systems',
-    'high-performance web apps',
-    // Niche specialisations
-    'AI engineer',
-    'computer vision developer',
-    'embedded systems developer',
-    'WebRTC developer',
-    'real-time systems engineer',
-    'HIPAA compliant development',
-    'AI surveillance system',
-    'regulated industries software',
-  ],
+  // No <meta name="keywords">: Google ignores it, and a 60-term list reads as stuffing.
 
   authors: [{ name: 'Abakwe Carrington', url: BASE_URL }],
   creator: 'Abakwe Carrington',
@@ -155,7 +53,7 @@ export const metadata: Metadata = {
     title:
       'Abakwe Carrington — Software Engineer & Systems Architect',
     description:
-      'Software engineer & Infrastructure Architect in Lagos, Nigeria operating globally. 5+ years architecting distributed, production-grade systems. AWS · Docker · Go · Django · PostgreSQL · Redis. Available for hire worldwide.',
+      'Software engineer and systems architect in Lagos, Nigeria. AWS, Docker, Go, Django and PostgreSQL for clients worldwide.',
     locale: 'en_US',
     images: [
       {
@@ -187,7 +85,7 @@ export const metadata: Metadata = {
     title:
       'Abakwe Carrington — Software Engineer & Systems Architect',
     description:
-      'Software engineer & Infrastructure Architect. 5+ years architecting production-grade distributed systems. AWS · Docker · Go · Django · PostgreSQL. Available worldwide.',
+      'Software engineer and systems architect in Lagos, Nigeria. AWS, Docker, Go, Django and PostgreSQL for clients worldwide.',
     images: [`${BASE_URL}/sage/cybersage_og_whatsapp.png`],
   },
 

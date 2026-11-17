@@ -49,4 +49,33 @@ one full-viewport canvas (hero interaction), a CSS `mask-image` pixel mask (`pix
 - Services (hairline list + framed card with header strip, proof cell and project link), Process (four-cell timeline sheet, step headers with timeframe, ghost numerals, nodes on a top rule), Contact (SHEET 07 tag, hairline info cells with live status dot) and the footer (INDEX / ALL SHEETS grid with wipe tiles, FIG. 99 framed poster in greyscale, the duplicate nav row removed, closing headlines no longer break mid-word).
 - Lab (numbered cells with LAB 01 status strips), Testimonials (EXHIBIT plates with corner ticks, caption card with source strip, hairline prev/next and a tick per exhibit), Pricing (RATE SHEET: numbered rows, custom-engagement row filled ink) and FAQ (numbered hairline rows). Every section now carries a SHEET nn tag. Prices and FAQ JSON-LD unchanged and still in sync.
 
+## Second pass, 2026-11-17: hero and the team portrait hover
+
+Captured with REA (headless Chrome, 1440x900, home and `/about-us`), plus the public HTML and stylesheet.
+`main.js` is string-array obfuscated; only its selectors were read, no code was reused.
+
+Observed:
+
+- **Hero.** One illustration carries the whole first screen, centred and standing on a ground line, inside the
+  framed sheet. Headline, description and CTA sit in a strip below it. The loader resolves into that picture.
+- **Team portraits (sketch to photograph).** Each card is two complete, stacked copies: `.about-team-item-inner-bot`
+  holds a pen drawing of the person, `.about-team-item-inner-top` holds the black-and-white photograph on an ink
+  panel. The top copy starts at `clip-path: inset(100% 0 0)` and on `:hover` (hover-capable, 992px and up) goes to
+  `inset(0)` over 0.4 s. The drawing and photograph are separate assets drawn to the same registration, and the
+  images are multiplied (`mix-blend-mode: multiply`) into the paper. No canvas, no filter.
+
+Inferred, not observed: the drawings were made from the photographs (they register to the pixel).
+
+What we built from it (`src/components/HeroV2.tsx`, `src/components/hero/*`):
+
+- The portrait is the hero. Two registered layers, `public/hero/portrait-draft.webp` (graphite study) and
+  `public/hero/portrait-built.jpg` (photograph), both generated from `public/me.png` and multiplied into the sheet.
+- Instead of a hover swap, a vertical rule splits them: drawing on the left, photograph on the right. `--split`
+  drives two `clip-path` insets. The rule follows the pointer, drifts when idle, can be dragged on touch, and runs
+  out to the left on scroll. Reduced motion gets a static split that still follows the pointer.
+- The name runs edge to edge across the figure in `mix-blend-mode: difference`, so it is ink on paper and on the
+  drawing and white over the coat. This needs every wrapper between the section and the `<h1>` to stay free of
+  stacking contexts (see the comment at the top of the hero CSS).
+- Pointing at a word of the name, or tapping it, replays the glyph scramble (`hero/heroScramble.ts`).
+
 Still to do (Prompt 11): final QA, Lighthouse run, page-height trim (target 18,000 px), preview URL.

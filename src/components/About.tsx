@@ -132,7 +132,7 @@ export function About() {
                   <div ref={portraitRef} className="portrait relative aspect-[4/5] w-full bg-black/5">
                     <span className="portrait-clip">
                     <Image
-                      src="/me.png"
+                      src="/hero/portrait-built.jpg"
                       alt="Abakwe Carrington, software engineer and Infrastructure & Systems Architect based in Lagos, Nigeria"
                       fill
                       sizes="(max-width: 640px) 90vw, (max-width: 1024px) 40vw, 28vw"

@@ -2,10 +2,11 @@
 // drawing = which isometric line drawing the card carries (components/ui/IsoDrawing.tsx).
 
 export const SERVICES: {
-  index: string; drawing: 'architecture' | 'devops' | 'backends' | 'reliability' | 'fullstack'; proof: [string, string]; title: string; short: string; body: string; keywords: string[];
+  index: string; slug: string; drawing: 'architecture' | 'devops' | 'backends' | 'reliability' | 'fullstack'; proof: [string, string]; title: string; short: string; body: string; keywords: string[];
 }[] = [
   {
     index: '01',
+    slug: 'systems-architecture',
     drawing: 'architecture',
     proof: ['wytnest', 'Multi-tenant workspace isolation enforced with row-level security.'],
     title: 'Systems Architecture',
@@ -15,6 +16,7 @@ export const SERVICES: {
   },
   {
     index: '02',
+    slug: 'cloud-infrastructure-devops',
     drawing: 'devops',
     proof: ['nextgen', 'Deployment time cut 45%.'],
     title: 'Cloud Infrastructure & DevOps',
@@ -24,6 +26,7 @@ export const SERVICES: {
   },
   {
     index: '03',
+    slug: 'distributed-backends-apis',
     drawing: 'backends',
     proof: ['circlesoflife', 'Streaming AI chat, care assessment and applicant auto-scoring on Supabase row-level security.'],
     title: 'Distributed Backends & APIs',
@@ -33,6 +36,7 @@ export const SERVICES: {
   },
   {
     index: '04',
+    slug: 'reliability-performance',
     drawing: 'reliability',
     proof: ['recoverderm', 'Unauthorized-access surface down 60%.'],
     title: 'Reliability & Performance',
@@ -42,6 +46,7 @@ export const SERVICES: {
   },
   {
     index: '05',
+    slug: 'full-stack-delivery',
     drawing: 'fullstack',
     proof: ['winsko', 'Nine service pages, a scroll-driven Mapbox globe and a Turnstile-validated contact form.'],
     title: 'Full Stack Delivery',
@@ -50,3 +55,5 @@ export const SERVICES: {
     keywords: ['Next.js', 'React', 'Stripe', 'PostgreSQL'],
   },
 ];
+
+export const serviceBySlug = (slug: string) => SERVICES.find((x) => x.slug === slug);

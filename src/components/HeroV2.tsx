@@ -1,46 +1,73 @@
 'use client';
 
-import { useEffect, useRef, type MouseEvent } from 'react';
+import { useEffect, useRef, type CSSProperties, type MouseEvent } from 'react';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { POSITIONING } from '@/content/site';
-import { HeroSpecimen } from '@/components/hero/HeroSpecimen';
+import { HeroFigure } from '@/components/hero/HeroFigure';
+import { createHeroSplit, type HeroSplit } from '@/components/hero/heroSplit';
+import { cancelScramble, scrambleWord } from '@/components/hero/heroScramble';
 import type { HeroEntrance } from '@/components/hero/heroEntrance';
 import { lenisInstance } from '@/lib/SmoothScroll';
 
+const NAME = ['ABAKWE', 'CARRINGTON'] as const;
+
 const SPECS = [
-  { label: 'Role', value: 'Infrastructure & systems architect' },
   { label: 'Base', value: 'Lagos, Nigeria / UTC+1' },
   { label: 'Stack', value: 'AWS · Go · Django · PostgreSQL' },
+  { label: 'Works with', value: 'Remote clients, worldwide' },
 ] as const;
 
 /**
- * The hero is drawn as a cover sheet: a drafting grid, a specimen portrait
- * scanned by the same seven layers as the loader, and a title block of real
- * facts along the bottom edge.
+ * The hero is a cover sheet built around one image: the portrait as a line
+ * drawing on the left of a rule and as a photograph on the right. Drawn first,
+ * then built, which is the job. The rule follows the pointer, drifts when left
+ * alone, and runs out to the left as the sheet scrolls away.
  *
- * The name stays real text in the server HTML. Once the loader hands over, each
- * line rises out of a mask and runs the original glyph-scramble; the second
- * line is an outline until you point at it, then fills and scrambles again.
+ * The name crosses the figure at chest height in `difference`, so it is ink on
+ * the paper and on the drawing and turns white over the black coat. For that to
+ * work nothing between the section and the <h1> may form a stacking context:
+ * no transform, opacity, filter or z-index on `.hero-content` or `.hero-stage`.
+ * Animate the name, the figure and the copy themselves, never their parents.
+ *
+ * The name is real text in the server HTML. Entrance and motion are armed on
+ * mount (the loader covers the sheet) and never under reduced motion. Pointing
+ * at a word of the name, or tapping it, replays the glyph scramble on it.
  */
 export function HeroV2() {
   const sheet = useRef<HTMLElement>(null);
-  const line1 = useRef<HTMLSpanElement>(null);
-  const line2 = useRef<HTMLSpanElement>(null);
+  const box = useRef<HTMLDivElement>(null);
+  const nodeReadout = useRef<HTMLSpanElement>(null);
+  const railReadout = useRef<HTMLSpanElement>(null);
+  const split = useRef<HeroSplit | null>(null);
   const ctaWrap = useRef<HTMLSpanElement>(null);
   const cta = useRef<HTMLAnchorElement>(null);
 
-  // Entrance and the name scramble, both released by the loader. The sheet is
-  // armed on mount (the loader covers it) and disarmed on `loader-done`; CSS
-  // transitions do the rest. A timeout means a stuck loader can never hold the
-  // page hostage. Reduced motion never arms anything.
+  // The split rule and the entrance, both released by the loader. The sheet is
+  // armed on mount and disarmed by the timeline; a timeout means a stuck loader
+  // can never hold the page hostage. Reduced motion never arms anything.
   useEffect(() => {
     const el = sheet.current;
-    if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const figure = box.current;
+    if (!el || !figure) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const lines = [line1.current, line2.current].filter(Boolean) as HTMLElement[];
+    const rule = createHeroSplit({
+      root: el,
+      box: figure,
+      readouts: [nodeReadout.current, railReadout.current],
+      reduced,
+      held: !reduced,
+    });
+    split.current = rule;
+    if (reduced) {
+      return () => {
+        rule.dispose();
+        split.current = null;
+      };
+    }
+
     let alive = true;
     let started = false;
     let fallback = 0;
@@ -49,12 +76,13 @@ export function HeroV2() {
     // The timeline lives in its own chunk, fetched while the loader runs.
     const ready = import('@/components/hero/heroEntrance')
       .then((mod) => {
-        if (alive) entrance = mod.createHeroEntrance(el, lines);
+        if (alive) entrance = mod.createHeroEntrance(el, () => rule.develop());
       })
       .catch((error) => {
         // Never leave the sheet hidden if the chunk fails to load.
         console.warn('[hero] entrance unavailable', error);
         el.removeAttribute('data-armed');
+        rule.release();
       });
 
     const start = () => {
@@ -66,6 +94,15 @@ export function HeroV2() {
       });
     };
 
+    // The scramble on the name: pointerenter covers both a mouse arriving and a
+    // finger landing. It waits until the entrance has let go of the letters.
+    const words = Array.from(el.querySelectorAll<HTMLElement>('.hero-name-mask'));
+    const onWord = (event: Event) => {
+      if (el.hasAttribute('data-armed')) return;
+      scrambleWord(event.currentTarget as HTMLElement);
+    };
+    words.forEach((word) => word.addEventListener('pointerenter', onWord));
+
     el.setAttribute('data-armed', '');
     const done = (window as unknown as { __loaderDone?: boolean }).__loaderDone;
     if (done) start();
@@ -74,18 +111,17 @@ export function HeroV2() {
       fallback = window.setTimeout(start, 6000);
     }
 
-    const onEnter = (event: Event) => {
-      if (!started) return;
-      entrance?.replay(event.currentTarget as HTMLElement);
-    };
-    lines.forEach((line) => line.addEventListener('pointerenter', onEnter));
-
     return () => {
       alive = false;
       window.clearTimeout(fallback);
       window.removeEventListener('loader-done', start);
-      lines.forEach((line) => line.removeEventListener('pointerenter', onEnter));
+      words.forEach((word) => {
+        word.removeEventListener('pointerenter', onWord);
+        cancelScramble(word);
+      });
       entrance?.dispose();
+      rule.dispose();
+      split.current = null;
       el.removeAttribute('data-armed');
     };
   }, []);
@@ -174,9 +210,10 @@ export function HeroV2() {
     };
   }, []);
 
-  // Scroll choreography: the sheet lifts away while the name lines drift apart
-  // and the specimen lags behind, giving the handoff to Work some depth. GSAP
-  // is ticked by Lenis in SmoothScroll, so the scrub stays in sync.
+  // Scroll choreography: the copy lifts away, the figure lags behind the name,
+  // and the rule runs out to the left so the portrait leaves fully built. GSAP
+  // is ticked by Lenis in SmoothScroll, so the scrub stays in sync. Every
+  // target is a leaf of the stage (see the note on stacking contexts above).
   useEffect(() => {
     const root = sheet.current;
     if (!root) return;
@@ -192,18 +229,20 @@ export function HeroV2() {
           start: 'top top',
           end: 'bottom top',
           scrub: 0.5,
+          onUpdate: (self) => split.current?.setScroll(self.progress * 1.35),
         },
       });
 
       tl.to(q('.hero-topline'), { yPercent: -120, opacity: 0, duration: 0.35, ease: 'none' }, 0)
-        .to(q('.hero-copy'), { y: -80, opacity: 0.12, duration: 1, ease: 'none' }, 0)
-        .to(q('.hero-specimen'), { y: 56, opacity: 0.2, duration: 1, ease: 'none' }, 0)
-        .fromTo(q('.hero-plate-parallax'), { yPercent: 0 }, { yPercent: 6, duration: 1, ease: 'none' }, 0)
+        .to(q('.hero-copy, .hero-rail'), { y: -70, opacity: 0, duration: 0.7, ease: 'none' }, 0)
+        .to(q('.hero-figure, .hero-split-ui'), { y: 70, duration: 1, ease: 'none' }, 0)
+        .to(q('.hero-name'), { y: -36, duration: 1, ease: 'none' }, 0)
         .to(q('.hero-grid-bg'), { y: 48, duration: 1, ease: 'none' }, 0);
 
       return () => {
         tl.scrollTrigger?.kill();
         tl.kill();
+        split.current?.setScroll(0);
       };
     });
 
@@ -236,7 +275,6 @@ export function HeroV2() {
       className="hero-sheet"
     >
       <div aria-hidden className="hero-grid-bg" />
-      <div aria-hidden className="hero-glow" />
       <div aria-hidden className="hero-spotlight" />
 
       <div className="hero-content">
@@ -247,21 +285,32 @@ export function HeroV2() {
         </header>
 
         <div className="hero-stage">
+          <HeroFigure boxRef={box} readoutRef={nodeReadout} />
+
+          {/* One real phrase for crawlers and screen readers: the visible name, a real
+              space between its words, and the role and place as visually hidden text.
+              The label is what assistive tech announces instead of the lettered spans. */}
+          <h1
+            id="hero-name"
+            className="hero-name"
+            aria-label="Abakwe Carrington, software engineer and systems architect in Lagos, Nigeria"
+          >
+            {NAME.map((word, w) => (
+              <span key={word} className="hero-name-mask">
+                {word.split('').map((char, i) => (
+                  <span key={i} className="hero-char">{char}</span>
+                ))}
+                {w < NAME.length - 1 ? ' ' : null}
+              </span>
+            ))}
+            <span className="sr-only"> — Software Engineer &amp; Systems Architect in Lagos, Nigeria</span>
+          </h1>
+
           <div className="hero-copy">
             <p className="hero-kicker">
+              <span aria-hidden className="hero-kicker-mark" />
               <span>Infrastructure &amp; systems architect</span>
-              <span aria-hidden className="hero-kicker-line" />
-              <span>Lagos, Nigeria / UTC+1</span>
             </p>
-
-            <h1 id="hero-name" aria-label="Abakwe Carrington" className="hero-name">
-              <span className="hero-name-mask">
-                <span ref={line1} className="hero-name-line cursor-default select-none">ABAKWE</span>
-              </span>
-              <span className="hero-name-mask">
-                <span ref={line2} className="hero-name-line hero-name-outline cursor-default select-none">CARRINGTON</span>
-              </span>
-            </h1>
 
             <p className="hero-positioning">{POSITIONING}</p>
 
@@ -295,7 +344,37 @@ export function HeroV2() {
             </div>
           </div>
 
-          <HeroSpecimen />
+          <div className="hero-rail" aria-hidden>
+            <p className="hero-rail-head">
+              <span>Fig. 01</span>
+              <span>Principal</span>
+            </p>
+            <p className="hero-rail-note">
+              Drawn first.
+              <br />
+              Then built.
+            </p>
+            <div className="hero-rail-key">
+              <p style={{ '--k': 0 } as CSSProperties}>
+                <i>A</i>
+                <b>Draft</b>
+                <span>Line study</span>
+              </p>
+              <p style={{ '--k': 1 } as CSSProperties}>
+                <i>B</i>
+                <b>Built</b>
+                <span>Photograph</span>
+              </p>
+            </div>
+            <p className="hero-rail-read">
+              <span>Rule at</span>
+              <span ref={railReadout}>0.50</span>
+            </p>
+            <p className="hero-rail-hint">
+              <span className="hero-hint-fine">[ Move across the figure ]</span>
+              <span className="hero-hint-coarse">[ Drag across the figure ]</span>
+            </p>
+          </div>
         </div>
 
         <dl className="hero-titleblock" aria-label="At a glance">

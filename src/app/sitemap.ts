@@ -1,4 +1,6 @@
 import type { MetadataRoute } from 'next';
+import { SERVICES } from '@/content/services';
+import { INDEXABLE_CASE_STUDIES } from '@/content/projects';
 
 const BASE_URL = 'https://cybersage.dev';
 
@@ -32,6 +34,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.9,
     },
+    {
+      url: `${BASE_URL}/services`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    ...SERVICES.map((s) => ({
+      url: `${BASE_URL}/services/${s.slug}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
+    // Only case studies with a real write-up; the rest are noindex (see content/projects.ts).
+    ...INDEXABLE_CASE_STUDIES.map((p) => ({
+      url: `${BASE_URL}/work/${p.id}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
     {
       url: `${BASE_URL}/llms.txt`,
       lastModified: currentDate,
