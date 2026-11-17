@@ -759,13 +759,17 @@ body {
   color: rgba(10, 10, 10, 0.6);
 }
 .hero-rail p { margin: 0; }
-/* The mark sits at the top of the legend, centred over it, above FIG. 01. */
-.hero-rail-logo {
-  display: block;
+/* The mark sits at the top of the legend, centred over it, above FIG. 01. The
+   wrapper is the hover target; hero/HeroLogo.tsx drives the filter on .hero-logo-img. */
+.hero-logo {
+  position: relative;
   width: clamp(6.25rem, 8.2vw, 8.5rem);
-  height: auto;
   margin: 0 auto clamp(1rem, 2.4vh, 1.75rem);
+  cursor: default;
 }
+.hero-logo-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.hero-logo-img { will-change: filter, transform; }
+.hero-rail-logo { display: block; width: 100%; height: auto; }
 .hero-rail-head,
 .hero-rail-read,
 .hero-rail-key p {
