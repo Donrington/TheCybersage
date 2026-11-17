@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { POSITIONING } from '@/content/site';
 import { HeroFigure } from '@/components/hero/HeroFigure';
+import { HeroLogo } from '@/components/hero/HeroLogo';
 import { createHeroSplit, type HeroSplit } from '@/components/hero/heroSplit';
 import { cancelScramble, scrambleWord } from '@/components/hero/heroScramble';
 import type { HeroEntrance } from '@/components/hero/heroEntrance';
@@ -345,6 +346,7 @@ export function HeroV2() {
           </div>
 
           <div className="hero-rail" aria-hidden>
+            <HeroLogo />
             <p className="hero-rail-head">
               <span>Fig. 01</span>
               <span>Principal</span>

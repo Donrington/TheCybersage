@@ -46,7 +46,7 @@ export function LabRow() {
                   </span>
                   <span className="flex flex-1 flex-col p-6">
                     <span className="flex h-10 items-center justify-between">
-                      <span className="relative h-7 w-32">
+                      <span className="relative h-7 w-32" style={{ height: "logoHeight" in e ? e.logoHeight : undefined }}>
                         {e.logo ? (
                           <Image src={e.logo} alt="" fill sizes="128px" className="object-contain object-left opacity-80" />
                         ) : (
