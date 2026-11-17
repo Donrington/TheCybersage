@@ -105,6 +105,7 @@ const ALL_PROJECTS: Project[] = [
     stack: ['React', 'Node.js', 'PostgreSQL'],
     image: '/projects/deets.png',
     year: '2025',
+    link: 'https://deetsnigeria.com',
   },
   {
     id: 'handyman',

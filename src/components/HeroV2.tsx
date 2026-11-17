@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from 'react';
+import Image from 'next/image';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -345,6 +346,15 @@ export function HeroV2() {
           </div>
 
           <div className="hero-rail" aria-hidden>
+            <Image
+              src="/hero/cybersage-logo.png"
+              alt=""
+              width={720}
+              height={762}
+              sizes="160px"
+              quality={90}
+              className="hero-rail-logo"
+            />
             <p className="hero-rail-head">
               <span>Fig. 01</span>
               <span>Principal</span>

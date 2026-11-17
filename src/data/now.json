@@ -20,7 +20,7 @@
       "summary": "Testimonial SaaS: campaigns, video collection, embeddable widgets.",
       "tags": ["Supabase", "Cloudflare Stream", "Paystack + Stripe"],
       "href": "https://wytnest.vercel.app",
-      "logo": null
+      "logo": "/logo/wytnest-logo-primary-dark-transparent.png"
     },
     {
       "id": "ver",
@@ -31,7 +31,8 @@
       "summary": "Share more, waste less: connects givers with receivers.",
       "tags": ["Supabase", "Cloudinary", "TanStack Query"],
       "href": "https://ver-share-circle.vercel.app",
-      "logo": null
+      "logo": "/logo/ver.png",
+      "logoHeight": 36
     }
   ]
 }
