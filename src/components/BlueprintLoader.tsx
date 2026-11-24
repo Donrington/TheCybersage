@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Image from 'next/image';
+import { sfx } from '@/lib/sound';
+import { SoundToggle } from '@/components/SoundToggle';
 
 /**
  * Page loader that draws the site's subject: the seven-layer system stack from "Under the hood", as a technical
@@ -33,11 +35,16 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
   const [leaving, setLeaving] = useState(false);
   const onDoneRef = useRef(onDone);
   useEffect(() => { onDoneRef.current = onDone; });
+  // Audio stays locked until the visitor does something; the hint says so while it is.
+  const sound = useSyncExternalStore(sfx.subscribe, sfx.getStatus, () => 'locked' as const);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let raf = 0, cur = 0, ready = document.readyState === 'complete', minDone = false, finished = false;
+    // Which layer cues have sounded (same thresholds as the mono labels).
+    const sounded = LAYERS.map(() => false);
+    sfx.loaderStart();
     const onReady = () => { ready = true; };
     if (!ready) window.addEventListener('load', onReady);
     const minT = setTimeout(() => { minDone = true; }, reduced ? 300 : 1900);
@@ -47,9 +54,18 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
       cur += (target - cur) * (reduced ? 0.4 : 0.045);
       if (target === 1 && cur > 0.995) cur = 1;
       setP(cur);
+      sfx.loaderProgress(cur);
+      for (let i = 0; i < sounded.length; i++) {
+        if (!sounded[i] && cur > 0.1 + i * 0.12) {
+          sounded[i] = true;
+          // Under reduced motion the whole drawing lands in a few frames, which would stack all seven notes at once.
+          if (!reduced) sfx.play('layer', { deg: i });
+        }
+      }
       if (cur >= 1 && !finished) {
         finished = true;
         setLeaving(true);
+        sfx.loaderLift();
         window.setTimeout(() => { document.body.style.overflow = ''; onDoneRef.current(); }, reduced ? 0 : 900);
         return;
       }
@@ -58,6 +74,7 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf); clearTimeout(minT); clearTimeout(fb);
+      sfx.loaderStop();
       window.removeEventListener('load', onReady);
       document.body.style.overflow = '';
     };
@@ -95,11 +112,25 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
       </div>
       <p className="t-mono absolute top-[clamp(1.5rem,3.4vw,2.9rem)] left-[calc(clamp(1rem,4vw,3rem)+clamp(96px,9vw,150px)+0.9rem)] hidden text-white/50 sm:block" aria-hidden>CYBERSAGE / SHEET 00</p>
 
+      {/* A mute control while the loader covers the page (the nav is not up yet). */}
+      <div className="absolute top-[clamp(1.25rem,3vw,2.5rem)] right-[clamp(1rem,4vw,3rem)] flex h-9 items-stretch border border-white/15">
+        <SoundToggle variant="bar" className="border-l-0!" />
+      </div>
+
       {/* progress hairline + % */}
       <div className="absolute inset-x-0 top-1/2 h-px bg-white/10" style={{ transform: 'translateY(210px)' }}>
         <div className="h-px bg-white" style={{ width: `${pct}%` }} />
         <span className="t-mono absolute -top-6 text-white/70" style={{ left: `calc(${pct}% - 1.5rem)` }}>{pct}%</span>
       </div>
+
+      {/* Sound hint: only while the browser still has audio locked. Information, so it stays under reduced motion, just without the fade. */}
+      <p
+        aria-hidden
+        className="t-mono pointer-events-none absolute bottom-[4.5rem] left-1/2 -translate-x-1/2 whitespace-nowrap text-white/40 transition-opacity duration-500 motion-reduce:transition-none lg:bottom-8"
+        style={{ opacity: sound === 'locked' ? 1 : 0 }}
+      >
+        SOUND ON · TAP ANYWHERE
+      </p>
 
       <p className="t-label absolute bottom-8 left-[clamp(1rem,4vw,3rem)] text-white/60">Abakwe Carrington · Systems · 2026</p>
       <ul className="t-mono absolute right-[clamp(1rem,4vw,3rem)] bottom-8 hidden text-right text-white/60 sm:block" aria-hidden>

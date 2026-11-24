@@ -6,6 +6,7 @@ import { SplitHeading } from '@/components/ui/SplitHeading';
 import { LAYERS, splitProof } from '@/content/systems';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { lenisInstance } from '@/lib/SmoothScroll';
+import { sfx } from '@/lib/sound';
 import { Corners } from '@/components/ui/Corners';
 
 const N = LAYERS.length;
@@ -121,6 +122,8 @@ function StackStage() {
   const goTo = (i: number) => {
     const wrap = wrapRef.current;
     if (!wrap) return;
+    // Only the nav buttons call this (click, Enter, Space), so the layers climb the scale on selection, never on scroll.
+    sfx.play('layer', { deg: i });
     const top = wrap.getBoundingClientRect().top + window.scrollY;
     const span = wrap.offsetHeight - window.innerHeight;
     const y = top + ((i + 0.5) / N) * span;

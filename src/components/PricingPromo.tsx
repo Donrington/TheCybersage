@@ -33,6 +33,7 @@ export function PricingPromo() {
           <li className="border-b border-black/25">
             <Link
               href="#contact"
+              data-sound="primary"
               className="group relative flex min-h-20 flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-[#0A0A0A] px-5 py-5 text-white transition-colors hover:bg-black/85 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-black sm:px-7"
             >
               <span className="flex items-baseline gap-5">

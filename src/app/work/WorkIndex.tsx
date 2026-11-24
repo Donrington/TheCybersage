@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { PROJECTS, VERTICALS, VERTICAL_OF, type Project, type Vertical } from '@/content/projects';
 import { Corners } from '@/components/ui/Corners';
+import { sfx } from '@/lib/sound';
 
 type Filter = Vertical | 'all';
 type View = 'index' | 'plates';
@@ -107,11 +108,19 @@ function IndexList({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState<Project | null>(null);
   const [layers, setLayers] = useState<{ key: number; project: Project }[]>([]);
   const seq = useRef(0);
+  // Time of the last real pointer displacement over the list (not a layout shift under a still cursor).
+  const lastMove = useRef(0);
 
   // Each newly hovered project becomes a layer that wipes up over the last
   // one. Only the two most recent stay mounted.
-  const hover = (p: Project) => {
+  const hover = (p: Project, clientX: number, at: number) => {
     if (active?.id === p.id) return;
+    // Row to row while the preview is up: the image slides, so does the sound. Pointer-caused only.
+    // `at` is the event timeStamp, same clock as the pointermove stamp stored in lastMove.
+    if (active && at - lastMove.current < 220) {
+      const pan = Math.max(-0.5, Math.min(0.5, (clientX / window.innerWidth - 0.5) * 0.8));
+      sfx.play('swap', { pan });
+    }
     setActive(p);
     seq.current += 1;
     const key = seq.current;
@@ -130,6 +139,7 @@ function IndexList({ projects }: { projects: Project[] }) {
     let raf = 0;
     let on = false;
     let tx = 0, ty = 0, x = 0, y = 0, tilt = 0;
+    let lastX = -1, lastY = -1;
     const W = () => box.offsetWidth;
     const H = () => box.offsetHeight;
 
@@ -151,6 +161,11 @@ function IndexList({ projects }: { projects: Project[] }) {
       ty = Math.max(16, Math.min(window.innerHeight - h - 16, cy - h / 2));
     };
     const move = (e: PointerEvent) => {
+      if (Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY) >= 2) {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        lastMove.current = e.timeStamp;
+      }
       target(e.clientX, e.clientY);
       if (!on) {
         on = true;
@@ -204,7 +219,7 @@ function IndexList({ projects }: { projects: Project[] }) {
               style={{ '--i': Math.min(i, 14) } as CSSProperties}
               data-active={active?.id === p.id ? '' : undefined}
               onPointerEnter={(e) => {
-                if (e.pointerType === 'mouse') hover(p);
+                if (e.pointerType === 'mouse') hover(p, e.clientX, e.timeStamp);
               }}
             >
               <RowLink project={p} className="work-row">

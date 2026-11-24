@@ -6,6 +6,8 @@
  * cycles, so the word never changes length and nothing around it moves. Letters
  * settle left to right behind a block cursor.
  */
+import { sfx } from '@/lib/sound';
+
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@_!∆';
 const CURSOR = '█▓▒░';
 const STEP = 46; // ms between glyph changes
@@ -42,6 +44,8 @@ export function scrambleWord(word: HTMLElement, duration = 760) {
     letter.style.width = `${widths[i].toFixed(2)}px`;
   });
   word.setAttribute('data-scramble', '');
+  // Rate-limited by the engine, so crossing both words is one burst. Silent when the word only slid under a still cursor.
+  if (sfx.pointerRecent(250)) sfx.play('glitch');
 
   const run: Run = { raf: 0, letters, finals };
   runs.set(word, run);

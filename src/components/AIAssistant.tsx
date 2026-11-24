@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles, ArrowUpRight } from 'lucide-react';
 import { ThinkingOrb } from 'thinking-orbs';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { sfx } from '@/lib/sound';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -43,6 +44,25 @@ function freshSuggestions(prev: Suggestion[]): Suggestion[] {
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+/* Sound for one streamed reply: a single "receive" when the first chunk lands,
+   then a key tick throttled to ~45 ms for the first 60 chunks only, so long
+   answers never become a typewriter. Call the returned fn once per chunk. */
+function createReplySound() {
+  let chunks = 0;
+  let lastTick = 0;
+  return () => {
+    chunks += 1;
+    const now = performance.now();
+    if (chunks === 1) {
+      sfx.play('receive');
+      lastTick = now;
+    } else if (chunks <= 60 && now - lastTick >= 45) {
+      lastTick = now;
+      sfx.play('key');
+    }
+  };
 }
 
 function MessageContent({ content }: { content: string }) {
@@ -202,6 +222,7 @@ export function AIAssistant() {
   }, [messages, streaming]);
 
   const close = () => {
+    sfx.play('close');
     setOpen(false);
     abortRef.current?.abort();
   };
@@ -216,6 +237,7 @@ export function AIAssistant() {
     const next: Message[] = [...messages, { role: 'user', content: trimmed }];
     setMessages(next);
     setStreaming(true);
+    sfx.play('send');
 
     const abort = new AbortController();
     abortRef.current = abort;
@@ -233,6 +255,7 @@ export function AIAssistant() {
       const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let reply = '';
+      const replySound = createReplySound();
 
       setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
@@ -241,6 +264,7 @@ export function AIAssistant() {
         if (done) break;
         reply += decoder.decode(value, { stream: true });
         const content = reply;
+        if (content !== '') replySound();
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = { role: 'assistant', content };
@@ -249,6 +273,7 @@ export function AIAssistant() {
       }
     } catch (err) {
       if ((err as Error).name !== 'AbortError') {
+        sfx.play('error');
         setMessages((prev) => [
           ...prev,
           { role: 'assistant', content: "Something went wrong on my end. Please try again." },
@@ -287,6 +312,7 @@ export function AIAssistant() {
         whileHover={{ borderColor: 'rgba(255,255,255,0.28)' }}
         whileTap={{ scale: 0.96 }}
         aria-label="Ask the AI assistant about my work"
+        aria-expanded={open}
       >
         {/* Liquid-metal edge + cursor-following sheen — decorative, inert to
             pointer/AT. Skipped under reduced-motion; the static 1px border
@@ -444,6 +470,7 @@ export function AIAssistant() {
 
                 <button
                   onClick={close}
+                  data-sound="off"
                   style={{
                     width: 28,
                     height: 28,

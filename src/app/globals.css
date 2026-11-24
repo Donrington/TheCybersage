@@ -2609,3 +2609,47 @@ body[data-nav-open] button[aria-label^='Ask the AI'] { display: none; }
   .svc-index-row { grid-template-columns: 2.25rem minmax(0, 1fr) 1.5rem; }
   .svc-index-kw { display: none; }
 }
+
+/* ── Sound toggle (src/components/SoundToggle.tsx) ─────────────────────────────
+   Drawn as one more cell of the bar it sits in: hairline left border, mono label, hard-cut ink fill and corner ticks
+   on hover, like .nav-cell. The bars animate only while sound is on and running, using transform alone, and stop
+   under reduced motion. */
+.snd-toggle {
+  position: relative; display: inline-flex; flex: none; align-items: center; gap: 9px; align-self: stretch; padding: 0 16px;
+  color: rgba(255, 255, 255, 0.86); background: transparent; border: 0; border-left: 1px solid rgba(255, 255, 255, 0.12); cursor: pointer;
+  font: 500 0.75rem/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+}
+/* Desktop bar: the compact 940px bar leaves only ~73px between the centred cells and HIRE ME, so this cell is the bars plus
+   a three-character ON / OFF (about 65px). Sized in ch so the cell does not change width when it flips. */
+.snd-toggle[data-variant='nav'] { gap: 7px; padding: 0 10px; font-size: 0.68rem; }
+.snd-toggle[data-variant='nav'] .snd-label { min-width: calc(3 * (1ch + 0.1em)); }
+.snd-toggle:hover, .snd-toggle:focus-visible { background: #fff; color: #0a0a0a; outline: none; }
+.snd-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }
+/* In the desktop bar the next cell is the white HIRE ME button; a hairline keeps the filled toggle from merging into it. */
+.snd-toggle[data-variant='nav']:hover, .snd-toggle[data-variant='nav']:focus-visible { box-shadow: inset -1px 0 0 #0a0a0a; }
+.snd-toggle .nav-corner { opacity: 0; }
+.snd-toggle:hover .nav-corner, .snd-toggle:focus-visible .nav-corner { opacity: 1; border-color: #0a0a0a; }
+.snd-label { display: inline-block; min-width: calc(7 * (1ch + 0.1em)); }
+.snd-bars { display: inline-flex; align-items: flex-end; gap: 2px; width: 14px; height: 12px; }
+.snd-bars i { display: block; flex: 1; height: 100%; background: currentColor; transform-origin: 50% 100%; transform: scaleY(0.3); }
+.snd-toggle[data-state='on'] .snd-bars i { animation: snd-eq 1.15s ease-in-out infinite; }
+.snd-toggle[data-state='on'] .snd-bars i:nth-child(2) { animation-duration: 0.85s; animation-delay: -0.3s; }
+.snd-toggle[data-state='on'] .snd-bars i:nth-child(3) { animation-duration: 1.4s; animation-delay: -0.7s; }
+.snd-toggle[data-state='on'] .snd-bars i:nth-child(4) { animation-duration: 0.95s; animation-delay: -0.5s; }
+.snd-toggle[data-state='locked'] .snd-bars i { transform: scaleY(0.45); opacity: 0.7; }
+.snd-toggle[data-state='off'] .snd-bars i { transform: scaleY(0.12); opacity: 0.5; }
+.snd-toggle[data-state='off'] .snd-label { opacity: 0.6; }
+/* Phone bar: bars only, a 44px-wide touch cell with a slightly larger meter. The sub-page bar drops its label at phone
+   width for the same reason. */
+.snd-toggle[data-variant='mobile'] { padding: 0 13px; }
+.snd-toggle[data-variant='mobile'] .snd-label { display: none; }
+.snd-toggle[data-variant='mobile'] .snd-bars { width: 18px; height: 14px; }
+@media (max-width: 639px) {
+  .snd-toggle[data-variant='bar'] { padding: 0 13px; }
+  .snd-toggle[data-variant='bar'] .snd-label { display: none; }
+  .snd-toggle[data-variant='bar'] .snd-bars { width: 18px; height: 14px; }
+}
+@keyframes snd-eq { 0%, 100% { transform: scaleY(0.2); } 50% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .snd-toggle[data-state='on'] .snd-bars i { animation: none; transform: scaleY(0.6); }
+}

@@ -2,11 +2,17 @@
 
 import { useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { animate, scrambleText } from 'animejs';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
-import { CustomCursor } from '@/components/CustomCursor';
+import { sfx } from '@/lib/sound';
+import { SoundToggle } from '@/components/SoundToggle';
+
+// The cursor reads matchMedia while rendering, which does not exist on the server. Without this every unknown URL
+// answered 500 instead of 404; the home page already loads it the same way (client only).
+const CustomCursor = dynamic(() => import('@/components/CustomCursor').then((m) => m.CustomCursor), { ssr: false });
 
 // ─── Seeded pseudo-random (stable SSR/CSR) ────────────────────────────────────
 function sr(seed: number) {
@@ -74,6 +80,7 @@ export default function NotFound() {
   const floaters = useMemo(() => buildFloaters(), []);
 
   useEffect(() => {
+    // The entrance scramble stays silent: this page has no nav, so nothing here should sound unprompted.
     const timers = [
       setTimeout(() => numRef.current  && runScramble(numRef.current,  1700), 180),
       setTimeout(() => sub1Ref.current && runScramble(sub1Ref.current, 1100), 1050),
@@ -81,7 +88,11 @@ export default function NotFound() {
     ];
     // Re-scramble on hover — like the hero
     const el = numRef.current;
-    const handler = () => el && runScramble(el, 1000);
+    const handler = () => {
+      if (!el) return;
+      runScramble(el, 1000);
+      sfx.play('glitch');
+    };
     el?.addEventListener('pointerenter', handler);
     return () => {
       timers.forEach(clearTimeout);
@@ -92,6 +103,9 @@ export default function NotFound() {
   return (
     <main className="relative w-full min-h-screen bg-white overflow-hidden flex flex-col">
       <CustomCursor />
+      <div className="fixed top-[6.5rem] right-5 z-40 flex h-9 items-stretch border border-black/15 bg-white">
+        <SoundToggle variant="bar" className="border-l-0! text-black!" />
+      </div>
 
       {/* ── Floating error vocabulary (desktop only) ──────────────────────── */}
       {floaters.map((f) => (
@@ -287,6 +301,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/#contact"
+            data-sound="primary"
             className="flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-on-canvas-3 hover:text-black border border-black/15 px-7 py-4 hover:border-black/40 transition-colors duration-200"
             style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
           >

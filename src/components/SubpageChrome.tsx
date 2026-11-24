@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { SheetFrame } from '@/components/SheetFrame';
+import { SoundToggle } from '@/components/SoundToggle';
 
 /**
  * Chrome shared by the standalone pages (/work, /work/[slug], /services,
@@ -26,6 +27,7 @@ export function SubpageTop({ label }: { label: string }) {
           </Link>
           <span className="t-mono hidden flex-1 items-center px-4 text-on-ink-3 sm:flex">{label}</span>
           <span className="flex-1 sm:hidden" />
+          <SoundToggle variant="bar" />
           <Link href="/" className="nav-cell !border-r-0" style={{ borderLeft: '1px solid rgba(255,255,255,0.12)' }}>
             <ArrowLeft size={13} aria-hidden />
             <span className="nav-roll" data-text="Back home"><span>Back home</span></span>
@@ -41,7 +43,7 @@ export function SubpageEnd({ note, line = 'Have a project', em = 'in mind?' }: {
     <footer className="work-end">
       <div className="work-wrap">
         <p className="t-mono text-on-ink-3">{note}</p>
-        <Link href="/#contact" className="work-end-cta group" data-cursor="hire">
+        <Link href="/#contact" className="work-end-cta group" data-cursor="hire" data-sound="primary">
           <span className="work-end-line">
             {line} <em>{em}</em>
           </span>
