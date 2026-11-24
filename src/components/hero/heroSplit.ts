@@ -1,3 +1,5 @@
+import { sfx } from '@/lib/sound';
+
 /**
  * The hero portrait is two registered layers: a line drawing (A, draft) and the
  * photograph (B, built). One number, `--split`, says where the drawing stops
@@ -15,6 +17,11 @@
  *
  * Reduced motion: no sweep, no breathing, no easing. The rule still goes where
  * the pointer is, because that is direct manipulation, not decoration.
+ *
+ * Sound: only while the pointer is driving the rule. Its movement per event
+ * feeds the paper-scrape voice (sfx.drag), and the rule clicking over each 5%
+ * step plays a detent. The sweep, the idle breathing and the scroll push stay
+ * silent.
  */
 export interface HeroSplit {
   develop(duration?: number): void;
@@ -38,6 +45,14 @@ interface Options {
 const REST = 0.5;
 const MIN = 0.02;
 const MAX = 0.98;
+/** One detent per 5% of the figure's width. */
+const DETENT = 0.05;
+/** Slack either side of a step before it counts as crossed, so a shaky hand on a boundary does not rattle. */
+const DETENT_SLACK = 0.003;
+/** Rule movement per pointer event (fraction of the width) that counts as full speed. */
+const FULL_SPEED = 0.05;
+/** Keeps the scrape well under the engine's ceiling. */
+const SCRAPE_LEVEL = 0.8;
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 const easeInOutCubic = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
@@ -61,6 +76,14 @@ export function createHeroSplit({ root, box, readouts = [], reduced, held }: Opt
   let idleStart = 0;
   let sweep: { start: number; from: number; duration: number } | null = null;
   let shown = '';
+  // Sound state: the step the rule last settled on, and the pointer's last position (null = no stroke in progress).
+  let zone = Math.floor(current / DETENT);
+  let lastT: number | null = null;
+  let scrapeSpeed = 0;
+  // When the hover rule engaged. A cursor just passing over the portrait on its way elsewhere stays silent:
+  // hover sounds start after a short dwell. A pressed drag (touch) sounds straight away.
+  let engagedAt = 0;
+  const soundOk = () => dragging || performance.now() - engagedAt > 250;
 
   const write = () => {
     const value = clamp(current * (1 - scroll), 0, 1);
@@ -93,6 +116,16 @@ export function createHeroSplit({ root, box, readouts = [], reduced, held }: Opt
     }
 
     write();
+
+    // A detent each time the pointer-driven rule crosses a 5% step. Otherwise just keep track of where it is.
+    const at = clamp(current, 0, 1);
+    if (engaged && !sweep && !holding) {
+      if (at >= (zone + 1) * DETENT + DETENT_SLACK || at < zone * DETENT - DETENT_SLACK) {
+        zone = Math.floor(at / DETENT);
+        if (soundOk()) sfx.play('detent', { deg: Math.round(at * 9), pan: (at - 0.5) * 1.2, gain: dragging ? 1 : 0.6 });
+      }
+    } else zone = Math.floor(at / DETENT);
+
     const settled = reduced && !sweep && Math.abs(target - current) < 0.0005;
     if (visible && !holding && !settled) raf = requestAnimationFrame(frame);
   };
@@ -114,7 +147,23 @@ export function createHeroSplit({ root, box, readouts = [], reduced, held }: Opt
     return true;
   };
 
+  // Paper scrape: loudness from how far the rule was asked to move since the last event, pitch from where it is.
+  const scrape = () => {
+    if (!soundOk()) {
+      lastT = target;
+      return;
+    }
+    if (lastT !== null) {
+      const raw = Math.min(1, Math.abs(target - lastT) / FULL_SPEED);
+      scrapeSpeed += (raw - scrapeSpeed) * 0.5;
+      sfx.drag(scrapeSpeed * SCRAPE_LEVEL * (dragging ? 1 : 0.45), target);
+    }
+    lastT = target;
+  };
+
   const disengage = () => {
+    lastT = null;
+    scrapeSpeed = 0;
     if (!engaged) return;
     engaged = false;
     dragging = false;
@@ -128,11 +177,14 @@ export function createHeroSplit({ root, box, readouts = [], reduced, held }: Opt
     if (holding || sweep) return;
     if (event.pointerType === 'mouse') {
       if (follow(event.clientX, event.clientY, true)) {
+        if (!engaged) engagedAt = performance.now();
         engaged = true;
+        scrape();
         wake();
       } else disengage();
     } else if (dragging) {
       follow(event.clientX, event.clientY, false);
+      scrape();
       wake();
     }
   };
@@ -141,6 +193,8 @@ export function createHeroSplit({ root, box, readouts = [], reduced, held }: Opt
     if (follow(event.clientX, event.clientY, true)) {
       engaged = true;
       dragging = true;
+      lastT = target;
+      scrapeSpeed = 0;
       wake();
     }
   };

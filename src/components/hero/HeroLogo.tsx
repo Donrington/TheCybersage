@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { sfx } from '@/lib/sound';
 
 /**
  * The CyberSage mark in the hero legend, with a current running through it.
@@ -19,6 +20,10 @@ import Image from 'next/image';
  * filter in one rAF loop; React never re-renders. The loop sleeps while the
  * logo is off screen (the legend is hidden below 1200px) and does not run at
  * all under reduced motion, where the logo stays still and unfiltered.
+ *
+ * Sound follows the same energy: a zap when the mouse arrives, then a hum at the
+ * eased level (so it fades out with the shiver). The idle sway and surges are
+ * silent, and there is no sound where there is no loop.
  */
 const GREEN = '0.063 0.725 0.506'; // #10B981, as 0-1 floats
 
@@ -64,6 +69,7 @@ export function HeroLogo() {
 
       // Hover charges the current quickly and lets it drain slowly.
       energy += ((hover ? 1 : 0) - energy) * (1 - Math.exp(-dt / (hover ? 110 : 420)));
+      sfx.buzz(energy);
 
       // A surge: a short burst of tearing now and then while idle.
       if (!hover && now > nextSurge) {
@@ -121,12 +127,19 @@ export function HeroLogo() {
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (visible) wake();
+      else {
+        // The loop is about to sleep, so nothing else would ever lower the hum.
+        hover = false;
+        energy = 0;
+        sfx.buzz(0);
+      }
     });
     observer.observe(el);
 
     const enter = (event: PointerEvent) => {
       if (event.pointerType !== 'mouse') return;
       hover = true;
+      sfx.play('zap');
       wake();
     };
     const leave = () => {
@@ -138,6 +151,7 @@ export function HeroLogo() {
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
+      sfx.buzz(0);
       el.removeEventListener('pointerenter', enter);
       el.removeEventListener('pointerleave', leave);
       shell.style.filter = '';

@@ -7,6 +7,7 @@ import { TESTIMONIALS } from '@/content/testimonials';
 import { SECTIONS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
 import { Corners } from '@/components/ui/Corners';
+import { sfx } from '@/lib/sound';
 
 const N = TESTIMONIALS.length;
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -49,7 +50,11 @@ export function Testimonials() {
   }, [running, i]);
   const t = TESTIMONIALS[i];
   const next = TESTIMONIALS[(i + 1) % N];
-  const go = (d: number) => setI((v) => (v + d + N) % N);
+  // Manual only (prev/next buttons); the autoplay timer calls setI directly and stays silent.
+  const go = (d: number) => {
+    sfx.play('swap');
+    setI((v) => (v + d + N) % N);
+  };
   const src = t.source === 'Client' ? 'VERIFIED CLIENT' : `VIA ${t.source.toUpperCase()}`;
 
   return (

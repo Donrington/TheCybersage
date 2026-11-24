@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { ChevronDown, ArrowRight, ArrowUpRight, X } from 'lucide-react';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { Corners } from '@/components/ui/Corners';
+import { SoundToggle } from '@/components/SoundToggle';
+import { sfx } from '@/lib/sound';
 import { NAV_LINKS as SITE_NAV } from '@/content/site';
 
 /**
@@ -108,6 +110,7 @@ function HireBtn() {
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
       data-magnetic
+      data-sound="primary"
       className="nav-hire group"
     >
       <Roll>Hire me</Roll>
@@ -300,6 +303,8 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const hiddenRef = useRef(false);
   const lockRef = useRef(false); // keep the bar visible while a panel or the mobile menu is open
+  const panelRef = useRef<PanelKey | null>(null); // mirrors activePanel so sound can fire from handlers
+  const mobileOpenRef = useRef(false); // mirrors mobileOpen for the Escape handler
   const reduced = useReducedMotion();
   const spy = useScrollSpy();
 
@@ -336,8 +341,11 @@ export function Navbar() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
+      const wasOpen = panelRef.current !== null || mobileOpenRef.current;
+      panelRef.current = null;
       setActivePanel(null);
       setMobileOpen(false);
+      if (wasOpen) sfx.play('close');
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -345,6 +353,7 @@ export function Navbar() {
 
   // Lock page scroll while the mobile sheet is open.
   useEffect(() => {
+    mobileOpenRef.current = mobileOpen;
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
     if (mobileOpen) document.body.dataset.navOpen = ''; else delete document.body.dataset.navOpen;
     return () => { document.body.style.overflow = ''; delete document.body.dataset.navOpen; };
@@ -352,13 +361,23 @@ export function Navbar() {
 
   useEffect(() => { lockRef.current = mobileOpen || activePanel !== null; if (lockRef.current) { hiddenRef.current = false; setHidden(false); } }, [mobileOpen, activePanel]);
 
+  // Every desktop panel change goes through here, so the open / close cue fires once per null <-> panel change
+  // (not when switching between the two panels).
+  const changePanel = (next: PanelKey | null) => {
+    const prev = panelRef.current;
+    if (prev === next) return;
+    panelRef.current = next;
+    if (prev === null) sfx.play('open');
+    else if (next === null) sfx.play('close');
+    setActivePanel(next);
+  };
   const openPanel = (panel: PanelKey | null) => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
-    setActivePanel(panel);
+    changePanel(panel);
   };
   const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setActivePanel(null), 140);
+    closeTimer.current = setTimeout(() => changePanel(null), 140);
   };
   const cancelClose = () => {
     if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
@@ -395,6 +414,7 @@ export function Navbar() {
               ))}
             </div>
             <div className="flex-1" />
+            <SoundToggle variant="nav" />
             <HireBtn />
             <Corners />
           </motion.nav>
@@ -409,6 +429,7 @@ export function Navbar() {
             <Image src="/sage/sage_horiz1_white.png" alt="Cybersage" width={200} height={88} loading="eager" className="block object-contain" style={{ height: 34, width: 'auto' }} />
           </a>
           <div className="flex-1" />
+          <SoundToggle variant="mobile" />
           <button
             type="button"
             onClick={() => setMobileOpen((v) => !v)}
@@ -454,6 +475,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); window.dispatchEvent(new CustomEvent('open-contact-modal')); }}
+                  data-sound="primary"
                   className="t-mono flex min-h-14 w-full items-center justify-between bg-white px-5 text-[0.8rem] text-[#0A0A0A]"
                 >
                   HIRE ME

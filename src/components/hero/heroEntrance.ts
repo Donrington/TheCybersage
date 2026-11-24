@@ -1,4 +1,5 @@
 import { animate, createScope, createTimeline, scrambleText, stagger } from 'animejs';
+import { sfx } from '@/lib/sound';
 
 /**
  * Hero entrance as one anime.js timeline. Loaded with a dynamic import by
@@ -70,8 +71,12 @@ export function createHeroEntrance(root: HTMLElement, onDevelop: () => void): He
         { clipPath: ['inset(0 100% 0 0)', 'inset(0 0% 0 0)'], duration: 1300, ease: 'inOutQuart' },
         280,
       )
+      .call(() => sfx.play('pencil', { dur: 1.3 }), 280)
       // 3. The name rises out of its masks, one letter after another.
       .add(q('.hero-char'), { translateY: ['112%', '0%'], duration: 1100, delay: stagger(24) }, 460)
+      .call(() => sfx.play('rise'), 460)
+      // The develop cue's low boom lands 0.95 s in, so it starts early enough to hit the rule at 1500.
+      .call(() => sfx.play('develop'), 550)
       // 4. Role, statement, calls to action.
       .add(q('.hero-kicker'), { opacity: [0, 1], translateY: [14, 0], duration: 800 }, 900)
       .add(q('.hero-positioning'), { opacity: [0, 1], translateY: [18, 0], duration: 900 }, 1000)
@@ -83,7 +88,10 @@ export function createHeroEntrance(root: HTMLElement, onDevelop: () => void): He
       .add(q('.hero-rail > *'), { opacity: [0, 1], translateX: [12, 0], duration: 700, delay: stagger(70) }, 1750)
       // 7. Title block last: cells fade in and the plain values type in.
       .add(q('.hero-cell > *'), { opacity: [0, 1], duration: 600, ease: 'outQuad', delay: stagger(70) }, 2050)
-      .call(() => specRows.forEach((el, i) => scramble(el, i * 90)), 2150)
+      .call(() => {
+        sfx.play('glitch');
+        specRows.forEach((el, i) => scramble(el, i * 90));
+      }, 2150)
       // Hold the timeline open until the sweep has landed, so the armed state
       // (which keeps the rail hint from pulsing early) lifts with it.
       .add(q('.hero-rail-hint'), { opacity: [1, 1], duration: 400 }, 2900);

@@ -76,6 +76,7 @@ export function Services() {
               <p className="t-body mt-3 text-white/70">Describe the problem. I will tell you which of these it is, or that it is none of them.</p>
               <a
                 href="#contact"
+                data-sound="primary"
                 data-magnetic
                 className="group t-mono mt-6 inline-flex min-h-11 items-center gap-2 border border-white/40 px-4 uppercase transition-colors hover:bg-white hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >

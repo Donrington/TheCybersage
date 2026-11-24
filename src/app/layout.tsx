@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { headers } from 'next/headers';
 import './globals.css';
 import { FAQS } from '@/content/faq';
+import { SoundLayer } from '@/components/SoundLayer';
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -502,6 +503,7 @@ export default async function RootLayout({
       <body className="antialiased">
         {/* Without JavaScript the full-screen loader can never lift: hide it so the page reads. */}
         <noscript><style>{'[role="status"][aria-label="Loading"]{display:none!important}'}</style></noscript>
+        <SoundLayer />
         {children}
         <Analytics />
       </body>

@@ -8,6 +8,7 @@ import { SplitText } from 'gsap/SplitText';
 import { ArrowUpRight, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useReducedMotion } from '@/lib/useReducedMotion';
+import { sfx } from '@/lib/sound';
 import { useSplitReveal } from '@/lib/useSplitReveal';
 import { SECTIONS, FOOTER_LINKS } from '@/content/site';
 import { SplitHeading } from '@/components/ui/SplitHeading';
@@ -73,6 +74,7 @@ function MagneticCTA({
   return (
     <motion.button
       data-cursor="hire"
+      data-sound={solid ? 'primary' : undefined}
       style={{ x, y, position: 'relative' }}
       onClick={onClick}
       onMouseMove={(e) => {
@@ -149,10 +151,25 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
     return () => { document.body.style.overflow = ''; };
   }, []);
 
+  // One open cue however the modal was summoned (CTA, nav, hero, window event).
+  useEffect(() => {
+    sfx.play('open');
+  }, []);
+
+  // One close cue for every way out (X, backdrop, Close after a send). The ref stops a second click during the exit animation.
+  const closedRef = useRef(false);
+  const close = () => {
+    if (closedRef.current) return;
+    closedRef.current = true;
+    sfx.play('close');
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!isValid) {
       setTouched({ name: true, email: true, message: true });
+      sfx.play('error');
       return;
     }
     setStatus('sending');
@@ -163,8 +180,10 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
         body: JSON.stringify(form),
       });
       setStatus(res.ok ? 'sent' : 'error');
+      sfx.play(res.ok ? 'success' : 'error');
     } catch {
       setStatus('error');
+      sfx.play('error');
     }
   };
 
@@ -185,7 +204,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
       {/* Backdrop */}
       <motion.div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={close}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -239,7 +258,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
               </h2>
             </div>
             <button
-              onClick={onClose}
+              onClick={close}
               className="w-9 h-9 border border-white/12 flex items-center justify-center text-on-ink-3 hover:text-white hover:border-white/35 transition-colors duration-200 shrink-0 mt-1"
             >
               <X size={14} />
@@ -272,7 +291,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
                   I&apos;ll be in touch within 24 hours.
                 </p>
                 <button
-                  onClick={onClose}
+                  onClick={close}
                   className="mt-8 text-xs tracking-[0.2em] uppercase text-on-ink-3 hover:text-white/60 transition-colors"
                   style={{ fontFamily: 'Satoshi, system-ui, sans-serif' }}
                 >
@@ -365,6 +384,7 @@ function ContactModal({ intent, onClose }: { intent: 'message' | 'call'; onClose
 
                 <button
                   type="submit"
+                  data-sound="primary"
                   disabled={!canSubmit}
                   onMouseMove={(e) => {
                     const r = e.currentTarget.getBoundingClientRect();
@@ -614,6 +634,7 @@ export function Contact() {
               <a
                 ref={emailRef}
                 href="mailto:hello@cybersage.dev"
+                onCopy={() => sfx.play('copy')}
                 className="block min-h-11 font-black text-white tracking-[-0.04em] leading-[0.88] hover:text-white/45 transition-colors duration-300 will-change-transform"
                 style={{
                   fontFamily: 'Satoshi, system-ui, sans-serif',

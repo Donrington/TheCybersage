@@ -156,6 +156,7 @@ export function About() {
                     <a
                       href="/resume/Abakwe Carrington.pdf"
                       download
+                      data-sound="primary"
                       className="group t-mono mt-4 inline-flex min-h-11 w-full items-center justify-between bg-[#0A0A0A] px-4 text-white uppercase transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                     >
                       Download résumé
