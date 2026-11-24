@@ -385,8 +385,8 @@ class SoundEngine {
         saw.frequency.value = 100;
         const bp = ctx.createBiquadFilter();
         bp.type = 'bandpass';
-        bp.frequency.value = 380;
-        bp.Q.value = 2;
+        bp.frequency.value = 260;
+        bp.Q.value = 1.6;
         const gain = ctx.createGain();
         gain.gain.value = 0.0001;
         saw.connect(bp);
@@ -409,8 +409,10 @@ class SoundEngine {
       }
       const v = this.buzzV;
       const t = ctx.currentTime;
-      v.gain.gain.setTargetAtTime(Math.max(0.0001, level * 0.05), t, 0.05);
-      v.bp.frequency.setTargetAtTime(300 + level * 500, t, 0.05);
+      // Centred on the 2nd-5th harmonics of the 100 Hz saw so the hum has body and is actually heard (about -39 dB RMS
+      // at full hover, close to the loader drone); the whole voice still peaks under -22 dBFS with the crackle.
+      v.gain.gain.setTargetAtTime(Math.max(0.0001, level * 0.22), t, 0.05);
+      v.bp.frequency.setTargetAtTime(260 + level * 300, t, 0.05);
       if (Math.random() < level * 0.2) {
         v.crackle.gain.cancelScheduledValues(t);
         v.crackle.gain.setValueAtTime(Math.max(0.0002, level * 0.12), t);
