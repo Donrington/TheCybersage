@@ -342,7 +342,7 @@ export default function NotFound() {
       >
         <p
           className="text-xs tracking-[0.18em] uppercase text-black/12 leading-relaxed"
-          style={{ fontFamily: 'ui-monospace, "JetBrains Mono", monospace' }}
+          style={{ fontFamily: 'var(--font-label)', fontWeight: 600 }}
         >
           X · 404<br />
           Y · 0000<br />

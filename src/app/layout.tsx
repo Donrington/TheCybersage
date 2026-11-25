@@ -1,10 +1,18 @@
 import type { Metadata, Viewport } from 'next';
-import { Instrument_Serif } from 'next/font/google';
+import { Instrument_Serif, Space_Grotesk } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { headers } from 'next/headers';
 import './globals.css';
 import { FAQS } from '@/content/faq';
 import { SoundLayer } from '@/components/SoundLayer';
+
+// The face for the small uppercase labels (BASE, STACK, STATUS, the nav cells, the sheet annotations). Variable, so the
+// weights are free; next/font self-hosts it and sizes a fallback to match, so labels do not jump when it arrives.
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-grotesk',
+  display: 'swap',
+});
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -488,7 +496,7 @@ export default async function RootLayout({
   const nonce = (await headers()).get('x-nonce') ?? undefined;
 
   return (
-    <html lang="en" className={instrumentSerif.variable} suppressHydrationWarning>
+    <html lang="en" className={`${instrumentSerif.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
         {/* Hero h1 face: fetched with the HTML, not after the CSS (LCP). */}
         <link rel="preload" href="/fonts/Satoshi-Variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
