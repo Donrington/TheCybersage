@@ -83,17 +83,17 @@ export function About() {
                 <span aria-hidden className="absolute top-0 -left-1 text-[4rem] leading-none text-black/15">
                   &ldquo;
                 </span>
-                I architect systems that don&rsquo;t just work &mdash; they scale, survive failure, and stay clean under pressure.
+                I architect systems that don&rsquo;t just work. They scale, survive failure, and stay clean under pressure.
               </blockquote>
             </Reveal>
 
             <Reveal className="space-y-4">
               <WordFill
                 className="t-lede text-on-canvas-1"
-                text="A software engineer based in Lagos, Nigeria — 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery."
+                text="A software engineer based in Lagos, Nigeria, with 5+ years designing and running production systems for global clients: multi-tenant compliance platforms, HIPAA medical portals, high-traffic marketplaces. I own the system end-to-end: architecture, infrastructure, backend, delivery."
               />
               <p className="t-body text-on-canvas-2">
-                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system &mdash; not just the feature.
+                Core: AWS, Docker, Go, Django, PostgreSQL, Redis, CI/CD. Fluent in Next.js for when the system needs a face. I care about the whole system, not just the feature.
               </p>
             </Reveal>
 

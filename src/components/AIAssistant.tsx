@@ -14,7 +14,7 @@ interface Suggestion { label: string; query: string; }
 /* Pool of client-intent prompts — a fresh set of 4 is shuffled in over time */
 const SUGGESTION_POOL: Suggestion[] = [
   { label: 'Available right now?',     query: 'Is Carrington available to start a new project right now?' },
-  { label: 'How do you engage?',       query: 'How does Carrington structure engagements — contract, rates, and timelines?' },
+  { label: 'How do you engage?',       query: 'How does Carrington structure engagements, including contract, rates, and timelines?' },
   { label: 'Work in my timezone?',     query: 'Can he work remotely across my timezone, and how does he communicate?' },
   { label: 'Built something like X?',  query: 'Has he built something similar to what I need? What are his most relevant projects?' },
   { label: 'AI & computer vision?',    query: 'Has Carrington built AI, computer vision, or embedded systems?' },
@@ -526,7 +526,7 @@ export function AIAssistant() {
                           margin: 0,
                         }}
                       >
-                        Hello. I&rsquo;m Carrington&rsquo;s AI assistant — I know his full engineering history, every project he&rsquo;s shipped, and what he&rsquo;s currently building.
+                        Hi, I&rsquo;m Carrington&rsquo;s assistant. I know his work well: what he&rsquo;s built, how he works, and whether he has room for a new project. Ask me anything.
                       </p>
                       <p
                         style={{

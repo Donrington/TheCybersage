@@ -98,7 +98,7 @@ export function BlueprintLoader({ onDone }: { onDone: () => void }) {
         {LAYERS.map((l, i) => {
           const y = 40 + i * 56 + 21;
           const on = p > 0.1 + i * 0.12;
-          return <text key={l} x={560} y={y} fontSize={9} fill="rgba(255,255,255,0.6)" fontFamily="var(--font-mono)" letterSpacing="1.4" style={{ opacity: on ? 1 : 0, transition: 'opacity 300ms' }}>{`${String(i + 1).padStart(2, '0')} ${l}`}</text>;
+          return <text key={l} x={560} y={y} fontSize={9} fill="rgba(255,255,255,0.6)" fontFamily="var(--font-mono)" fontWeight={600} letterSpacing="1.4" style={{ opacity: on ? 1 : 0, transition: 'opacity 300ms' }}>{`${String(i + 1).padStart(2, '0')} ${l}`}</text>;
         })}
       </svg>
 
